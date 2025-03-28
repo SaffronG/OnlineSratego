@@ -1,3 +1,8 @@
+/*
+    Unified styling for the entire application
+    The stored variables can be easilly changed and should be used in contrast to individual color-tweaking
+*/
+
 :root {
     --black-color: rgb(34, 31, 31);
     --text-color: rgb(235, 160, 22);
