@@ -22,15 +22,14 @@ body {
 }
 
 div.cell {
-    width: 10px;
-    height: 10px;
+    width: .2em;
+    height: .2em;
     background-color: var(--text-color);
-    display: flex;
     justify-content: center;
     align-items: center;
-    margin: 5px;
-    border-radius: 10px;
+    margin: .1em;
     font-size: 24px;
+    padding: 25%;
     color: var(--black-color);
     cursor: pointer;
     transition: background-color 0.3s ease;
@@ -40,8 +39,16 @@ div.cell:hover {
     background-color: rgb(255, 255, 255);
 }
 
+div.cell.active {
+    background-color: rgb(255, 255, 255);
+    color: var(--black-color);
+}
+
 #game_board {
     display: grid;
     grid-template-columns: repeat(10, 1fr);
-    gap: 5px;
+    width: 70%;
+    border: 5px dashed var(--text-color);
+    border-radius: 1em;
+    padding: 1em;
 }

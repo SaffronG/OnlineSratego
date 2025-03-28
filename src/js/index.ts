@@ -8,5 +8,8 @@ function buildBoard() {
         let cell: HTMLDivElement = document.createElement("div");
         cell.className = "cell";
         board?.appendChild(cell);
+        cell.addEventListener("click", function() {
+            cell.classList.toggle("active");
+        });
     }
 }
