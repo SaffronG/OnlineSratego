@@ -19,9 +19,9 @@ K Chase Harmer, Tyson Meade, Cael Church
 - (Bomb) 6
 
 # TODO
+- [x] Implement 10 x 10 grids
+- [x] Create TS pipeline
 - [ ] Create simple "PIECE" class
-- [ ] Implement 10 x 10 grids
-- [ ] Create TS pipeline
 - [ ] Create CS webhook client
 - [ ] Choose color scheme
 - [ ] Create or generate (AI) piece images
