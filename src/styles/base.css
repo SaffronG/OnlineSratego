@@ -10,7 +10,33 @@ body {
     margin: 0;
     padding: 0;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     height: 100vh;
+}
+
+div.cell {
+    width: 10px;
+    height: 10px;
+    background-color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 5px;
+    border-radius: 10px;
+    font-size: 24px;
+    color: var(--black-color);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+div.cell:hover {
+    background-color: rgb(255, 255, 255);
+}
+
+#game_board {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 5px;
 }
