@@ -4,12 +4,14 @@
 */
 
 :root {
-    --black-color: rgb(34, 31, 31);
-    --text-color: rgb(235, 160, 22);
+    --black-color: rgb(77, 76, 76);
+    --text-color: rgb(240, 166, 30);
+    --hover-color: rgb(255, 255, 255);
+    --black-border: rgb(40, 37, 37);
 }
 
 body {
-    background-color: var(--black-color);
+    background-color: var(--black-border);
     color: var(--text-color);
     font-family: Arial, sans-serif;
     margin: 0;
@@ -19,6 +21,18 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
+}
+
+#title {
+    font-size: 2em;
+    margin-bottom: 1em;
+    text-align: center;
+    transition: .5s;
+}
+
+#title:hover {
+    color: var(--hover-color);
+    cursor: default;
 }
 
 div.cell {
@@ -36,11 +50,11 @@ div.cell {
 }
 
 div.cell:hover {
-    background-color: rgb(255, 255, 255);
+    background-color: var(--hover-color);
 }
 
 div.cell.active {
-    background-color: rgb(255, 255, 255);
+    background-color: var(--hover-color);
     color: var(--black-color);
 }
 
@@ -48,7 +62,8 @@ div.cell.active {
     display: grid;
     grid-template-columns: repeat(10, 1fr);
     width: 70%;
-    border: 5px dashed var(--text-color);
+    border: 5px solid var(--text-color);
     border-radius: 1em;
     padding: 1em;
+    background-color: var(--black-color);
 }
