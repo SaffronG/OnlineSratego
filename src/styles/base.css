@@ -1,0 +1,16 @@
+:root {
+    --black-color: rgb(34, 31, 31);
+    --text-color: rgb(235, 160, 22);
+}
+
+body {
+    background-color: var(--black-color);
+    color: var(--text-color);
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
