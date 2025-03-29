@@ -4,11 +4,23 @@
 */
 
 :root {
-    --black-color: rgb(77, 76, 76);
+    --black-color: rgb(255, 201, 85);
     --text-color: rgb(240, 166, 30);
     --hover-color: rgb(255, 255, 255);
     --black-border: rgb(48, 42, 42);
     --shadow-color: rgb(20, 19, 19);
+    --water: rgb(93, 93, 229);
+}
+
+@media (prefers-color-scheme: light) {
+    body {
+        --black-border: white;
+        --black-color: rgb(242, 217, 185);
+        --text-color: rgb(255, 117, 71);
+        --hover-color: rgb(234, 234, 35);
+        --water: rgb(22, 22, 160);
+        --shadow-color: rgb(111, 100, 100);
+    }
 }
 
 body {
@@ -48,6 +60,22 @@ div.cell {
     color: var(--black-color);
     cursor: pointer;
     transition: background-color 0.3s ease;
+    box-shadow: 0.5px 0.5px var(--shadow-color);
+}
+
+div.cell_water {
+    width: .2em;
+    height: .2em;
+    background-color: var(--water);
+    justify-content: center;
+    align-items: center;
+    margin: .1em;
+    font-size: 24px;
+    padding: 25%;
+    color: var(--black-color);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-shadow: 2px 2px var(--shadow-color);
 }
 
 div.cell:hover {
