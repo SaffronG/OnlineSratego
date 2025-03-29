@@ -8,6 +8,9 @@ function buildBoard() {
         let cell: HTMLDivElement = document.createElement("div");
         cell.className = "cell";
         board?.appendChild(cell);
+        if ((i % 3 == 1 || i % 4) == 1 && (i > 40 && i < 60)) {
+            cell.classList.add("active");
+        }
         cell.addEventListener("click", function() {
             cell.classList.toggle("active");
         });
