@@ -1,7 +1,7 @@
 # OnlineSratego
 A Tauri web app for stratego, hope to implement robot, chat gpt, and multiplayer functionality
 
-# Collaberators
+# Collaborators
 K Chase Harmer, Tyson Meade, Cael Church
 
 # Pieces
