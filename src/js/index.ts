@@ -1,3 +1,18 @@
+class piece {
+    constructor(name: string, rank: number, movement: number, isAlive: boolean, image: string) {
+        this.name = name;
+        this.rank = rank;
+        this.movement = movement;
+        this.isAlive = isAlive;
+        this.image = image;
+    }
+    name: string;
+    rank: number;
+    movement: number;
+    isAlive: boolean;
+    image: string;
+}
+
 let board: HTMLElement | null = document.getElementById("game_board");
 
 buildBoard()
