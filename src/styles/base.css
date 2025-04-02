@@ -49,13 +49,13 @@ body {
 }
 
 div.cell {
-    width: .2em;
-    height: .2em;
+    width: 3vh;
+    height: 1vh;
     background-color: var(--text-color);
     justify-content: center;
     align-items: center;
     margin: .1em;
-    font-size: 24px;
+    font-size: 8px;
     padding: 25%;
     color: var(--black-color);
     cursor: pointer;
@@ -64,13 +64,13 @@ div.cell {
 }
 
 div.cell_water {
-    width: .2em;
-    height: .2em;
+    width: 3vh;
+    height: 1vh;
     background-color: var(--water);
     justify-content: center;
     align-items: center;
     margin: .1em;
-    font-size: 24px;
+    font-size: 8px;
     padding: 25%;
     color: var(--black-color);
     cursor: pointer;
@@ -93,7 +93,7 @@ div.cell.active {
     width: 70%;
     border: 5px solid var(--text-color);
     border-radius: .5em;
-    padding: 1em;
+    padding: .5em;
     background-color: var(--black-color);
     box-shadow: 10px 10px var(--shadow-color);
 }

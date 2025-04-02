@@ -1,4 +1,4 @@
-Game Pieces with their rank numbers and number of units
+# Game Pieces with their rank numbers and number of units
 
 Flag: 1x (lowest rank, cannot move)
 Bomb: 6x (cannot move, defeats all but the Miner)
