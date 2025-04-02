@@ -40,3 +40,6 @@ K Chase Harmer, Tyson Meade, Cael Church
 
 # UML Diagram
 https://lucid.app/lucidchart/a44e2201-ed57-493c-bb41-f5d009b19f49/edit?view_items=e6o6_PWrgp74&invitationId=inv_6e04dae5-279e-44bf-9a33-681c4611398f
+
+# Kanban Board
+https://trello.com/invite/b/67ed6714ac20e9429d16b742/ATTI8d7ce6e65a721bc1ce0c1e32bb62b46f624FCFC5/stratego
