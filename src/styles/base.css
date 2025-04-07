@@ -41,6 +41,9 @@ body {
     margin-bottom: 1em;
     text-align: center;
     transition: .5s;
+    border-style: solid;
+    padding: .3em;
+    border-radius: 1em;
 }
 
 #title:hover {
@@ -96,4 +99,45 @@ div.cell.active {
     padding: 1em;
     background-color: var(--black-color);
     box-shadow: 10px 10px var(--shadow-color);
+}
+
+#auth_links {
+    display: flex;
+    align-items: center;
+    padding-top: 1em;
+}
+
+a {
+    text-decoration: none;
+    color: var(--text-color);
+    padding: .5em;
+    transition: .5s;
+}
+
+a:hover {
+    color: var(--hover-color);
+}
+
+.login {
+    display: flex;
+    flex-direction: column;
+}
+
+.login input {
+    margin-bottom: 1em;
+}
+
+.login button {
+    padding: .5em;
+    margin-top: 1em;
+    border-radius: .5em;
+    background-color: var(--text-color);
+    color: var(--hover-color);
+    transition: .5s;
+}
+
+.login button:hover {
+    background-color: var(--hover-color);
+    color: var(--text-color);
+    cursor: pointer;
 }

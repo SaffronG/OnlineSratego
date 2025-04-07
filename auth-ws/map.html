@@ -13,13 +13,13 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: rgb(54, 50, 50);
+            background-color: rgb(50, 49, 49);
             flex-direction: column;
         }
         .path {
             width: 80%;
             height: 100px;
-            background-color: rgb(255, 255, 255);
+            background-color: rgb(238, 236, 236);
             border-radius: 10px;
             margin: 10px;
             display: flex;
@@ -29,16 +29,24 @@
             flex-direction: row;
         }
         .get {
-            background-color: rgb(0, 255, 0);
-            border-radius: .5em;
+            border-color: rgb(50, 49, 49);
+            border-style: solid;
+            color: rgb(238, 236, 236);
+            background-color: rgb(52, 175, 52);
+            border-radius: .25em;
             width: 100px;
             text-align: center;
+            padding: .2em;
         }
         .post {
-            background-color: rgb(255, 0, 0);
-            border-radius: .5em;
+            border-color: rgb(50, 49, 49);
+            border-style: solid;
+            color: rgb(238, 236, 236);
+            background-color: rgb(234, 39, 39);
+            border-radius: .25em;
             width: 100px;
             text-align: center;
+            padding: .2em;
         }
         .description {
             margin-left: 40px;
@@ -48,7 +56,11 @@
     </style>
 </head>
 <body>
-    <div class="path"><h1 class="get">GET</h1><p class="description">>> "/"</p></div>
-    <div class="path"><h1 class="post">POST</h1><p class="description">>> "/auth"</p></div>
+    <div class="path"><h1 class="get">GET</h1><p class="description">/</p></div>
+    <div class="path"><h1 class="post">POST</h1><p class="description">/login</p></div>
+    <div class="path"><h1 class="post">POST</h1><p class="description">/register</p></div>
+    <div class="path"><h1 class="post">POST</h1><p class="description">/login</p></div>
+    <div class="path"><h1 class="get">GET</h1><p class="description">/games</p></div>
+    <div class="path"><h1 class="get">GET</h1><p class="description">/concurrentPlayers</p></div>
 </body>
 </html>
