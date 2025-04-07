@@ -43,6 +43,9 @@ app.MapGet("/", () => Results.Content(File.ReadAllLines("map.html").Aggregate((a
 
 app.MapPost("/login", (Account user) => {
     var foundUser = users.FirstOrDefault(u => u.username == user.username && u.password == user.password);
+    var isLoggedIn = authenticated.FirstOrDefault(u => u.username == foundUser!.username);
+    if (isLoggedIn != null)
+        return Results.Conflict("User is already logged in!");
     if (foundUser != null) {
         Guid tok = Guid.NewGuid();
         authenticated.Enqueue(new UserWithToken(foundUser, tok));
@@ -62,6 +65,14 @@ app.MapPost("/logout", (string token) => {
     if (user != null) return Results.Ok("Logout successful");
     return Results.Forbid();
 }).WithName("Logout");
+
+app.MapGet("/games", ()=> {
+    return games;
+});
+
+app.MapGet("/concurrentUsers", () => {
+    return authenticated;
+}); 
 
 app.Run();
 

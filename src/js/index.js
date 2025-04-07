@@ -60,6 +60,7 @@ function renderLoginForm() {
             e.preventDefault();
             let response = await auth_login(usernameInput.value, passwordInput.value);
             console.log(response);
+            window.location.replace("./index.html");
         });
         login_form.appendChild(loginButton);
     }
@@ -114,6 +115,7 @@ function renderRegisterForm() {
             e.preventDefault();
             let response = await register(usernameInput.value, passwordInput.value, emailInput.value);
             console.log(response);
+            window.location.replace("./index.html");
         });
         register_form.appendChild(registerButton);
     }
