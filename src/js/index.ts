@@ -183,20 +183,26 @@ function buildLogout() {
 }
 
 async function auth_login(username: string, password: string) {
-    let response: Response = await fetch(`${base_url}/login`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ username, password })
-    });
-
-    if (!response.ok) {
-        console.error("Login failed:", await response.text());
+    if (localStorage.getItem("currentUser") != "undefined") {
+        alert("User already logged in!");
+        return "User already logged in!"
+    }
+    else {
+        let response: Response = await fetch(`${base_url}/login`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ username, password })
+        });
+    
+        if (!response.ok) {
+            console.error("Login failed:", await response.text());
+            return response;
+        }
+    
         return response;
     }
-
-    return response;
 }
 
 async function register(username: string, password: string, email: string) {
