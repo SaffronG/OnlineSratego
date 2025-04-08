@@ -18,18 +18,20 @@ K Chase Harmer, Tyson Meade, Cael Church
 - (1) 1
 - (Bomb) 6
 
-# TODO
+# COMPLETED
 - [x] Implement 10 x 10 grids
 - [x] Create TS pipeline
-- [ ] Create simple "PIECE" class
-- [ ] Create CS webhook client
+- [x] Create simple "PIECE" class
+- [x] Create CS webhook client
+- [x] Implement login functionality
+
+# TODO
 - [ ] Choose color scheme
 - [ ] Create or generate (AI) piece images
 - [ ] Implement bounds checking
 - [ ] Valid move highlighting and checking
 - [ ] Drag and drop animation
 - [ ] Create basic grid, add css and shadows
-- [ ] Implement social sign in
 - [ ] Create simple move robot to move pieces in a simple way that can win them the game
 - [ ] Allow both a board randomizer and a board customizer function (for your pieces)
 
