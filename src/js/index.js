@@ -4,7 +4,9 @@ let title = document.getElementById("title");
 let base_url = "http://localhost:5244";
 let login_form = document.getElementById("login");
 let register_form = document.getElementById("register");
+let logout_button = document.getElementById("logout_button");
 buildBoard();
+buildLogout();
 renderLoginForm();
 renderRegisterForm();
 function buildBoard() {
@@ -60,7 +62,14 @@ function renderLoginForm() {
             e.preventDefault();
             let response = await auth_login(usernameInput.value, passwordInput.value);
             console.log(response);
-            window.location.replace("./index.html");
+            if (!response.ok) {
+                localStorage.setItem("loggedIn", "true");
+                localStorage.setItem("currentUser", response.username);
+                window.location.replace("./index.html");
+            }
+            else {
+                alert("Invalid login! Please try again!");
+            }
         });
         login_form.appendChild(loginButton);
     }
@@ -120,6 +129,32 @@ function renderRegisterForm() {
         register_form.appendChild(registerButton);
     }
 }
+function buildLogout() {
+    if (logout_button) {
+        logout_button.addEventListener("click", async (e) => {
+            e.preventDefault();
+            console.log("CLICKED");
+            const currentUser = localStorage.getItem("currentUser");
+            if (!currentUser) {
+                alert("No user is currently logged in!");
+                return;
+            }
+            let response = await logout(currentUser);
+            if (response.ok) {
+                localStorage.removeItem("currentUser");
+                localStorage.setItem("loggedIn", "false");
+                alert("Logged out successfully!");
+                window.location.replace("./index.html");
+            }
+            else {
+                alert("Logout failed! Please try again.");
+            }
+        });
+    }
+    else {
+        console.error("Logout button not found!");
+    }
+}
 async function auth_login(username, password) {
     let body = await fetch(`${base_url}/login`, {
         method: "POST",
@@ -139,4 +174,30 @@ async function register(username, password, email) {
         body: JSON.stringify({ username, password, email })
     });
     return await body.json();
+}
+async function logout(username) {
+    if (!username) {
+        throw new Error("Username is required for logout.");
+    }
+    try {
+        let response = await fetch(`${base_url}/logout`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ username })
+        });
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error("Logout failed:", errorData);
+            throw new Error(`Logout failed with status ${response.status}`);
+        }
+        const responseData = await response.json();
+        console.log(responseData);
+        return responseData;
+    }
+    catch (error) {
+        console.error("An error occurred during logout:", error);
+        throw error;
+    }
 }
