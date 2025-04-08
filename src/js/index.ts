@@ -70,9 +70,9 @@ function renderLoginForm() {
             e.preventDefault()
             let response = await auth_login(usernameInput.value, passwordInput.value);
             console.log(response)
-            if (!response.ok) {
+            if (response.ok) {
+                localStorage.setItem("currentUser", usernameInput.value)
                 localStorage.setItem("loggedIn", "true")
-                localStorage.setItem("currentUser", response.username)
                 window.location.replace("./index.html")
             } else {
                 alert("Invalid login! Please try again!")
@@ -157,14 +157,14 @@ function buildLogout() {
             console.log("CLICKED");
 
             const currentUser = localStorage.getItem("currentUser");
-            if (!currentUser) {
+            if (!currentUser || currentUser === "undefined") {
                 alert("No user is currently logged in!");
                 return;
             }
 
             let response = await logout(currentUser);
-            if (response.ok) {
-                localStorage.removeItem("currentUser");
+            if (response) {
+                localStorage.setItem("currentUser", "undefined");
                 localStorage.setItem("loggedIn", "false");
                 alert("Logged out successfully!");
                 window.location.replace("./index.html");
@@ -178,25 +178,37 @@ function buildLogout() {
 }
 
 async function auth_login(username: string, password: string) {
-    let body: Response = await fetch(`${base_url}/login`, {
+    let response: Response = await fetch(`${base_url}/login`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({ username, password })
     });
-    return await body.json();
+
+    if (!response.ok) {
+        console.error("Login failed:", await response.text());
+        return response;
+    }
+
+    return response;
 }
 
 async function register(username: string, password: string, email: string) {
-    let body: Response = await fetch(`${base_url}/register`, {
+    let response: Response = await fetch(`${base_url}/register`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({username, password, email})
+        body: JSON.stringify({ username, password, email })
     });
-    return await body.json();
+
+    if (!response.ok) {
+        console.error("Registration failed:", await response.text());
+        return response;
+    }
+
+    return response;
 }
 
 async function logout(username: string | null) {
@@ -214,7 +226,7 @@ async function logout(username: string | null) {
         });
 
         if (!response.ok) {
-            const errorData = await response.json();
+            const errorData = await response.text();
             console.error("Logout failed:", errorData);
             throw new Error(`Logout failed with status ${response.status}`);
         }

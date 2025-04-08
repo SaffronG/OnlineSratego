@@ -60,14 +60,13 @@ app.MapPost("/register", (Account user) => {
 app.MapPost("/logout", (logoutUser logoutUser) => {
     var user = authenticated.FirstOrDefault(u => u.username == logoutUser.username);
     if (user != null) {
-        Console.WriteLine(authenticated.ToString());
+        // Remove the user from the authenticated list
         for (int i = 0; i < authenticated.Count(); i++) {
             if (authenticated[i].username == logoutUser.username) {
                 authenticated.RemoveAt(i);
                 break;
             }
         }
-        Console.WriteLine("\n\nINVALID RESPONSE\n\n");
         return Results.Ok("Logout successful");
     } else {
         return Results.Forbid();
