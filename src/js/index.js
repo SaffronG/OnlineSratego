@@ -6,7 +6,14 @@ let login_form = document.getElementById("login");
 let register_form = document.getElementById("register");
 let logout_button = document.getElementById("logout_button");
 buildBoard();
-buildLogout();
+if (logout_button)
+    buildLogout();
+if (!logout_button)
+    console.log({ "Test Accounts": [
+            { "username": "admin", "password": "password", "email": "admin.123@fake.com" },
+            { "username": "user", "password": "1234", "email": "guest@fake.com" },
+            { "username": "guest", "password": "password", "email": "guest123@fake.com" },
+        ] });
 renderLoginForm();
 renderRegisterForm();
 function buildBoard() {
