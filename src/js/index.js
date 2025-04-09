@@ -1,5 +1,12 @@
 "use strict";
 class piece {
+    name;
+    rank;
+    movement;
+    isAlive;
+    image;
+    row;
+    col;
     constructor(name, rank, movement, isAlive, image, row, col) {
         this.name = name;
         this.rank = rank;
@@ -18,6 +25,10 @@ class piece {
 }
 ;
 class cell {
+    row; // 0 - 9
+    col; // a - j
+    isWater;
+    piece;
     constructor(row, col, isWater = false, piece = null) {
         this.row = row;
         this.col = col;
@@ -42,7 +53,7 @@ var ColEnum;
 // GLOBAL VARIABLES
 let board = document.getElementById("game_board");
 let title = document.getElementById("title");
-let base_url = "http://localhost:5244";
+let base_url = "strategogameserver-4vzb9wy5.b4a.run";
 let login_form = document.getElementById("login");
 let register_form = document.getElementById("register");
 let logout_button = document.getElementById("logout_button");
@@ -56,11 +67,6 @@ if (!logout_button)
         ] });
 renderLoginForm();
 renderRegisterForm();
-function buildBoard() {
-    for (let i = 0; i < 100; i++) {
-        let cell = document.createElement("div");
-        cell.className = "cell";
-        board?.appendChild(cell);
 let pieces = [
     new piece("scout", 9, 100, true, "scout.png", 0, "a"),
     new piece("miner", 8, 1, true, "miner.png", 0, "b"),
@@ -82,12 +88,12 @@ function buildBoard(board) {
     for (let i = 0; i < 100; i++) {
         let cell = document.createElement("div");
         cell.className = "cell";
-        board === null || board === void 0 ? void 0 : board.appendChild(cell);
+        board?.appendChild(cell);
         if (piece_index < pieces.length) {
             cell.className = "cell";
             cell.innerText = `${pieces[piece_index].rank}`; // for debugging purposes, show the name of the piece in the cell
             // cell.innerHTML = `<img ssrc="images/${pieces[piece_index].image}" alt="${pieces[piece_index].name}">`;
-            board === null || board === void 0 ? void 0 : board.appendChild(cell);
+            board?.appendChild(cell);
             piece_index++;
             cell.style.fontSize = "8px"; // make the text smaller to fit in the cell
         }
