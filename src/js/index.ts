@@ -57,7 +57,7 @@ enum ColEnum {
 // GLOBAL VARIABLES
 let board: HTMLElement | null = document.getElementById("game_board");
 let title: HTMLElement | null = document.getElementById("title");
-let base_url: string = "http://localhost:5244";
+let base_url: string = "strategogameserver-4vzb9wy5.b4a.run";
 let login_form = document.getElementById("login")
 let register_form = document.getElementById("register")
 let logout_button = document.getElementById("logout_button")
@@ -70,7 +70,6 @@ if (!logout_button) console.log({"Test Accounts": [
 ]});
 renderLoginForm();
 renderRegisterForm();
-=======
 let pieces: piece[] = [
     new piece("scout", 9, 100, true, "scout.png", 0, "a"),
     new piece("miner", 8, 1, true, "miner.png", 0, "b"),
