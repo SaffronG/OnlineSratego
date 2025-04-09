@@ -1,4 +1,4 @@
-# Game Pieces with their rank numbers and number of units
+Game Pieces with their rank numbers and number of units
 
 Flag: 1x (lowest rank, cannot move)
 Bomb: 6x (cannot move, defeats all but the Miner)
@@ -11,9 +11,9 @@ Captain (5): 4x
 Major (4): 3x
 Colonel (3): 2x
 General (2): 1x
-Marshal (1): 1x (highest rank)
+Marshall (1): 1x (highest rank)
 
 The lower the number, the stronger the power of the unit. 
-- The Marshal can only be killed by being attacked by another marshal or being attacked by the Spy. Spy gets killed by everything that attacks him.
+- The Marshall can only be killed by being attacked by another marshal or being attacked by the Spy. Spy gets killed by everything that attacks him.
 - Miners are the only units that can kill bombs. Bombs kill every other unit that touches them.
 - Scout can move any number of spaces.
