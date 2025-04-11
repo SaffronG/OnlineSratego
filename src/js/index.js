@@ -1,12 +1,13 @@
-"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 class piece {
-    name;
-    rank;
-    movement;
-    isAlive;
-    image;
-    row;
-    col;
     constructor(name, rank, movement, isAlive, image, row, col) {
         this.name = name;
         this.rank = rank;
@@ -25,10 +26,6 @@ class piece {
 }
 ;
 class cell {
-    row; // 0 - 9
-    col; // a - j
-    isWater;
-    piece;
     constructor(row, col, isWater = false, piece = null) {
         this.row = row;
         this.col = col;
@@ -67,19 +64,33 @@ if (!logout_button)
         ] });
 renderLoginForm();
 renderRegisterForm();
-let pieces = [
-    new piece("scout", 9, 100, true, "scout.png", 0, "a"),
-    new piece("miner", 8, 1, true, "miner.png", 0, "b"),
-    new piece("sergeant", 7, 1, true, "sergeant.png", 0, "c"),
-    new piece("lieutenant", 6, 1, true, "lieutenant.png", 0, "d"),
-    new piece("captain", 5, 1, true, "captain.png", 0, "e"),
-    new piece("major", 4, 1, true, "major.png", 0, "f"),
-    new piece("colonel", 3, 1, true, "colonel.png", 0, "g"),
-    new piece("general", 2, 1, true, "general.png", 0, "h"),
-    new piece("marshal", 1, 1, true, "marshal.png", 0, "i"),
-    new piece("spy", 0, 1, true, "spy.png", 0, "j"),
-    new piece("bomb", -1, 0, true, "bomb.png", 0, "k"),
-    new piece("flag", -2, 0, true, "flag.png", 0, "l"),
+let RedPieces = [
+    new piece("Red Scout", 9, 100, true, ".\..\Game Piece Images\Edited Images\Red Pieces\Red Scout.png", 0, "a"),
+    new piece("Red Miner", 8, 1, true, ".\..\Game Piece Images\Edited Images\Red Pieces\Red Miner.png", 0, "b"),
+    new piece("Red Sergeant", 7, 1, true, ".\..\Game Piece Images\Edited Images\Red Pieces\Red Sergeant.png", 0, "c"),
+    new piece("Red Lieutenant", 6, 1, true, ".\..\Game Piece Images\Edited Images\Red Pieces\Red Lieutenant.png", 0, "d"),
+    new piece("Red Captain", 5, 1, true, ".\..\Game Piece Images\Edited Images\Red Pieces\Red Captain.png", 0, "e"),
+    new piece("Red Major", 4, 1, true, ".\..\Game Piece Images\Edited Images\Red Pieces\Red Major.png", 0, "f"),
+    new piece("Red Colonel", 3, 1, true, ".\..\Game Piece Images\Edited Images\Red Pieces\Red Colonel.png", 0, "g"),
+    new piece("Red General", 2, 1, true, ".\..\Game Piece Images\Edited Images\Red Pieces\Red General.png", 0, "h"),
+    new piece("Red Marshal", 1, 1, true, ".\..\Game Piece Images\Edited Images\Red Pieces\Red Marshall.png", 0, "i"),
+    new piece("Red Spy", 0, 1, true, ".\..\Game Piece Images\Edited Images\Red Pieces\Red Spy.png", 0, "j"),
+    new piece("Red Bomb", -1, 0, true, ".\..\Game Piece Images\Edited Images\Red Pieces\Red Bomb.png", 0, "k"),
+    new piece("Red Flag", -2, 0, true, ".\..\Game Piece Images\Edited Images\Red Pieces\Red Flag.png", 0, "l"),
+];
+let BluePieces = [
+    new piece("Blue Scout", 9, 100, true, "src/Game Piece Images/Edited Images/Blue Pieces/Blue Scout.png", 0, "a"),
+    new piece("Blue Miner", 8, 1, true, "./../Game Piece Images/Edited Images/Blue Pieces/Blue Miner.png", 0, "b"),
+    new piece("Blue Sergeant", 7, 1, true, "./../Game Piece Images/Edited Images/Blue Pieces/Blue Sergeant.png", 0, "c"),
+    new piece("Blue Lieutenant", 6, 1, true, "./../Game Piece Images/Edited Images/Blue Pieces/Blue Lieutentant.png", 0, "d"),
+    new piece("Blue Captain", 5, 1, true, "./../Game Piece Images/Edited Images/Blue Pieces/Blue Captain.png", 0, "e"),
+    new piece("Blue Major", 4, 1, true, "./../Game Piece Images/Edited Images/Blue Pieces/Blue Major.png", 0, "f"),
+    new piece("Blue Colonel", 3, 1, true, "./../Game Piece Images/Edited Images/Blue Pieces/Blue Colonel.png", 0, "g"),
+    new piece("Blue General", 2, 1, true, "./../Game Piece Images/Edited Images/Blue Pieces/Blue General.png", 0, "h"),
+    new piece("Blue Marshal", 1, 1, true, "./../Game Piece Images/Edited Images/Blue Pieces/Blue Marshall.png", 0, "i"),
+    new piece("Blue Spy", 0, 1, true, "./../Game Piece Images/Edited Images/Blue Pieces/Blue Spy.png", 0, "j"),
+    new piece("Blue Bomb", -1, 0, true, "./../Game Piece Images/Edited Images/Blue Pieces/Blue Bomb.png", 0, "k"),
+    new piece("Blue Flag", -2, 0, true, "./../Game Piece Images/Edited Images/Blue Pieces/Blue Flag.png", 0, "l"),
 ];
 // INITAILIZE THE BOARD VISUALLY
 buildBoard(board);
@@ -88,12 +99,12 @@ function buildBoard(board) {
     for (let i = 0; i < 100; i++) {
         let cell = document.createElement("div");
         cell.className = "cell";
-        board?.appendChild(cell);
-        if (piece_index < pieces.length) {
+        board === null || board === void 0 ? void 0 : board.appendChild(cell);
+        if (piece_index < BluePieces.length) {
             cell.className = "cell";
-            cell.innerText = `${pieces[piece_index].rank}`; // for debugging purposes, show the name of the piece in the cell
-            // cell.innerHTML = `<img ssrc="images/${pieces[piece_index].image}" alt="${pieces[piece_index].name}">`;
-            board?.appendChild(cell);
+            cell.innerText = `${BluePieces[piece_index].rank}`; // for debugging purposes, show the name of the piece in the cell
+            cell.innerHTML = `<img src="${BluePieces[piece_index].image}" alt="${BluePieces[piece_index].name}">`;
+            board === null || board === void 0 ? void 0 : board.appendChild(cell);
             piece_index++;
             cell.style.fontSize = "8px"; // make the text smaller to fit in the cell
         }
@@ -141,9 +152,9 @@ function renderLoginForm() {
         const loginButton = document.createElement("button");
         loginButton.setAttribute("type", "submit");
         loginButton.textContent = "Login";
-        login_form.addEventListener("submit", async (e) => {
+        login_form.addEventListener("submit", (e) => __awaiter(this, void 0, void 0, function* () {
             e.preventDefault();
-            let response = await auth_login(usernameInput.value, passwordInput.value);
+            let response = yield auth_login(usernameInput.value, passwordInput.value);
             console.log(response);
             if (response.ok) {
                 localStorage.setItem("currentUser", usernameInput.value);
@@ -153,7 +164,7 @@ function renderLoginForm() {
             else {
                 alert("Invalid login! Please try again!");
             }
-        });
+        }));
         login_form.appendChild(loginButton);
     }
 }
@@ -203,18 +214,18 @@ function renderRegisterForm() {
         const registerButton = document.createElement("button");
         registerButton.setAttribute("type", "submit");
         registerButton.textContent = "Register";
-        register_form.addEventListener("submit", async (e) => {
+        register_form.addEventListener("submit", (e) => __awaiter(this, void 0, void 0, function* () {
             e.preventDefault();
-            let response = await register(usernameInput.value, passwordInput.value, emailInput.value);
+            let response = yield register(usernameInput.value, passwordInput.value, emailInput.value);
             console.log(response);
             window.location.replace("./index.html");
-        });
+        }));
         register_form.appendChild(registerButton);
     }
 }
 function buildLogout() {
     if (logout_button) {
-        logout_button.addEventListener("click", async (e) => {
+        logout_button.addEventListener("click", (e) => __awaiter(this, void 0, void 0, function* () {
             e.preventDefault();
             console.log("CLICKED");
             const currentUser = localStorage.getItem("currentUser");
@@ -222,7 +233,7 @@ function buildLogout() {
                 alert("No user is currently logged in!");
                 return;
             }
-            let response = await logout(currentUser);
+            let response = yield logout(currentUser);
             if (response) {
                 localStorage.setItem("currentUser", "undefined");
                 localStorage.setItem("loggedIn", "false");
@@ -232,69 +243,75 @@ function buildLogout() {
             else {
                 alert("Logout failed! Please try again.");
             }
-        });
+        }));
     }
     else {
         console.error("Logout button not found!");
     }
 }
-async function auth_login(username, password) {
-    if (localStorage.getItem("currentUser") != "undefined") {
-        alert("User already logged in!");
-        return "User already logged in!";
-    }
-    else {
-        let response = await fetch(`${base_url}/login`, {
+function auth_login(username, password) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (localStorage.getItem("currentUser") != "undefined") {
+            alert("User already logged in!");
+            return "User already logged in!";
+        }
+        else {
+            let response = yield fetch(`${base_url}/login`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ username, password })
+            });
+            if (!response.ok) {
+                console.error("Login failed:", yield response.text());
+                return response;
+            }
+            return response;
+        }
+    });
+}
+function register(username, password, email) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let response = yield fetch(`${base_url}/register`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ username, password })
+            body: JSON.stringify({ username, password, email })
         });
         if (!response.ok) {
-            console.error("Login failed:", await response.text());
+            console.error("Registration failed:", yield response.text());
             return response;
         }
         return response;
-    }
-}
-async function register(username, password, email) {
-    let response = await fetch(`${base_url}/register`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ username, password, email })
     });
-    if (!response.ok) {
-        console.error("Registration failed:", await response.text());
-        return response;
-    }
-    return response;
 }
-async function logout(username) {
-    if (!username) {
-        throw new Error("Username is required for logout.");
-    }
-    try {
-        let response = await fetch(`${base_url}/logout`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ username })
-        });
-        if (!response.ok) {
-            const errorData = await response.text();
-            console.error("Logout failed:", errorData);
-            throw new Error(`Logout failed with status ${response.status}`);
+function logout(username) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (!username) {
+            throw new Error("Username is required for logout.");
         }
-        const responseData = await response.json();
-        console.log(responseData);
-        return responseData;
-    }
-    catch (error) {
-        console.error("An error occurred during logout:", error);
-        throw error;
-    }
+        try {
+            let response = yield fetch(`${base_url}/logout`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ username })
+            });
+            if (!response.ok) {
+                const errorData = yield response.text();
+                console.error("Logout failed:", errorData);
+                throw new Error(`Logout failed with status ${response.status}`);
+            }
+            const responseData = yield response.json();
+            console.log(responseData);
+            return responseData;
+        }
+        catch (error) {
+            console.error("An error occurred during logout:", error);
+            throw error;
+        }
+    });
 }
