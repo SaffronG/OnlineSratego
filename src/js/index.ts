@@ -27,7 +27,6 @@ class piece {
 };
 
 class cell{
-    
     row: number; // 0 - 9
     col: ColEnum; // a - j
     isWater: boolean;
@@ -57,7 +56,8 @@ enum ColEnum {
 // GLOBAL VARIABLES
 let board: HTMLElement | null = document.getElementById("game_board");
 let title: HTMLElement | null = document.getElementById("title");
-let base_url: string = "strategogameserver-4vzb9wy5.b4a.run";
+// let base_url: string = "http://localhost:5244";
+let base_url: string = "https://strategogameserver-4vzb9wy5.b4a.run";
 let login_form = document.getElementById("login")
 let register_form = document.getElementById("register")
 let logout_button = document.getElementById("logout_button")
@@ -96,8 +96,7 @@ function buildBoard(board: HTMLElement | null) {
         board?.appendChild(cell);
         if (piece_index < pieces.length) {
             cell.className = "cell";
-            cell.innerText = `${pieces[piece_index].rank}`; // for debugging purposes, show the name of the piece in the cell
-            // cell.innerHTML = `<img ssrc="images/${pieces[piece_index].image}" alt="${pieces[piece_index].name}">`;
+            cell.innerText = `${pieces[piece_index].rank}`; // for debugging purposes, show the name of the 
             board?.appendChild(cell);
             piece_index++;
             cell.style.fontSize = "8px"; // make the text smaller to fit in the cell
@@ -157,7 +156,7 @@ function renderLoginForm() {
             e.preventDefault()
             let response = await auth_login(usernameInput.value, passwordInput.value);
             console.log(response)
-            if (response.ok) {
+            if (typeof response !== "string" && response.ok) {
                 localStorage.setItem("currentUser", usernameInput.value)
                 localStorage.setItem("loggedIn", "true")
                 window.location.replace("./index.html")
@@ -250,7 +249,7 @@ function buildLogout() {
             }
 
             let response = await logout(currentUser);
-            if (response) {
+            if (response.ok) {
                 localStorage.setItem("currentUser", "undefined");
                 localStorage.setItem("loggedIn", "false");
                 alert("Logged out successfully!");
@@ -270,12 +269,12 @@ async function auth_login(username: string, password: string) {
         return "User already logged in!"
     }
     else {
-        let response: Response = await fetch(`${base_url}/login`, {
+        let response: Response = await fetch(`${base_url}/api/auth/login`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ username, password })
+            body: JSON.stringify({ username, password, email:"" })
         });
     
         if (!response.ok) {
@@ -288,7 +287,7 @@ async function auth_login(username: string, password: string) {
 }
 
 async function register(username: string, password: string, email: string) {
-    let response: Response = await fetch(`${base_url}/register`, {
+    let response: Response = await fetch(`${base_url}/api/auth/register`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -310,7 +309,7 @@ async function logout(username: string | null) {
     }
 
     try {
-        let response: Response = await fetch(`${base_url}/logout`, {
+        let response: Response = await fetch(`${base_url}/api/auth/logout`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -323,7 +322,8 @@ async function logout(username: string | null) {
             console.error("Logout failed:", errorData);
             throw new Error(`Logout failed with status ${response.status}`);
         }
-
+        localStorage.setItem("currentUser", "undefined");
+        localStorage.setItem("loggedIn", "false");
         const responseData = await response.json();
         console.log(responseData);
         return responseData;
