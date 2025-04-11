@@ -6,8 +6,9 @@ class piece {
     image: string;
     row: number;
     col: string;
+    color: string;
     
-    constructor(name: string, rank: number, movement: number, isAlive: boolean, image: string, row: number, col: string) {
+    constructor(name: string, rank: number, movement: number, isAlive: boolean, image: string, row: number, col: string, color: string) {
         this.name = name;
         this.rank = rank;
         this.movement = movement;
@@ -15,10 +16,19 @@ class piece {
         this.image = image;
         this.row = row;
         this.col = col;
+        this.color = color;
     }
 
     validMoves(): string[] {
-
+        let validmoves: string[] = [];
+        if (this.rank === 2) {
+            
+        }
+        else
+        {
+           
+            
+        }
         return [""]; // implement later
     }
     move(): boolean {
@@ -71,18 +81,18 @@ if (!logout_button) console.log({"Test Accounts": [
 renderLoginForm();
 renderRegisterForm();
 let pieces: piece[] = [
-    new piece("scout", 9, 100, true, "scout.png", 0, "a"),
-    new piece("miner", 8, 1, true, "miner.png", 0, "b"),
-    new piece("sergeant", 7, 1, true, "sergeant.png", 0, "c"),
-    new piece("lieutenant", 6, 1, true, "lieutenant.png", 0, "d"),
-    new piece("captain", 5, 1, true, "captain.png", 0, "e"),
-    new piece("major", 4, 1, true, "major.png", 0, "f"),
-    new piece("colonel", 3, 1, true, "colonel.png", 0, "g"),
-    new piece("general", 2, 1, true, "general.png", 0, "h"),
-    new piece("marshal", 1, 1, true, "marshal.png", 0, "i"),
-    new piece("spy", 0, 1, true, "spy.png", 0, "j"),
-    new piece("bomb", -1, 0, true, "bomb.png", 0, "k"),
-    new piece("flag", -2, 0, true, "flag.png", 0, "l"),
+    new piece("scout", 9, 100, true, "scout.png", 0, "a", "blue"),
+    new piece("miner", 8, 1, true, "miner.png", 0, "b", "blue"),
+    new piece("sergeant", 7, 1, true, "sergeant.png", 0, "c", "blue"),
+    new piece("lieutenant", 6, 1, true, "lieutenant.png", 0, "d", "blue"),
+    new piece("captain", 5, 1, true, "captain.png", 0, "e","blue"),
+    new piece("major", 4, 1, true, "major.png", 0, "f", "blue"),
+    new piece("colonel", 3, 1, true, "colonel.png", 0, "g", "blue"),
+    new piece("general", 2, 1, true, "general.png", 0, "h", "blue"),
+    new piece("marshal", 1, 1, true, "marshal.png", 0, "i", "blue"),
+    new piece("spy", 0, 1, true, "spy.png", 0, "j", "blue"),
+    new piece("bomb", -1, 0, true, "bomb.png", 0, "k","blue"),
+    new piece("flag", -2, 0, true, "flag.png", 0, "l", "blue"),
 ]
 
 // INITAILIZE THE BOARD VISUALLY
