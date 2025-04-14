@@ -53,7 +53,8 @@ var ColEnum;
 // GLOBAL VARIABLES
 let board = document.getElementById("game_board");
 let title = document.getElementById("title");
-let base_url = "strategogameserver-4vzb9wy5.b4a.run";
+// let base_url: string = "http://localhost:5244";
+let base_url = "https://strategogameserver-4vzb9wy5.b4a.run";
 let login_form = document.getElementById("login");
 let register_form = document.getElementById("register");
 let logout_button = document.getElementById("logout_button");
@@ -91,8 +92,7 @@ function buildBoard(board) {
         board?.appendChild(cell);
         if (piece_index < pieces.length) {
             cell.className = "cell";
-            cell.innerText = `${pieces[piece_index].rank}`; // for debugging purposes, show the name of the piece in the cell
-            // cell.innerHTML = `<img ssrc="images/${pieces[piece_index].image}" alt="${pieces[piece_index].name}">`;
+            cell.innerText = `${pieces[piece_index].rank}`; // for debugging purposes, show the name of the 
             board?.appendChild(cell);
             piece_index++;
             cell.style.fontSize = "8px"; // make the text smaller to fit in the cell
@@ -145,7 +145,7 @@ function renderLoginForm() {
             e.preventDefault();
             let response = await auth_login(usernameInput.value, passwordInput.value);
             console.log(response);
-            if (response.ok) {
+            if (typeof response !== "string" && response.ok) {
                 localStorage.setItem("currentUser", usernameInput.value);
                 localStorage.setItem("loggedIn", "true");
                 window.location.replace("./index.html");
@@ -223,7 +223,7 @@ function buildLogout() {
                 return;
             }
             let response = await logout(currentUser);
-            if (response) {
+            if (response.ok) {
                 localStorage.setItem("currentUser", "undefined");
                 localStorage.setItem("loggedIn", "false");
                 alert("Logged out successfully!");
@@ -244,12 +244,12 @@ async function auth_login(username, password) {
         return "User already logged in!";
     }
     else {
-        let response = await fetch(`${base_url}/login`, {
+        let response = await fetch(`${base_url}/api/auth/login`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ username, password })
+            body: JSON.stringify({ username, password, email: "" })
         });
         if (!response.ok) {
             console.error("Login failed:", await response.text());
@@ -259,7 +259,7 @@ async function auth_login(username, password) {
     }
 }
 async function register(username, password, email) {
-    let response = await fetch(`${base_url}/register`, {
+    let response = await fetch(`${base_url}/api/auth/register`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -277,7 +277,7 @@ async function logout(username) {
         throw new Error("Username is required for logout.");
     }
     try {
-        let response = await fetch(`${base_url}/logout`, {
+        let response = await fetch(`${base_url}/api/auth/logout`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -289,6 +289,8 @@ async function logout(username) {
             console.error("Logout failed:", errorData);
             throw new Error(`Logout failed with status ${response.status}`);
         }
+        localStorage.setItem("currentUser", "undefined");
+        localStorage.setItem("loggedIn", "false");
         const responseData = await response.json();
         console.log(responseData);
         return responseData;
