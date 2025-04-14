@@ -7,7 +7,7 @@ class piece {
     row: number;
     col: string;
     color: string;
-    
+
     constructor(name: string, rank: number, movement: number, isAlive: boolean, image: string, row: number, col: string, color: string) {
         this.name = name;
         this.rank = rank;
@@ -22,12 +22,10 @@ class piece {
     validMoves(): string[] {
         let validmoves: string[] = [];
         if (this.rank === 2) {
-            
+            currentCell?.innerText.includes("scout")
         }
-        else
-        {
-           
-            
+        else {
+
         }
         return [""]; // implement later
     }
@@ -36,7 +34,7 @@ class piece {
     }
 };
 
-class cell{
+class cell {
     row: number; // 0 - 9
     col: ColEnum; // a - j
     isWater: boolean;
@@ -64,8 +62,10 @@ enum ColEnum {
 };
 
 // GLOBAL VARIABLES
+let currentCell: HTMLElement | null = null;
 let board: HTMLElement | null = document.getElementById("game_board");
 let title: HTMLElement | null = document.getElementById("title");
+let cells: HTMLElement[] | null = [];
 // let base_url: string = "http://localhost:5244";
 let base_url: string = "https://strategogameserver-4vzb9wy5.b4a.run";
 let login_form = document.getElementById("login")
@@ -73,11 +73,13 @@ let register_form = document.getElementById("register")
 let logout_button = document.getElementById("logout_button")
 
 if (logout_button) buildLogout();
-if (!logout_button) console.log({"Test Accounts": [
-    {"username": "admin", "password": "password", "email": "admin.123@fake.com"},
-    {"username": "user", "password": "1234", "email": "guest@fake.com"},
-    {"username": "guest", "password": "password", "email": "guest123@fake.com"},
-]});
+if (!logout_button) console.log({
+    "Test Accounts": [
+        { "username": "admin", "password": "password", "email": "admin.123@fake.com" },
+        { "username": "user", "password": "1234", "email": "guest@fake.com" },
+        { "username": "guest", "password": "password", "email": "guest123@fake.com" },
+    ]
+});
 renderLoginForm();
 renderRegisterForm();
 let pieces: piece[] = [
@@ -85,13 +87,13 @@ let pieces: piece[] = [
     new piece("miner", 8, 1, true, "miner.png", 0, "b", "blue"),
     new piece("sergeant", 7, 1, true, "sergeant.png", 0, "c", "blue"),
     new piece("lieutenant", 6, 1, true, "lieutenant.png", 0, "d", "blue"),
-    new piece("captain", 5, 1, true, "captain.png", 0, "e","blue"),
+    new piece("captain", 5, 1, true, "captain.png", 0, "e", "blue"),
     new piece("major", 4, 1, true, "major.png", 0, "f", "blue"),
     new piece("colonel", 3, 1, true, "colonel.png", 0, "g", "blue"),
     new piece("general", 2, 1, true, "general.png", 0, "h", "blue"),
     new piece("marshal", 1, 1, true, "marshal.png", 0, "i", "blue"),
     new piece("spy", 0, 1, true, "spy.png", 0, "j", "blue"),
-    new piece("bomb", -1, 0, true, "bomb.png", 0, "k","blue"),
+    new piece("bomb", -1, 0, true, "bomb.png", 0, "k", "blue"),
     new piece("flag", -2, 0, true, "flag.png", 0, "l", "blue"),
 ]
 
@@ -101,33 +103,44 @@ buildBoard(board)
 function buildBoard(board: HTMLElement | null) {
     let piece_index: number = 0;
     for (let i = 0; i < 100; i++) {
-        let cell: HTMLDivElement = document.createElement("div");
-        cell.className = "cell";
-        board?.appendChild(cell);
+        let HTMLcell: HTMLDivElement = document.createElement("div");
+        HTMLcell.className = "cell";
+        board?.appendChild(HTMLcell);
         if (piece_index < pieces.length) {
-            cell.className = "cell";
-            cell.innerText = `${pieces[piece_index].rank}`; // for debugging purposes, show the name of the 
-            board?.appendChild(cell);
+            HTMLcell.className = "cell";
+            HTMLcell.innerText = `${pieces[piece_index].rank}`; // for debugging purposes, show the name of the 
+            new cell(i/10, i%10, false, pieces[piece_index]);
+            board?.appendChild(HTMLcell);
             piece_index++;
-            cell.style.fontSize = "8px"; // make the text smaller to fit in the cell
+            HTMLcell.style.fontSize = "8px"; // make the text smaller to fit in the cell
         }
+        cells?.push(HTMLcell);
         if (i > 40 && i < 60) {
             let loc = i % 10
             if (loc == 2 || loc == 3 || loc == 6 || loc == 7) {
-                cell.className = "cell_water"
+                HTMLcell.className = "cell_water"
             }
             else {
-                cell.addEventListener("click", function() {
-                    cell.classList.toggle("active");
+                HTMLcell.addEventListener("click", (e) => {
+                    console.log(e);
+                    cells?.forEach(e => e.classList.remove("active"));
+                    HTMLcell.classList.toggle("active");
+                    showMoves();
+                    currentCell = HTMLcell
                 })
             }
         }
         else {
-            cell.addEventListener("click", function() {
-                cell.classList.toggle("active");
+            HTMLcell.addEventListener("click", function () {
+                cells?.forEach(e => e.classList.remove("active"));
+                HTMLcell.classList.toggle("active");
             })
         }
     }
+}
+
+function showMoves(){
+    if(currentCell?.innerText.includes("scout") && currentCell?.innerText.includes("blue"))
 }
 
 function renderLoginForm() {
@@ -284,14 +297,14 @@ async function auth_login(username: string, password: string) {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ username, password, email:"" })
+            body: JSON.stringify({ username, password, email: "" })
         });
-    
+
         if (!response.ok) {
             console.error("Login failed:", await response.text());
             return response;
         }
-    
+
         return response;
     }
 }
