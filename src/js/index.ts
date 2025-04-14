@@ -101,7 +101,7 @@ let BluePieces: piece[] = [
 ]
 
 // INITAILIZE THE BOARD VISUALLY
-buildBoard(board)
+// buildBoard(board)
 
 function buildBoard(board: HTMLElement | null) {
     let piece_index: number = 0;
