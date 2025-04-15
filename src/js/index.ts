@@ -86,19 +86,34 @@ if (!logout_button) console.log({
 });
 renderLoginForm();
 renderRegisterForm();
-let pieces: piece[] = [
-    new piece("scout", 9, 100, true, "scout.png", 0, "a", "blue"),
-    new piece("miner", 8, 1, true, "miner.png", 0, "b", "blue"),
-    new piece("sergeant", 7, 1, true, "sergeant.png", 0, "c", "blue"),
-    new piece("lieutenant", 6, 1, true, "lieutenant.png", 0, "d", "blue"),
-    new piece("captain", 5, 1, true, "captain.png", 0, "e", "blue"),
-    new piece("major", 4, 1, true, "major.png", 0, "f", "blue"),
-    new piece("colonel", 3, 1, true, "colonel.png", 0, "g", "blue"),
-    new piece("general", 2, 1, true, "general.png", 0, "h", "blue"),
-    new piece("marshal", 1, 1, true, "marshal.png", 0, "i", "blue"),
-    new piece("spy", 0, 1, true, "spy.png", 0, "j", "blue"),
-    new piece("bomb", -1, 0, true, "bomb.png", 0, "k", "blue"),
-    new piece("flag", -2, 0, true, "flag.png", 0, "l", "blue"),
+let RedPieces: piece[] = [
+    new piece("Red Scout", 9, 100, true, "./js/Red Pieces/Red Scout.png", 0, "a", "red"),
+    new piece("Red Miner", 8, 1, true, "./js/Red Pieces/Red Miner.png", 0, "b", "red"),
+    new piece("Red Sergeant", 7, 1, true, "./js/Red Pieces/Red Sergeant.png", 0, "c", "red"),
+    new piece("Red Lieutenant", 6, 1, true, "./js/Red Pieces/Red Lieutenant.png", 0, "d", "red"),
+    new piece("Red Captain", 5, 1, true, "./js/Red Pieces/Red Captain.png", 0, "e", "red"),
+    new piece("Red Major", 4, 1, true, "./js/Red Pieces/Red Major.png", 0, "f", "red"),
+    new piece("Red Colonel", 3, 1, true, "./js/Red Pieces/Red Colonel.png", 0, "g", "red"),
+    new piece("Red General", 2, 1, true, "./js/Red Pieces/Red General.png", 0, "h", "red"),
+    new piece("Red Marshal", 1, 1, true, "./js/Red Pieces/Red Marshall.png", 0, "i", "red"),
+    new piece("Red Spy", 0, 1, true, "./js/Red Pieces/Red Spy.png", 0, "j", "red"),
+    new piece("Red Bomb", -1, 0, true, "./js/Red Pieces/Red Bomb.png", 0, "k", "red"),
+    new piece("Red Flag", -2, 0, true, "./js/Red Pieces/Red Flag.png", 0, "l", "red"),
+]
+
+let BluePieces: piece[] = [
+    new piece("Blue Scout", 9, 100, true, "./js/Blue Pieces/Blue Scout.png", 0, "a", ""),
+    new piece("Blue Miner", 8, 1, true, "./js/Blue Pieces/Blue Miner.png", 0, "b", ""),
+    new piece("Blue Sergeant", 7, 1, true, "./js/Blue Pieces/Blue Sergeant.png", 0, "c", ""),
+    new piece("Blue Lieutenant", 6, 1, true, "./js/Blue Pieces/Blue Lieutenant.png", 0, "d", ""),
+    new piece("Blue Captain", 5, 1, true, "./js/Blue Pieces/Blue Captain.png", 0, "e", ""),
+    new piece("Blue Major", 4, 1, true, "./js/Blue Pieces/Blue Major.png", 0, "f", ""),
+    new piece("Blue Colonel", 3, 1, true, "./js/Blue Pieces/Blue Colonel.png", 0, "g", ""),
+    new piece("Blue General", 2, 1, true, "./js/Blue Pieces/Blue General.png", 0, "h", ""),
+    new piece("Blue Marshal", 1, 1, true, "./js/Blue Pieces/Blue Marshall.png", 0, "i", ""),
+    new piece("Blue Spy", 0, 1, true, "./js/Blue Pieces/Blue Spy.png", 0, "j", ""),
+    new piece("Blue Bomb", -1, 0, true, "./js/Blue Pieces/Blue Bomb.png", 0, "k", ""),
+    new piece("Blue Flag", -2, 0, true, "./js/Blue Pieces/Blue Flag.png", 0, "l", ""),
 ]
 
 // INITAILIZE THE BOARD VISUALLY
@@ -110,10 +125,10 @@ function buildBoard(board: HTMLElement | null) {
         let HTMLcell: HTMLDivElement = document.createElement("div");
         HTMLcell.className = "cell";
         board?.appendChild(HTMLcell);
-        if (piece_index < pieces.length) {
+        if (piece_index < BluePieces.length) {
             HTMLcell.className = "cell";
-            HTMLcell.innerText = `${pieces[piece_index].rank}`; // for debugging purposes, show the name of the 
-            cellsObject.push(new cell(Math.floor(i/10), i%10 as ColEnum, false, pieces[piece_index], HTMLcell));
+            HTMLcell.innerText = `${BluePieces[piece_index].rank}`; // for debugging purposes, show the name of the piece in the cell
+            HTMLcell.innerHTML = `<img src="${BluePieces[piece_index].image}" alt="${BluePieces[piece_index].name}">`;
             board?.appendChild(HTMLcell);
             piece_index++;
             HTMLcell.style.fontSize = "8px"; // make the text smaller to fit in the cell
