@@ -183,7 +183,7 @@ function buildBoard(board: HTMLElement | null) {
 
 function showMoves(){
     // for blue pieces
- if(currentCell?.piece?.color == "blue" && currentCell.piece.isAlive == true){  
+ if(currentCell?.piece?.color == "blue" && currentCell.piece.isAlive == true && currentCell.piece.rank != -2 && currentCell.piece.rank != -1){  
         let validMoveCells: HTMLElement[] = [];
         let validMoveCellObjects: cell[] = [];
         if(currentCell.piece.rank != 2){
