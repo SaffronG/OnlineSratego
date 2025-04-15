@@ -22,7 +22,7 @@ class piece {
     validMoves(): string[] {
         let validmoves: string[] = [];
         if (this.rank === 2) {
-            currentCell?.innerText.includes("scout")
+
         }
         else {
 
@@ -39,12 +39,14 @@ class cell {
     col: ColEnum; // a - j
     isWater: boolean;
     piece: piece | null;
+    element: HTMLDivElement;
 
-    constructor(row: number, col: ColEnum, isWater: boolean = false, piece: piece | null = null) {
+    constructor(row: number, col: ColEnum, isWater: boolean = false, piece: piece | null = null, element: HTMLDivElement = document.createElement("div")) {
         this.row = row;
         this.col = col;
         this.isWater = isWater;
         this.piece = piece;
+        this.element = element;
     }
 }
 
@@ -62,10 +64,12 @@ enum ColEnum {
 };
 
 // GLOBAL VARIABLES
-let currentCell: HTMLElement | null = null;
+let currentCell: cell | null = null;
 let board: HTMLElement | null = document.getElementById("game_board");
 let title: HTMLElement | null = document.getElementById("title");
 let cells: HTMLElement[] | null = [];
+let cellsObject: cell[] = [];
+
 // let base_url: string = "http://localhost:5244";
 let base_url: string = "https://strategogameserver-4vzb9wy5.b4a.run";
 let login_form = document.getElementById("login")
@@ -109,30 +113,45 @@ function buildBoard(board: HTMLElement | null) {
         if (piece_index < pieces.length) {
             HTMLcell.className = "cell";
             HTMLcell.innerText = `${pieces[piece_index].rank}`; // for debugging purposes, show the name of the 
-            new cell(i/10, i%10, false, pieces[piece_index]);
+            cellsObject.push(new cell(Math.floor(i/10), i%10 as ColEnum, false, pieces[piece_index], HTMLcell));
             board?.appendChild(HTMLcell);
             piece_index++;
             HTMLcell.style.fontSize = "8px"; // make the text smaller to fit in the cell
         }
+        cellsObject.push(new cell(Math.floor(i/10), i%10 as ColEnum, false, null, HTMLcell));
         cells?.push(HTMLcell);
         if (i > 40 && i < 60) {
             let loc = i % 10
             if (loc == 2 || loc == 3 || loc == 6 || loc == 7) {
                 HTMLcell.className = "cell_water"
+        cellsObject.push(new cell(i/10, i%10 as ColEnum, true, null, HTMLcell));
+
             }
             else {
                 HTMLcell.addEventListener("click", (e) => {
                     console.log(e);
                     cells?.forEach(e => e.classList.remove("active"));
+                    cells?.forEach(e => e.classList.remove("valid_move"));
                     HTMLcell.classList.toggle("active");
+                    cellsObject.forEach(e => {
+                        if(e.element == HTMLcell){
+                            currentCell = e;
+                        }
                     showMoves();
-                    currentCell = HTMLcell
+                    });
                 })
             }
         }
         else {
             HTMLcell.addEventListener("click", function () {
                 cells?.forEach(e => e.classList.remove("active"));
+                cells?.forEach(e => e.classList.remove("valid_move"));
+                cellsObject.forEach(e => {
+                    if(e.element == HTMLcell){
+                        currentCell = e;
+                    }
+                    showMoves();
+                });
                 HTMLcell.classList.toggle("active");
             })
         }
@@ -140,7 +159,12 @@ function buildBoard(board: HTMLElement | null) {
 }
 
 function showMoves(){
-    if(currentCell?.innerText.includes("scout") && currentCell?.innerText.includes("blue"))
+ if(currentCell?.piece?.color == "blue" && currentCell.piece.isAlive == true
+    && currentCell.piece.rank != 2){
+        let validMoveCell = cellsObject[(currentCell.row + 1) * 10 + currentCell.col].element;
+        console.log(validMoveCell);
+        validMoveCell.classList.add("valid_move");
+    }
 }
 
 function renderLoginForm() {

@@ -21,7 +21,6 @@ class piece {
     validMoves() {
         let validmoves = [];
         if (this.rank === 2) {
-            currentCell === null || currentCell === void 0 ? void 0 : currentCell.innerText.includes("scout");
         }
         else {
         }
@@ -33,11 +32,12 @@ class piece {
 }
 ;
 class cell {
-    constructor(row, col, isWater = false, piece = null) {
+    constructor(row, col, isWater = false, piece = null, element = document.createElement("div")) {
         this.row = row;
         this.col = col;
         this.isWater = isWater;
         this.piece = piece;
+        this.element = element;
     }
 }
 var ColEnum;
@@ -59,6 +59,7 @@ let currentCell = null;
 let board = document.getElementById("game_board");
 let title = document.getElementById("title");
 let cells = [];
+let cellsObject = [];
 // let base_url: string = "http://localhost:5244";
 let base_url = "https://strategogameserver-4vzb9wy5.b4a.run";
 let login_form = document.getElementById("login");
@@ -95,37 +96,62 @@ buildBoard(board);
 function buildBoard(board) {
     let piece_index = 0;
     for (let i = 0; i < 100; i++) {
-        let cell = document.createElement("div");
-        cell.className = "cell";
-        board === null || board === void 0 ? void 0 : board.appendChild(cell);
+        let HTMLcell = document.createElement("div");
+        HTMLcell.className = "cell";
+        board === null || board === void 0 ? void 0 : board.appendChild(HTMLcell);
         if (piece_index < pieces.length) {
-            cell.className = "cell";
-            cell.innerText = `${pieces[piece_index].rank}`; // for debugging purposes, show the name of the 
-            board === null || board === void 0 ? void 0 : board.appendChild(cell);
+            HTMLcell.className = "cell";
+            HTMLcell.innerText = `${pieces[piece_index].rank}`; // for debugging purposes, show the name of the 
+            cellsObject.push(new cell(Math.floor(i / 10), i % 10, false, pieces[piece_index], HTMLcell));
+            board === null || board === void 0 ? void 0 : board.appendChild(HTMLcell);
             piece_index++;
-            cell.style.fontSize = "8px"; // make the text smaller to fit in the cell
+            HTMLcell.style.fontSize = "8px"; // make the text smaller to fit in the cell
         }
-        cells === null || cells === void 0 ? void 0 : cells.push(cell);
+        cellsObject.push(new cell(Math.floor(i / 10), i % 10, false, null, HTMLcell));
+        cells === null || cells === void 0 ? void 0 : cells.push(HTMLcell);
         if (i > 40 && i < 60) {
             let loc = i % 10;
             if (loc == 2 || loc == 3 || loc == 6 || loc == 7) {
-                cell.className = "cell_water";
+                HTMLcell.className = "cell_water";
+                cellsObject.push(new cell(i / 10, i % 10, true, null, HTMLcell));
             }
             else {
-                cell.addEventListener("click", (e) => {
+                HTMLcell.addEventListener("click", (e) => {
                     console.log(e);
                     cells === null || cells === void 0 ? void 0 : cells.forEach(e => e.classList.remove("active"));
-                    cell.classList.toggle("active");
-                    currentCell = cell;
+                    cells === null || cells === void 0 ? void 0 : cells.forEach(e => e.classList.remove("valid_move"));
+                    HTMLcell.classList.toggle("active");
+                    cellsObject.forEach(e => {
+                        if (e.element == HTMLcell) {
+                            currentCell = e;
+                        }
+                        showMoves();
+                    });
                 });
             }
         }
         else {
-            cell.addEventListener("click", function () {
+            HTMLcell.addEventListener("click", function () {
                 cells === null || cells === void 0 ? void 0 : cells.forEach(e => e.classList.remove("active"));
-                cell.classList.toggle("active");
+                cells === null || cells === void 0 ? void 0 : cells.forEach(e => e.classList.remove("valid_move"));
+                cellsObject.forEach(e => {
+                    if (e.element == HTMLcell) {
+                        currentCell = e;
+                    }
+                    showMoves();
+                });
+                HTMLcell.classList.toggle("active");
             });
         }
+    }
+}
+function showMoves() {
+    var _a;
+    if (((_a = currentCell === null || currentCell === void 0 ? void 0 : currentCell.piece) === null || _a === void 0 ? void 0 : _a.color) == "blue" && currentCell.piece.isAlive == true
+        && currentCell.piece.rank != 2) {
+        let validMoveCell = cellsObject[(currentCell.row + 1) * 10 + currentCell.col].element;
+        console.log(validMoveCell);
+        validMoveCell.classList.add("valid_move");
     }
 }
 function renderLoginForm() {
