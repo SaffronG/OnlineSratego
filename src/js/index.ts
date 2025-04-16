@@ -150,31 +150,47 @@ function buildBoard(board: HTMLElement | null) {
             }
             else {
                 HTMLcell.addEventListener("click", (e) => {
-                    console.log(e);
+                    if (HTMLcell == currentCell?.element) {
+                        HTMLcell.classList.remove("active");
+                        cells?.forEach(e => e.classList.remove("valid_move"));
+
+                    }
+                    else{
+
+                        console.log(e);
+                        cells?.forEach(e => e.classList.remove("active"));
+                        cells?.forEach(e => e.classList.remove("valid_move"));
+                        HTMLcell.classList.toggle("active");
+                        cellsObject.forEach(e => {
+                            if(e.element == HTMLcell){
+                                currentCell = e;
+                                showMoves();
+                            }
+                        });
+                    }
+                })
+            }
+        }
+        else {
+            HTMLcell.addEventListener("click", function () {
+                if (HTMLcell == currentCell?.element) {
+                    HTMLcell.classList.remove("active");
+                    cells?.forEach(e => e.classList.remove("valid_move"));
+
+                }
+                else{
+
                     cells?.forEach(e => e.classList.remove("active"));
                     cells?.forEach(e => e.classList.remove("valid_move"));
-                    HTMLcell.classList.toggle("active");
                     cellsObject.forEach(e => {
                         if(e.element == HTMLcell){
                             currentCell = e;
                             showMoves();
                         }
                     });
+                    HTMLcell.classList.toggle("active");
+                }
                 })
-            }
-        }
-        else {
-            HTMLcell.addEventListener("click", function () {
-                cells?.forEach(e => e.classList.remove("active"));
-                cells?.forEach(e => e.classList.remove("valid_move"));
-                cellsObject.forEach(e => {
-                    if(e.element == HTMLcell){
-                        currentCell = e;
-                        showMoves();
-                    }
-                });
-                HTMLcell.classList.toggle("active");
-            })
         }
         cellsObject.push(new cell(row, col, isWater, piece, HTMLcell));
         cells?.push(HTMLcell);
@@ -206,7 +222,7 @@ function showMoves(){
             }
             for(let i = 0; i < validMoveCells.length; i++){
     
-                if (validMoveCells[i] != null && (validMoveCellObjects[i]?.piece?.color != "blue" ||validMoveCellObjects[i]?.piece?.isAlive == false)) {
+                if (validMoveCells[i] != null && (validMoveCellObjects[i]?.piece?.color != "blue" ||validMoveCellObjects[i]?.piece?.isAlive == false || validMoveCellObjects[i].piece == null)) {
                     (validMoveCells[i] as HTMLElement).classList.add("valid_move");
                 }
             }

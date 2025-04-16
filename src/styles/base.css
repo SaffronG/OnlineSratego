@@ -91,7 +91,7 @@ div.cell.active {
 }
 
 div.cell.valid_move{
-    background-color: var(--hover-color);
+    background-color: #4FC3F7;
 }
 
 #game_board {
