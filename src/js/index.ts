@@ -140,13 +140,13 @@ function buildBoard(board: HTMLElement | null) {
             piece_index++;
             HTMLcell.style.fontSize = "8px"; // make the text smaller to fit in the cell
         }
-        
+
         if (i > 40 && i < 60) {
             let loc = i % 10
             if (loc == 2 || loc == 3 || loc == 6 || loc == 7) {
                 HTMLcell.className = "cell_water"
                 isWater = true;
-                
+
             }
             else {
                 HTMLcell.addEventListener("click", (e) => {
@@ -155,14 +155,14 @@ function buildBoard(board: HTMLElement | null) {
                         cells?.forEach(e => e.classList.remove("valid_move"));
 
                     }
-                    else{
+                    else {
 
                         console.log(e);
                         cells?.forEach(e => e.classList.remove("active"));
                         cells?.forEach(e => e.classList.remove("valid_move"));
                         HTMLcell.classList.toggle("active");
                         cellsObject.forEach(e => {
-                            if(e.element == HTMLcell){
+                            if (e.element == HTMLcell) {
                                 currentCell = e;
                                 showMoves();
                             }
@@ -178,35 +178,35 @@ function buildBoard(board: HTMLElement | null) {
                     cells?.forEach(e => e.classList.remove("valid_move"));
 
                 }
-                else{
+                else {
 
                     cells?.forEach(e => e.classList.remove("active"));
                     cells?.forEach(e => e.classList.remove("valid_move"));
                     cellsObject.forEach(e => {
-                        if(e.element == HTMLcell){
+                        if (e.element == HTMLcell) {
                             currentCell = e;
                             showMoves();
                         }
                     });
                     HTMLcell.classList.toggle("active");
                 }
-                })
+            })
         }
         cellsObject.push(new cell(row, col, isWater, piece, HTMLcell));
         cells?.push(HTMLcell);
     }
 }
 
-function showMoves(){
+function showMoves() {
     // for blue pieces
- if(currentCell?.piece?.color == "blue" && currentCell.piece.isAlive == true && currentCell.piece.rank != -2 && currentCell.piece.rank != -1){  
+    if (currentCell?.piece?.color == "blue" && currentCell.piece.isAlive == true && currentCell.piece.rank != -2 && currentCell.piece.rank != -1) {
         let validMoveCells: HTMLElement[] = [];
         let validMoveCellObjects: cell[] = [];
-        if(currentCell.piece.rank != 2){
+        if (currentCell.piece.rank != 2) {
 
-            for(let i = 0; i < cells?.length!; i++){
-                if(cells?.length! > 0){
-                    if(cells && cells[i] == currentCell?.element){
+            for (let i = 0; i < cells?.length!; i++) {
+                if (cells?.length! > 0) {
+                    if (cells && cells[i] == currentCell?.element) {
                         validMoveCells.push(cells[i + 10]);
                         validMoveCells.push(cells[i + 1]);
                         validMoveCells.push(cells[i - 1]);
@@ -215,37 +215,49 @@ function showMoves(){
                         validMoveCellObjects.push(cellsObject[i + 1]);
                         validMoveCellObjects.push(cellsObject[i - 1]);
                         validMoveCellObjects.push(cellsObject[i - 10]);
-                        
+
                     }
-                    
+
                 }
             }
-            for(let i = 0; i < validMoveCells.length; i++){
-    
-                if (validMoveCells[i] != null && (validMoveCellObjects[i]?.piece?.color != "blue" ||validMoveCellObjects[i]?.piece?.isAlive == false || validMoveCellObjects[i].piece == null)) {
+            for (let i = 0; i < validMoveCells.length; i++) {
+
+                if (validMoveCells[i] != null && validMoveCellObjects[i].isWater == false && ((validMoveCellObjects[i]?.piece?.color != "blue"))) {
                     (validMoveCells[i] as HTMLElement).classList.add("valid_move");
                 }
             }
         }
-        else if(currentCell.piece.rank == 2){
-            for(let i = 0; i < cells?.length!; i++){
-                if(cells?.length! > 0){
-                    if(cells && cells[i] == currentCell?.element){
-                        for(let j = 1; j <= 10; j++){
-                            validMoveCells.push(cells[i + (j * 10)]);
-                            validMoveCells.push(cells[i + (j)]);
-                            validMoveCells.push(cells[i - (j)]);
-                            validMoveCells.push(cells[i - (j * 10)]);
+        else if (currentCell.piece.rank == 2) {
+            for (let i = 0; i < cells?.length!; i++) {
+                if (cells && cells[i] == currentCell?.element) {
+                    for (let j = 1; j <= 10; j++) {
+                        //Can move down
+                        if (cellsObject[i + (j * 10)].col == currentCell.col) {
                             validMoveCellObjects.push(cellsObject[i + (j * 10)]);
+                            validMoveCells.push(cells[i + (j * 10)]);
+                        }
+                        //Can move right
+                        if (cellsObject[i + (j)].row == currentCell.row) {
                             validMoveCellObjects.push(cellsObject[i + (j)]);
+                            validMoveCells.push(cells[i + (j)]);
+                        }
+
+                        // Can move left
+                        if (cellsObject[i - (j)].row == currentCell.row) {
                             validMoveCellObjects.push(cellsObject[i - (j)]);
+                            validMoveCells.push(cells[i - (j)]);
+                        }
+
+                        //Can move up
+                        if (cellsObject[i - (j * 10)].col == currentCell.col) {
                             validMoveCellObjects.push(cellsObject[i - (j * 10)]);
+                            validMoveCells.push(cells[i - (j * 10)]);
                         }
                     }
                 }
             }
-            for(let i = 0; i < validMoveCells.length; i++){
-                if (validMoveCells[i] != null && (validMoveCellObjects[i]?.piece?.color != "blue" ||validMoveCellObjects[i]?.piece?.isAlive == false)) {
+            for (let i = 0; i < validMoveCells.length; i++) {
+                if (validMoveCells[i] != null && (validMoveCellObjects[i]?.piece?.color != "blue" || validMoveCellObjects[i]?.piece?.isAlive == false)) {
                     (validMoveCells[i] as HTMLElement).classList.add("valid_move");
                 }
             }

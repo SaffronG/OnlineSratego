@@ -178,7 +178,7 @@ function buildBoard(board) {
     }
 }
 function showMoves() {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j;
+    var _a, _b, _c, _d, _e, _f, _g;
     // for blue pieces
     if (((_a = currentCell === null || currentCell === void 0 ? void 0 : currentCell.piece) === null || _a === void 0 ? void 0 : _a.color) == "blue" && currentCell.piece.isAlive == true && currentCell.piece.rank != -2 && currentCell.piece.rank != -1) {
         let validMoveCells = [];
@@ -199,30 +199,40 @@ function showMoves() {
                 }
             }
             for (let i = 0; i < validMoveCells.length; i++) {
-                if (validMoveCells[i] != null && (((_c = (_b = validMoveCellObjects[i]) === null || _b === void 0 ? void 0 : _b.piece) === null || _c === void 0 ? void 0 : _c.color) != "blue" || ((_e = (_d = validMoveCellObjects[i]) === null || _d === void 0 ? void 0 : _d.piece) === null || _e === void 0 ? void 0 : _e.isAlive) == false || validMoveCellObjects[i].piece == null)) {
+                if (validMoveCells[i] != null && validMoveCellObjects[i].isWater == false && ((((_c = (_b = validMoveCellObjects[i]) === null || _b === void 0 ? void 0 : _b.piece) === null || _c === void 0 ? void 0 : _c.color) != "blue"))) {
                     validMoveCells[i].classList.add("valid_move");
                 }
             }
         }
         else if (currentCell.piece.rank == 2) {
             for (let i = 0; i < (cells === null || cells === void 0 ? void 0 : cells.length); i++) {
-                if ((cells === null || cells === void 0 ? void 0 : cells.length) > 0) {
-                    if (cells && cells[i] == (currentCell === null || currentCell === void 0 ? void 0 : currentCell.element)) {
-                        for (let j = 1; j <= 10; j++) {
-                            validMoveCells.push(cells[i + (j * 10)]);
-                            validMoveCells.push(cells[i + (j)]);
-                            validMoveCells.push(cells[i - (j)]);
-                            validMoveCells.push(cells[i - (j * 10)]);
+                if (cells && cells[i] == (currentCell === null || currentCell === void 0 ? void 0 : currentCell.element)) {
+                    for (let j = 1; j <= 10; j++) {
+                        //Can move down
+                        if (cellsObject[i + (j * 10)].col == currentCell.col) {
                             validMoveCellObjects.push(cellsObject[i + (j * 10)]);
+                            validMoveCells.push(cells[i + (j * 10)]);
+                        }
+                        //Can move right
+                        if (cellsObject[i + (j)].row == currentCell.row) {
                             validMoveCellObjects.push(cellsObject[i + (j)]);
+                            validMoveCells.push(cells[i + (j)]);
+                        }
+                        // Can move left
+                        if (cellsObject[i - (j)].row == currentCell.row) {
                             validMoveCellObjects.push(cellsObject[i - (j)]);
+                            validMoveCells.push(cells[i - (j)]);
+                        }
+                        //Can move up
+                        if (cellsObject[i - (j * 10)].col == currentCell.col) {
                             validMoveCellObjects.push(cellsObject[i - (j * 10)]);
+                            validMoveCells.push(cells[i - (j * 10)]);
                         }
                     }
                 }
             }
             for (let i = 0; i < validMoveCells.length; i++) {
-                if (validMoveCells[i] != null && (((_g = (_f = validMoveCellObjects[i]) === null || _f === void 0 ? void 0 : _f.piece) === null || _g === void 0 ? void 0 : _g.color) != "blue" || ((_j = (_h = validMoveCellObjects[i]) === null || _h === void 0 ? void 0 : _h.piece) === null || _j === void 0 ? void 0 : _j.isAlive) == false)) {
+                if (validMoveCells[i] != null && (((_e = (_d = validMoveCellObjects[i]) === null || _d === void 0 ? void 0 : _d.piece) === null || _e === void 0 ? void 0 : _e.color) != "blue" || ((_g = (_f = validMoveCellObjects[i]) === null || _f === void 0 ? void 0 : _f.piece) === null || _g === void 0 ? void 0 : _g.isAlive) == false)) {
                     validMoveCells[i].classList.add("valid_move");
                 }
             }
