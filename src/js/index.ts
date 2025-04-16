@@ -56,6 +56,7 @@ enum ColEnum {
 // GLOBAL VARIABLES
 let board: HTMLElement | null = document.getElementById("game_board");
 let title: HTMLElement | null = document.getElementById("title");
+let box: HTMLElement | null = document.getElementById("box");
 // let base_url: string = "http://localhost:5244";
 let base_url: string = "https://strategogameserver-4vzb9wy5.b4a.run";
 let login_form = document.getElementById("login")
@@ -101,6 +102,7 @@ let BluePieces: piece[] = [
 ]
 
 // INITAILIZE THE BOARD VISUALLY
+console.log(GetGames())
 // buildBoard(board)
 
 function buildBoard(board: HTMLElement | null) {
@@ -279,6 +281,11 @@ function buildLogout() {
     }
 }
 
+function buildEventListener()
+{
+    
+}
+
 async function auth_login(username: string, password: string) {
     if (localStorage.getItem("currentUser") != "undefined") {
         alert("User already logged in!");
@@ -347,4 +354,11 @@ async function logout(username: string | null) {
         console.error("An error occurred during logout:", error);
         throw error;
     }
+}
+
+async function GetGames()
+{
+    let response: Response = await fetch(`${base_url}/api/game/getGames`);
+    let json = await response.json();
+    return json;
 }

@@ -50,6 +50,7 @@ var ColEnum;
 // GLOBAL VARIABLES
 let board = document.getElementById("game_board");
 let title = document.getElementById("title");
+let box = document.getElementById("box");
 // let base_url: string = "http://localhost:5244";
 let base_url = "https://strategogameserver-4vzb9wy5.b4a.run";
 let login_form = document.getElementById("login");
@@ -94,6 +95,7 @@ let BluePieces = [
     new piece("Blue Flag", -2, 0, true, "./js/Blue Pieces/Blue Flag.png", 0, "l"),
 ];
 // INITAILIZE THE BOARD VISUALLY
+console.log(GetGames());
 // buildBoard(board)
 function buildBoard(board) {
     let piece_index = 0;
@@ -250,6 +252,8 @@ function buildLogout() {
         console.error("Logout button not found!");
     }
 }
+function buildEventListener() {
+}
 function auth_login(username, password) {
     return __awaiter(this, void 0, void 0, function* () {
         if (localStorage.getItem("currentUser") != "undefined") {
@@ -316,5 +320,12 @@ function logout(username) {
             console.error("An error occurred during logout:", error);
             throw error;
         }
+    });
+}
+function GetGames() {
+    return __awaiter(this, void 0, void 0, function* () {
+        let response = yield fetch(`${base_url}/api/game/getGames`);
+        let json = yield response.json();
+        return json;
     });
 }
