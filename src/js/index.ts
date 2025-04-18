@@ -151,22 +151,32 @@ function buildBoard(board: HTMLElement | null) {
             else {
                 HTMLcell.addEventListener("click", (e) => {
                     if (HTMLcell == currentCell?.element) {
-                        HTMLcell.classList.remove("active");
-                        cells?.forEach(e => e.classList.remove("valid_move"));
-
+                        HTMLcell.classList.toggle("active");
+                        cells?.forEach(cell => cell.classList.remove("valid_move"));
                     }
                     else {
-
-                        console.log(e);
-                        cells?.forEach(e => e.classList.remove("active"));
-                        cells?.forEach(e => e.classList.remove("valid_move"));
                         HTMLcell.classList.toggle("active");
-                        cellsObject.forEach(e => {
-                            if (e.element == HTMLcell) {
-                                currentCell = e;
-                                showMoves();
-                            }
+                        cells?.forEach((cell) => {
+                            cell.classList.remove("active")
+                            cell.classList.remove("valid_move")
                         });
+                        if(HTMLcell.classList.contains("valid_move"))
+                        {
+                            cellsObject.forEach((element: cell) => {
+                                if(element.element.classList.contains("active"))
+                                {
+                                    currentCell = element;
+                                }
+                            });
+                            currentCell?
+                        }
+                        await sendMove(Number(localStorage.getItem("lobbyId")), );
+                        // cellsObject.forEach((cellObject: cell) => {
+                        //     if (cellObject.element == HTMLcell) {
+                        //         currentCell = cellObject;
+                        //         showMoves();
+                        //     }
+                        // });
                     }
                 })
             }

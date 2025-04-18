@@ -136,20 +136,22 @@ function buildBoard(board) {
             else {
                 HTMLcell.addEventListener("click", (e) => {
                     if (HTMLcell == (currentCell === null || currentCell === void 0 ? void 0 : currentCell.element)) {
-                        HTMLcell.classList.remove("active");
-                        cells === null || cells === void 0 ? void 0 : cells.forEach(e => e.classList.remove("valid_move"));
+                        HTMLcell.classList.toggle("active");
+                        cells === null || cells === void 0 ? void 0 : cells.forEach(cell => cell.classList.remove("valid_move"));
                     }
                     else {
                         console.log(e);
-                        cells === null || cells === void 0 ? void 0 : cells.forEach(e => e.classList.remove("active"));
-                        cells === null || cells === void 0 ? void 0 : cells.forEach(e => e.classList.remove("valid_move"));
-                        HTMLcell.classList.toggle("active");
-                        cellsObject.forEach(e => {
-                            if (e.element == HTMLcell) {
-                                currentCell = e;
-                                showMoves();
-                            }
+                        cells === null || cells === void 0 ? void 0 : cells.forEach((cell) => {
+                            cell.classList.remove("active");
+                            cell.classList.remove("valid_move");
                         });
+                        HTMLcell.classList.toggle("active");
+                        // cellsObject.forEach((cellObject: cell) => {
+                        //     if (cellObject.element == HTMLcell) {
+                        //         currentCell = cellObject;
+                        //         showMoves();
+                        //     }
+                        // });
                     }
                 });
             }
@@ -270,6 +272,12 @@ function showMoves() {
             }
         }
     }
+    cells === null || cells === void 0 ? void 0 : cells.forEach(element => {
+        if (element.classList.contains("valid_move")) {
+            element.addEventListener("click", function (e) {
+            });
+        }
+    });
 }
 function renderLoginForm() {
     if (login_form) {
