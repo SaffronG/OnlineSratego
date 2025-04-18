@@ -64,15 +64,6 @@ let register_form = document.getElementById("register")
 let logout_button = document.getElementById("logout_button")
 
 if (logout_button) buildLogout();
-if (!logout_button) console.log({
-    "Test Accounts": [
-        { "username": "admin", "password": "password", "email": "admin.123@fake.com" },
-        { "username": "user", "password": "1234", "email": "guest@fake.com" },
-        { "username": "guest", "password": "password", "email": "guest123@fake.com" },
-    ]
-});
-renderLoginForm();
-renderRegisterForm();
 let RedPieces: piece[] = [
     new piece("Red Scout", 9, 100, true, "./js/Red Pieces/Red Scout.png", 0, "a"),
     new piece("Red Miner", 8, 1, true, "./js/Red Pieces/Red Miner.png", 0, "b"),
@@ -103,9 +94,11 @@ let BluePieces: piece[] = [
     new piece("Blue Flag", -2, 0, true, "./js/Blue Pieces/Blue Flag.png", 0, "l"),
 ]
 
-// INITAILIZE THE BOARD VISUALLY
-buildBoard(board)
-getGames()
+// MAIN FUNTIONS HERE
+buildOnClose();
+renderLoginForm();
+renderRegisterForm();
+buildBoard(board);
 findGame();
 
 function buildBoard(board: HTMLElement | null) {
@@ -257,6 +250,14 @@ function renderRegisterForm() {
     }
 }
 
+function buildOnClose() {
+    window.addEventListener("beforeunload", async () => {
+        await logout(localStorage.getItem("currentUser"));
+        localStorage.setItem("currentUser", "undefined");
+        localStorage.setItem("loggedIn", "false");
+    })
+}
+
 function buildLogout() {
     if (logout_button) {
         logout_button.addEventListener("click", async (e) => {
@@ -357,11 +358,12 @@ async function logout(username: string | null) {
     }
 }
 
-async function getGames() {
-    let response = await fetch(`${base_url}/api/game/getGames`)
+// NOT IN USE
+// async function getGames() {
+//     let response = await fetch(`${base_url}/api/game/getGames`)
 
-    return await response.json();
-}
+//     return await response.json();
+// }
 
 async function findGame() {
     // Retrieve the username from localStorage
