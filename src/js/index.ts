@@ -157,26 +157,39 @@ function buildBoard(board: HTMLElement | null) {
                     else {
                         HTMLcell.classList.toggle("active");
                         cells?.forEach((cell) => {
-                            cell.classList.remove("active")
-                            cell.classList.remove("valid_move")
+                            cell.classList.remove("active");
+                            cell.classList.remove("valid_move");
                         });
                         if(HTMLcell.classList.contains("valid_move"))
-                        {
-                            cellsObject.forEach((element: cell) => {
-                                if(element.element.classList.contains("active"))
+                        {   
+                            let oldCell = currentCell;
+                            let index = -1;
+                            let row = -1;
+                            let col = -1;
+                            for(let i = 0; i < cells?.length!; i++)
+                            {
+                                if(cells && cells[i] == HTMLcell)
                                 {
-                                    currentCell = element;
+                                    index = i;
+                                    row = Math.floor(i / 10);
+                                    col = i % 10 as ColEnum;
                                 }
-                            });
-                            currentCell?
+                            }
+                            await sendMove(Number(localStorage.getItem("lobbyId")), row, col, null);
+
+                            const newCell = cellsObject[index];
+
+                            if(newCell.piece)
+                            {
+                                newCell.piece.row = row;
+                                newCell.piece.col = String(col);
+                            }
+
+                            if(oldCell)
+                            {
+                                oldCell.piece = null;
+                            }
                         }
-                        await sendMove(Number(localStorage.getItem("lobbyId")), );
-                        // cellsObject.forEach((cellObject: cell) => {
-                        //     if (cellObject.element == HTMLcell) {
-                        //         currentCell = cellObject;
-                        //         showMoves();
-                        //     }
-                        // });
                     }
                 })
             }
