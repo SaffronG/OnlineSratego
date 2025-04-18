@@ -72,6 +72,7 @@ let title: HTMLElement | null = document.getElementById("title");
 let cells: HTMLElement[] | null = [];
 let cellsObject: cell[] = [];
 
+var currentUser: any | null = null;
 // let base_url: string = "http://localhost:5244";
 let base_url: string = "https://strategogameserver-4vzb9wy5.b4a.run";
 let login_form = document.getElementById("login")
@@ -120,6 +121,8 @@ let BluePieces: piece[] = [
 
 // INITAILIZE THE BOARD VISUALLY
 buildBoard(board)
+getGames()
+findGame();
 
 function buildBoard(board: HTMLElement | null) {
     let piece_index: number = 0;
@@ -214,6 +217,124 @@ function buildBoard(board: HTMLElement | null) {
                     HTMLcell.classList.toggle("active");
                 }
             })
+        }
+        cellsObject.push(new cell(row, col, isWater, piece, HTMLcell));
+        cells?.push(HTMLcell);
+    }
+}
+
+function showMoves() {
+    let ranIntoWaterDown = false;
+    let ranIntoWaterUp = false;
+    let ranIntoWaterRight = false;
+    let ranIntoWaterLeft = false;
+    // for blue pieces
+    if (currentCell?.piece?.color == "blue" && currentCell.piece.isAlive == true && currentCell.piece.rank != -2 && currentCell.piece.rank != -1) {
+        let validMoveCells: HTMLElement[] = [];
+        let validMoveCellObjects: cell[] = [];
+        if (currentCell.piece.rank != 2) {
+
+            for (let i = 0; i < cells?.length!; i++) {
+                if (cells?.length! > 0) {
+                    if (cells && cells[i] == currentCell?.element) {
+                        validMoveCells.push(cells[i + 10]);
+                        validMoveCells.push(cells[i + 1]);
+                        validMoveCells.push(cells[i - 1]);
+                        validMoveCells.push(cells[i - 10]);
+                        validMoveCellObjects.push(cellsObject[i + 10]);
+                        validMoveCellObjects.push(cellsObject[i + 1]);
+                        validMoveCellObjects.push(cellsObject[i - 1]);
+                        validMoveCellObjects.push(cellsObject[i - 10]);
+
+                    }
+
+                }
+            }
+            for (let i = 0; i < validMoveCells.length; i++) {
+
+                if (validMoveCells[i] != null && validMoveCellObjects[i].isWater == false && ((validMoveCellObjects[i]?.piece?.color != "blue"))) {
+                    (validMoveCells[i] as HTMLElement).classList.add("valid_move");
+                }
+            }
+        }
+        else if (currentCell.piece.rank == 2) {
+            for (let i = 0; i < cells?.length!; i++) {
+                if (cells && cells[i] == currentCell?.element) {
+                    for (let j = 1; j <= 10; j++) {
+                        //Can move down
+                        if(i+(j * 10) <= cellsObject.length && (i+(j*10)) >= 0)
+                        {
+
+                            if (cellsObject[i + (j * 10)].col == currentCell.col) {
+                                if(cellsObject[i + (j * 10)].isWater == true)
+                                {
+                                    ranIntoWaterDown = true;
+                                }
+                                if(!ranIntoWaterDown)
+                                {
+                                    validMoveCellObjects.push(cellsObject[i + (j * 10)]);
+                                    validMoveCells.push(cells[i + (j * 10)]);
+                                }
+                            }
+                        }
+                        //Can move right
+                        if((i + j) <= cellsObject.length && (i+j) >= 0)
+                        {
+
+                            if (cellsObject[i + (j)].row == currentCell.row) {
+                                if(cellsObject[i + (j)].isWater == true)
+                                {
+                                    ranIntoWaterRight = true;
+                                }
+                                if(!ranIntoWaterRight)
+                                {
+                                    validMoveCellObjects.push(cellsObject[i + (j)]);
+                                    validMoveCells.push(cells[i + (j)]);
+                                }
+                            }
+                        }
+                            
+                        // Can move left
+                        if((i-j) <= cellsObject.length && (i-j) >= 0)
+                        {
+
+                            if (cellsObject[i - (j)].row == currentCell.row) {
+                                if(cellsObject[i - (j)].isWater)
+                                {
+                                    ranIntoWaterLeft = true;
+                                }
+                                if(!ranIntoWaterLeft)
+                                {
+                                    validMoveCellObjects.push(cellsObject[i - (j)]);
+                                    validMoveCells.push(cells[i - (j)]);
+                                }
+                            }
+                        }
+                        
+                        //Can move up
+                        if((i-(j *10)) <= cellsObject.length && (i-(j*10) >= 0))
+                        {
+
+                            if (cellsObject[i - (j * 10)].col == currentCell.col) {
+                                if(cellsObject[i - (j * 10)].isWater)
+                                {
+                                    ranIntoWaterUp = true;
+                                }
+                                if(!ranIntoWaterUp)
+                                {
+                                    validMoveCellObjects.push(cellsObject[i - (j * 10)]);
+                                    validMoveCells.push(cells[i - (j * 10)]);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            for (let i = 0; i < validMoveCells.length; i++) {
+                if (validMoveCells[i] != null && (validMoveCellObjects[i]?.piece?.color != "blue" || validMoveCellObjects[i]?.piece?.isAlive == false)) {
+                    (validMoveCells[i] as HTMLElement).classList.add("valid_move");
+                }
+            }
         }
         cellsObject.push(new cell(row, col, isWater, piece, HTMLcell));
         cells?.push(HTMLcell);
@@ -458,7 +579,7 @@ function buildLogout() {
             e.preventDefault();
             console.log("CLICKED");
 
-            const currentUser = localStorage.getItem("currentUser");
+            let currentUser = localStorage.getItem("currentUser");
             if (!currentUser || currentUser === "undefined") {
                 alert("No user is currently logged in!");
                 return;
@@ -468,6 +589,7 @@ function buildLogout() {
             if (response.ok) {
                 localStorage.setItem("currentUser", "undefined");
                 localStorage.setItem("loggedIn", "false");
+                currentUser = null;
                 alert("Logged out successfully!");
                 window.location.replace("./index.html");
             } else {
@@ -497,7 +619,9 @@ async function auth_login(username: string, password: string) {
             console.error("Login failed:", await response.text());
             return response;
         }
-
+        currentUser = response;
+        console.log(response);
+        alert("Login successful!");
         return response;
     }
 }
@@ -538,13 +662,48 @@ async function logout(username: string | null) {
             console.error("Logout failed:", errorData);
             throw new Error(`Logout failed with status ${response.status}`);
         }
+        alert("Logged out successfully!")
         localStorage.setItem("currentUser", "undefined");
         localStorage.setItem("loggedIn", "false");
         const responseData = await response.json();
-        console.log(responseData);
-        return responseData;
+        return new Error(responseData);
     } catch (error) {
         console.error("An error occurred during logout:", error);
         throw error;
     }
+}
+
+async function getGames() {
+    let response = await fetch(`${base_url}/api/game/getGames`)
+
+    return await response.json();
+}
+
+async function findGame() {
+    // Retrieve the username from localStorage
+    let username = localStorage.getItem("currentUser");
+
+    // Validate the username
+    if (!username || username === "undefined") {
+        console.error("No valid username found in localStorage.");
+        throw new Error("No valid username found. Please log in first.");
+    }
+
+    // Use the username to find a game
+    let response = await fetch(`${base_url}/api/game/findGame`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ username }), // Fixed: Stringify the body
+    });
+
+    if (!response.ok) {
+        console.log(await response.json())
+        throw new Error("Failed to find game!");
+    }
+
+    let res = await response.json();
+    console.log(res);
+    return res;
 }
