@@ -53,6 +53,7 @@ var ColEnum;
 // GLOBAL VARIABLES
 let board = document.getElementById("game_board");
 let title = document.getElementById("title");
+var currentUser = null;
 // let base_url: string = "http://localhost:5244";
 let base_url = "https://strategogameserver-4vzb9wy5.b4a.run";
 let login_form = document.getElementById("login");
@@ -61,11 +62,13 @@ let logout_button = document.getElementById("logout_button");
 if (logout_button)
     buildLogout();
 if (!logout_button)
-    console.log({ "Test Accounts": [
+    console.log({
+        "Test Accounts": [
             { "username": "admin", "password": "password", "email": "admin.123@fake.com" },
             { "username": "user", "password": "1234", "email": "guest@fake.com" },
             { "username": "guest", "password": "password", "email": "guest123@fake.com" },
-        ] });
+        ]
+    });
 renderLoginForm();
 renderRegisterForm();
 let pieces = [
@@ -84,6 +87,8 @@ let pieces = [
 ];
 // INITAILIZE THE BOARD VISUALLY
 buildBoard(board);
+getGames();
+findGame();
 function buildBoard(board) {
     let piece_index = 0;
     for (let i = 0; i < 100; i++) {
@@ -217,7 +222,7 @@ function buildLogout() {
         logout_button.addEventListener("click", async (e) => {
             e.preventDefault();
             console.log("CLICKED");
-            const currentUser = localStorage.getItem("currentUser");
+            let currentUser = localStorage.getItem("currentUser");
             if (!currentUser || currentUser === "undefined") {
                 alert("No user is currently logged in!");
                 return;
@@ -226,6 +231,7 @@ function buildLogout() {
             if (response.ok) {
                 localStorage.setItem("currentUser", "undefined");
                 localStorage.setItem("loggedIn", "false");
+                currentUser = null;
                 alert("Logged out successfully!");
                 window.location.replace("./index.html");
             }
@@ -255,6 +261,9 @@ async function auth_login(username, password) {
             console.error("Login failed:", await response.text());
             return response;
         }
+        currentUser = response;
+        console.log(response);
+        alert("Login successful!");
         return response;
     }
 }
@@ -289,14 +298,42 @@ async function logout(username) {
             console.error("Logout failed:", errorData);
             throw new Error(`Logout failed with status ${response.status}`);
         }
+        alert("Logged out successfully!");
         localStorage.setItem("currentUser", "undefined");
         localStorage.setItem("loggedIn", "false");
         const responseData = await response.json();
-        console.log(responseData);
-        return responseData;
+        return new Error(responseData);
     }
     catch (error) {
         console.error("An error occurred during logout:", error);
         throw error;
     }
+}
+async function getGames() {
+    let response = await fetch(`${base_url}/api/game/getGames`);
+    return await response.json();
+}
+async function findGame() {
+    // Retrieve the username from localStorage
+    let username = localStorage.getItem("currentUser");
+    // Validate the username
+    if (!username || username === "undefined") {
+        console.error("No valid username found in localStorage.");
+        throw new Error("No valid username found. Please log in first.");
+    }
+    // Use the username to find a game
+    let response = await fetch(`${base_url}/api/game/findGame`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ username }), // Fixed: Stringify the body
+    });
+    if (!response.ok) {
+        console.log(await response.json());
+        throw new Error("Failed to find game!");
+    }
+    let res = await response.json();
+    console.log(res);
+    return res;
 }
