@@ -198,6 +198,10 @@ function buildBoard(board: HTMLElement | null) {
 }
 
 function showMoves() {
+    let ranIntoWaterDown = false;
+    let ranIntoWaterUp = false;
+    let ranIntoWaterRight = false;
+    let ranIntoWaterLeft = false;
     // for blue pieces
     if (currentCell?.piece?.color == "blue" && currentCell.piece.isAlive == true && currentCell.piece.rank != -2 && currentCell.piece.rank != -1) {
         let validMoveCells: HTMLElement[] = [];
@@ -232,26 +236,70 @@ function showMoves() {
                 if (cells && cells[i] == currentCell?.element) {
                     for (let j = 1; j <= 10; j++) {
                         //Can move down
-                        if (cellsObject[i + (j * 10)].col == currentCell.col) {
-                            validMoveCellObjects.push(cellsObject[i + (j * 10)]);
-                            validMoveCells.push(cells[i + (j * 10)]);
+                        if(i+(j * 10) <= cellsObject.length && (i+(j*10)) >= 0)
+                        {
+
+                            if (cellsObject[i + (j * 10)].col == currentCell.col) {
+                                if(cellsObject[i + (j * 10)].isWater == true)
+                                {
+                                    ranIntoWaterDown = true;
+                                }
+                                if(!ranIntoWaterDown)
+                                {
+                                    validMoveCellObjects.push(cellsObject[i + (j * 10)]);
+                                    validMoveCells.push(cells[i + (j * 10)]);
+                                }
+                            }
                         }
                         //Can move right
-                        if (cellsObject[i + (j)].row == currentCell.row) {
-                            validMoveCellObjects.push(cellsObject[i + (j)]);
-                            validMoveCells.push(cells[i + (j)]);
-                        }
+                        if((i + j) <= cellsObject.length && (i+j) >= 0)
+                        {
 
+                            if (cellsObject[i + (j)].row == currentCell.row) {
+                                if(cellsObject[i + (j)].isWater == true)
+                                {
+                                    ranIntoWaterRight = true;
+                                }
+                                if(!ranIntoWaterRight)
+                                {
+                                    validMoveCellObjects.push(cellsObject[i + (j)]);
+                                    validMoveCells.push(cells[i + (j)]);
+                                }
+                            }
+                        }
+                            
                         // Can move left
-                        if (cellsObject[i - (j)].row == currentCell.row) {
-                            validMoveCellObjects.push(cellsObject[i - (j)]);
-                            validMoveCells.push(cells[i - (j)]);
-                        }
+                        if((i-j) <= cellsObject.length && (i-j) >= 0)
+                        {
 
+                            if (cellsObject[i - (j)].row == currentCell.row) {
+                                if(cellsObject[i - (j)].isWater)
+                                {
+                                    ranIntoWaterLeft = true;
+                                }
+                                if(!ranIntoWaterLeft)
+                                {
+                                    validMoveCellObjects.push(cellsObject[i - (j)]);
+                                    validMoveCells.push(cells[i - (j)]);
+                                }
+                            }
+                        }
+                        
                         //Can move up
-                        if (cellsObject[i - (j * 10)].col == currentCell.col) {
-                            validMoveCellObjects.push(cellsObject[i - (j * 10)]);
-                            validMoveCells.push(cells[i - (j * 10)]);
+                        if((i-(j *10)) <= cellsObject.length && (i-(j*10) >= 0))
+                        {
+
+                            if (cellsObject[i - (j * 10)].col == currentCell.col) {
+                                if(cellsObject[i - (j * 10)].isWater)
+                                {
+                                    ranIntoWaterUp = true;
+                                }
+                                if(!ranIntoWaterUp)
+                                {
+                                    validMoveCellObjects.push(cellsObject[i - (j * 10)]);
+                                    validMoveCells.push(cells[i - (j * 10)]);
+                                }
+                            }
                         }
                     }
                 }

@@ -8,23 +8,23 @@
     "net9.0": []
   },
   "packageFolders": {
-    "C:\\Users\\caelc\\.nuget\\packages\\": {},
+    "C:\\Users\\cael.church\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\caelc\\Documents\\Spring 2025\\SE\\Assignments\\OnlineSratego\\auth-ws\\auth-ws.csproj",
+      "projectUniqueName": "C:\\Users\\cael.church\\Documents\\SE\\Assignments\\OnlineSratego\\auth-ws\\auth-ws.csproj",
       "projectName": "auth-ws",
-      "projectPath": "C:\\Users\\caelc\\Documents\\Spring 2025\\SE\\Assignments\\OnlineSratego\\auth-ws\\auth-ws.csproj",
-      "packagesPath": "C:\\Users\\caelc\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\caelc\\Documents\\Spring 2025\\SE\\Assignments\\OnlineSratego\\auth-ws\\obj\\",
+      "projectPath": "C:\\Users\\cael.church\\Documents\\SE\\Assignments\\OnlineSratego\\auth-ws\\auth-ws.csproj",
+      "packagesPath": "C:\\Users\\cael.church\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\cael.church\\Documents\\SE\\Assignments\\OnlineSratego\\auth-ws\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\caelc\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\cael.church\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
