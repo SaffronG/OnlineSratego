@@ -114,6 +114,10 @@ div.cell.active {
     align-items: center;
 }
 
+.game {
+    
+}
+
 #join_game {
     display: flex;
     justify-self: center;
@@ -124,8 +128,9 @@ div.cell.active {
 #box {
     width: 150px;
     height: 55px;
-    background-color: var(--black-color);
-    border: 2px solid var(--text-color);
+    background-color: rgb(31, 136, 172);
+    border: 2px solid blue;
+    color: blue;
     border-radius: 2em;
     padding: 10px;
     margin: 10px;

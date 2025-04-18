@@ -95,7 +95,7 @@ let BluePieces = [
     new piece("Blue Flag", -2, 0, true, "./js/Blue Pieces/Blue Flag.png", 0, "l"),
 ];
 // INITAILIZE THE BOARD VISUALLY
-console.log(GetGames());
+buildEventListener();
 // buildBoard(board)
 function buildBoard(board) {
     let piece_index = 0;
@@ -253,6 +253,10 @@ function buildLogout() {
     }
 }
 function buildEventListener() {
+    box === null || box === void 0 ? void 0 : box.addEventListener("click", (e) => __awaiter(this, void 0, void 0, function* () {
+        e.preventDefault();
+        let game = yield findGame();
+    }));
 }
 function auth_login(username, password) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -320,12 +324,5 @@ function logout(username) {
             console.error("An error occurred during logout:", error);
             throw error;
         }
-    });
-}
-function GetGames() {
-    return __awaiter(this, void 0, void 0, function* () {
-        let response = yield fetch(`${base_url}/api/game/getGames`);
-        let json = yield response.json();
-        return json;
     });
 }

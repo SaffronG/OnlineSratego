@@ -102,7 +102,7 @@ let BluePieces: piece[] = [
 ]
 
 // INITAILIZE THE BOARD VISUALLY
-console.log(GetGames())
+buildEventListener();
 // buildBoard(board)
 
 function buildBoard(board: HTMLElement | null) {
@@ -283,7 +283,10 @@ function buildLogout() {
 
 function buildEventListener()
 {
-    
+    box?.addEventListener("click", async (e) => {
+        e.preventDefault()
+        let game = await findGame();
+    })
 }
 
 async function auth_login(username: string, password: string) {
@@ -354,11 +357,4 @@ async function logout(username: string | null) {
         console.error("An error occurred during logout:", error);
         throw error;
     }
-}
-
-async function GetGames()
-{
-    let response: Response = await fetch(`${base_url}/api/game/getGames`);
-    let json = await response.json();
-    return json;
 }
