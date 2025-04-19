@@ -99,7 +99,6 @@ buildOnClose();
 renderLoginForm();
 renderRegisterForm();
 buildBoard(board);
-findGame();
 
 function buildBoard(board: HTMLElement | null) {
     let piece_index: number = 0;
@@ -270,8 +269,10 @@ function buildLogout() {
                 return;
             }
 
+            localStorage.setItem("currentUser", "undefined");
+            localStorage.setItem("loggedIn", "false");
             let response = await logout(currentUser);
-            if (response.ok) {
+            if (!response) {
                 localStorage.setItem("currentUser", "undefined");
                 localStorage.setItem("loggedIn", "false");
                 currentUser = null;

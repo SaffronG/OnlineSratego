@@ -1,13 +1,12 @@
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
+"use strict";
 class piece {
+    name;
+    rank;
+    movement;
+    isAlive;
+    image;
+    row;
+    col;
     constructor(name, rank, movement, isAlive, image, row, col) {
         this.name = name;
         this.rank = rank;
@@ -26,6 +25,10 @@ class piece {
 }
 ;
 class cell {
+    row; // 0 - 9
+    col; // a - j
+    isWater;
+    piece;
     constructor(row, col, isWater = false, piece = null) {
         this.row = row;
         this.col = col;
@@ -58,16 +61,6 @@ let register_form = document.getElementById("register");
 let logout_button = document.getElementById("logout_button");
 if (logout_button)
     buildLogout();
-if (!logout_button)
-    console.log({
-        "Test Accounts": [
-            { "username": "admin", "password": "password", "email": "admin.123@fake.com" },
-            { "username": "user", "password": "1234", "email": "guest@fake.com" },
-            { "username": "guest", "password": "password", "email": "guest123@fake.com" },
-        ]
-    });
-renderLoginForm();
-renderRegisterForm();
 let RedPieces = [
     new piece("Red Scout", 9, 100, true, "./js/Red Pieces/Red Scout.png", 0, "a"),
     new piece("Red Miner", 8, 1, true, "./js/Red Pieces/Red Miner.png", 0, "b"),
@@ -96,21 +89,22 @@ let BluePieces = [
     new piece("Blue Bomb", -1, 0, true, "./js/Blue Pieces/Blue Bomb.png", 0, "k"),
     new piece("Blue Flag", -2, 0, true, "./js/Blue Pieces/Blue Flag.png", 0, "l"),
 ];
-// INITAILIZE THE BOARD VISUALLY
+// MAIN FUNTIONS HERE
+buildOnClose();
+renderLoginForm();
+renderRegisterForm();
 buildBoard(board);
-getGames();
-findGame();
 function buildBoard(board) {
     let piece_index = 0;
     for (let i = 0; i < 100; i++) {
         let cell = document.createElement("div");
         cell.className = "cell";
-        board === null || board === void 0 ? void 0 : board.appendChild(cell);
+        board?.appendChild(cell);
         if (piece_index < BluePieces.length) {
             cell.className = "cell";
             cell.innerText = `${BluePieces[piece_index].rank}`; // for debugging purposes, show the name of the piece in the cell
             cell.innerHTML = `<img src="${BluePieces[piece_index].image}" alt="${BluePieces[piece_index].name}">`;
-            board === null || board === void 0 ? void 0 : board.appendChild(cell);
+            board?.appendChild(cell);
             piece_index++;
             cell.style.fontSize = "8px"; // make the text smaller to fit in the cell
         }
@@ -158,9 +152,9 @@ function renderLoginForm() {
         const loginButton = document.createElement("button");
         loginButton.setAttribute("type", "submit");
         loginButton.textContent = "Login";
-        login_form.addEventListener("submit", (e) => __awaiter(this, void 0, void 0, function* () {
+        login_form.addEventListener("submit", async (e) => {
             e.preventDefault();
-            let response = yield auth_login(usernameInput.value, passwordInput.value);
+            let response = await auth_login(usernameInput.value, passwordInput.value);
             console.log(response);
             if (typeof response !== "string" && response.ok) {
                 localStorage.setItem("currentUser", usernameInput.value);
@@ -170,7 +164,7 @@ function renderLoginForm() {
             else {
                 alert("Invalid login! Please try again!");
             }
-        }));
+        });
         login_form.appendChild(loginButton);
     }
 }
@@ -220,18 +214,25 @@ function renderRegisterForm() {
         const registerButton = document.createElement("button");
         registerButton.setAttribute("type", "submit");
         registerButton.textContent = "Register";
-        register_form.addEventListener("submit", (e) => __awaiter(this, void 0, void 0, function* () {
+        register_form.addEventListener("submit", async (e) => {
             e.preventDefault();
-            let response = yield register(usernameInput.value, passwordInput.value, emailInput.value);
+            let response = await register(usernameInput.value, passwordInput.value, emailInput.value);
             console.log(response);
             window.location.replace("./index.html");
-        }));
+        });
         register_form.appendChild(registerButton);
     }
 }
+function buildOnClose() {
+    window.addEventListener("beforeunload", async () => {
+        await logout(localStorage.getItem("currentUser"));
+        localStorage.setItem("currentUser", "undefined");
+        localStorage.setItem("loggedIn", "false");
+    });
+}
 function buildLogout() {
     if (logout_button) {
-        logout_button.addEventListener("click", (e) => __awaiter(this, void 0, void 0, function* () {
+        logout_button.addEventListener("click", async (e) => {
             e.preventDefault();
             console.log("CLICKED");
             let currentUser = localStorage.getItem("currentUser");
@@ -239,8 +240,10 @@ function buildLogout() {
                 alert("No user is currently logged in!");
                 return;
             }
-            let response = yield logout(currentUser);
-            if (response.ok) {
+            localStorage.setItem("currentUser", "undefined");
+            localStorage.setItem("loggedIn", "false");
+            let response = await logout(currentUser);
+            if (!response) {
                 localStorage.setItem("currentUser", "undefined");
                 localStorage.setItem("loggedIn", "false");
                 currentUser = null;
@@ -250,112 +253,103 @@ function buildLogout() {
             else {
                 alert("Logout failed! Please try again.");
             }
-        }));
+        });
     }
     else {
         console.error("Logout button not found!");
     }
 }
-function auth_login(username, password) {
-    return __awaiter(this, void 0, void 0, function* () {
-        if (localStorage.getItem("currentUser") != "undefined") {
-            alert("User already logged in!");
-            return "User already logged in!";
-        }
-        else {
-            let response = yield fetch(`${base_url}/api/auth/login`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ username, password, email: "" })
-            });
-            if (!response.ok) {
-                console.error("Login failed:", yield response.text());
-                return response;
-            }
-            currentUser = response;
-            console.log(response);
-            alert("Login successful!");
-            return response;
-        }
-    });
-}
-function register(username, password, email) {
-    return __awaiter(this, void 0, void 0, function* () {
-        let response = yield fetch(`${base_url}/api/auth/register`, {
+async function auth_login(username, password) {
+    if (localStorage.getItem("currentUser") != "undefined") {
+        alert("User already logged in!");
+        return "User already logged in!";
+    }
+    else {
+        let response = await fetch(`${base_url}/api/auth/login`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ username, password, email })
+            body: JSON.stringify({ username, password, email: "" })
         });
         if (!response.ok) {
-            console.error("Registration failed:", yield response.text());
+            console.error("Login failed:", await response.text());
             return response;
         }
+        currentUser = response;
+        console.log(response);
+        alert("Login successful!");
         return response;
-    });
+    }
 }
-function logout(username) {
-    return __awaiter(this, void 0, void 0, function* () {
-        if (!username) {
-            throw new Error("Username is required for logout.");
-        }
-        try {
-            let response = yield fetch(`${base_url}/api/auth/logout`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ username })
-            });
-            if (!response.ok) {
-                const errorData = yield response.text();
-                console.error("Logout failed:", errorData);
-                throw new Error(`Logout failed with status ${response.status}`);
-            }
-            alert("Logged out successfully!");
-            localStorage.setItem("currentUser", "undefined");
-            localStorage.setItem("loggedIn", "false");
-            const responseData = yield response.json();
-            return new Error(responseData);
-        }
-        catch (error) {
-            console.error("An error occurred during logout:", error);
-            throw error;
-        }
+async function register(username, password, email) {
+    let response = await fetch(`${base_url}/api/auth/register`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ username, password, email })
     });
+    if (!response.ok) {
+        console.error("Registration failed:", await response.text());
+        return response;
+    }
+    return response;
 }
-function getGames() {
-    return __awaiter(this, void 0, void 0, function* () {
-        let response = yield fetch(`${base_url}/api/game/getGames`);
-        return yield response.json();
-    });
-}
-function findGame() {
-    return __awaiter(this, void 0, void 0, function* () {
-        // Retrieve the username from localStorage
-        let username = localStorage.getItem("currentUser");
-        // Validate the username
-        if (!username || username === "undefined") {
-            console.error("No valid username found in localStorage.");
-            throw new Error("No valid username found. Please log in first.");
-        }
-        // Use the username to find a game
-        let response = yield fetch(`${base_url}/api/game/findGame`, {
+async function logout(username) {
+    if (!username) {
+        throw new Error("Username is required for logout.");
+    }
+    try {
+        let response = await fetch(`${base_url}/api/auth/logout`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ username }), // Fixed: Stringify the body
+            body: JSON.stringify({ username })
         });
         if (!response.ok) {
-            console.log(yield response.json());
-            throw new Error("Failed to find game!");
+            const errorData = await response.text();
+            console.error("Logout failed:", errorData);
+            throw new Error(`Logout failed with status ${response.status}`);
         }
-        let res = yield response.json();
-        console.log(res);
-        return res;
+        alert("Logged out successfully!");
+        localStorage.setItem("currentUser", "undefined");
+        localStorage.setItem("loggedIn", "false");
+        const responseData = await response.json();
+        return new Error(responseData);
+    }
+    catch (error) {
+        console.error("An error occurred during logout:", error);
+        throw error;
+    }
+}
+// NOT IN USE
+// async function getGames() {
+//     let response = await fetch(`${base_url}/api/game/getGames`)
+//     return await response.json();
+// }
+async function findGame() {
+    // Retrieve the username from localStorage
+    let username = localStorage.getItem("currentUser");
+    // Validate the username
+    if (!username || username === "undefined") {
+        console.error("No valid username found in localStorage.");
+        throw new Error("No valid username found. Please log in first.");
+    }
+    // Use the username to find a game
+    let response = await fetch(`${base_url}/api/game/findGame`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ username }), // Fixed: Stringify the body
     });
+    if (!response.ok) {
+        console.log(await response.json());
+        throw new Error("Failed to find game!");
+    }
+    let res = await response.json();
+    console.log(res);
+    return res;
 }
