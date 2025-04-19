@@ -61,6 +61,7 @@ let board = document.getElementById("game_board");
 let title = document.getElementById("title");
 let cells = [];
 let cellsObject = [];
+var currentUser = null;
 // let base_url: string = "http://localhost:5244";
 let base_url = "https://strategogameserver-4vzb9wy5.b4a.run";
 let login_form = document.getElementById("login");
@@ -108,6 +109,8 @@ let BluePieces = [
 ];
 // INITAILIZE THE BOARD VISUALLY
 buildBoard(board);
+getGames();
+findGame();
 function buildBoard(board) {
     let piece_index = 0;
     for (let i = 0; i < 100; i++) {
@@ -140,18 +143,33 @@ function buildBoard(board) {
                         cells === null || cells === void 0 ? void 0 : cells.forEach(cell => cell.classList.remove("valid_move"));
                     }
                     else {
-                        console.log(e);
+                        HTMLcell.classList.toggle("active");
                         cells === null || cells === void 0 ? void 0 : cells.forEach((cell) => {
                             cell.classList.remove("active");
                             cell.classList.remove("valid_move");
                         });
-                        HTMLcell.classList.toggle("active");
-                        // cellsObject.forEach((cellObject: cell) => {
-                        //     if (cellObject.element == HTMLcell) {
-                        //         currentCell = cellObject;
-                        //         showMoves();
-                        //     }
-                        // });
+                        if (HTMLcell.classList.contains("valid_move")) {
+                            let oldCell = currentCell;
+                            let index = -1;
+                            let row = -1;
+                            let col = -1;
+                            for (let i = 0; i < (cells === null || cells === void 0 ? void 0 : cells.length); i++) {
+                                if (cells && cells[i] == HTMLcell) {
+                                    index = i;
+                                    row = Math.floor(i / 10);
+                                    col = i % 10;
+                                }
+                            }
+                            yield sendMove(Number(localStorage.getItem("lobbyId")), row, col, null);
+                            const newCell = cellsObject[index];
+                            if (newCell.piece) {
+                                newCell.piece.row = row;
+                                newCell.piece.col = String(col);
+                            }
+                            if (oldCell) {
+                                oldCell.piece = null;
+                            }
+                        }
                     }
                 });
             }
@@ -272,12 +290,6 @@ function showMoves() {
             }
         }
     }
-    cells === null || cells === void 0 ? void 0 : cells.forEach(element => {
-        if (element.classList.contains("valid_move")) {
-            element.addEventListener("click", function (e) {
-            });
-        }
-    });
 }
 function renderLoginForm() {
     if (login_form) {
@@ -381,7 +393,7 @@ function buildLogout() {
         logout_button.addEventListener("click", (e) => __awaiter(this, void 0, void 0, function* () {
             e.preventDefault();
             console.log("CLICKED");
-            const currentUser = localStorage.getItem("currentUser");
+            let currentUser = localStorage.getItem("currentUser");
             if (!currentUser || currentUser === "undefined") {
                 alert("No user is currently logged in!");
                 return;
@@ -390,6 +402,7 @@ function buildLogout() {
             if (response.ok) {
                 localStorage.setItem("currentUser", "undefined");
                 localStorage.setItem("loggedIn", "false");
+                currentUser = null;
                 alert("Logged out successfully!");
                 window.location.replace("./index.html");
             }
@@ -420,6 +433,9 @@ function auth_login(username, password) {
                 console.error("Login failed:", yield response.text());
                 return response;
             }
+            currentUser = response;
+            console.log(response);
+            alert("Login successful!");
             return response;
         }
     });
@@ -458,15 +474,47 @@ function logout(username) {
                 console.error("Logout failed:", errorData);
                 throw new Error(`Logout failed with status ${response.status}`);
             }
+            alert("Logged out successfully!");
             localStorage.setItem("currentUser", "undefined");
             localStorage.setItem("loggedIn", "false");
             const responseData = yield response.json();
-            console.log(responseData);
-            return responseData;
+            return new Error(responseData);
         }
         catch (error) {
             console.error("An error occurred during logout:", error);
             throw error;
         }
+    });
+}
+function getGames() {
+    return __awaiter(this, void 0, void 0, function* () {
+        let response = yield fetch(`${base_url}/api/game/getGames`);
+        return yield response.json();
+    });
+}
+function findGame() {
+    return __awaiter(this, void 0, void 0, function* () {
+        // Retrieve the username from localStorage
+        let username = localStorage.getItem("currentUser");
+        // Validate the username
+        if (!username || username === "undefined") {
+            console.error("No valid username found in localStorage.");
+            throw new Error("No valid username found. Please log in first.");
+        }
+        // Use the username to find a game
+        let response = yield fetch(`${base_url}/api/game/findGame`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ username }), // Fixed: Stringify the body
+        });
+        if (!response.ok) {
+            console.log(yield response.json());
+            throw new Error("Failed to find game!");
+        }
+        let res = yield response.json();
+        console.log(res);
+        return res;
     });
 }
