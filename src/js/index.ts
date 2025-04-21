@@ -6,8 +6,9 @@ class piece {
     image: string;
     row: number;
     col: string;
+    team: string;
 
-    constructor(name: string, rank: number, movement: number, isAlive: boolean, image: string, row: number, col: string) {
+    constructor(name: string, rank: number, movement: number, isAlive: boolean, image: string, row: number, col: string, team:string) {
         this.name = name;
         this.rank = rank;
         this.movement = movement;
@@ -15,6 +16,7 @@ class piece {
         this.image = image;
         this.row = row;
         this.col = col;
+        this.team = team;
     }
 
     validMoves(): string[] {
@@ -25,6 +27,31 @@ class piece {
         return false; // implement later
     }
 };
+
+class ApiPiece {
+    rank: number;
+    team: string;
+
+    constructor(rank: number, team: string) {
+        this.rank = rank;
+        this.team = team;
+    }
+}
+
+class ApiBoard {
+    board: ApiPiece[];
+
+    constructor(board: cell[] |  null) {
+        this.board = Array();
+        for (let i = 0; i < 100; i++) {
+            try {
+                this.board[i] = new ApiPiece(board![i].piece!.rank, board![i].piece!.team)
+            } catch {
+                this.board[i] = new ApiPiece(0, "NONE")
+            }
+        }
+    }
+}
 
 class cell {
     row: number; // 0 - 9
@@ -65,33 +92,33 @@ let logout_button = document.getElementById("logout_button")
 
 if (logout_button) buildLogout();
 let RedPieces: piece[] = [
-    new piece("Red Scout", 9, 100, true, "./js/Red Pieces/Red Scout.png", 0, "a"),
-    new piece("Red Miner", 8, 1, true, "./js/Red Pieces/Red Miner.png", 0, "b"),
-    new piece("Red Sergeant", 7, 1, true, "./js/Red Pieces/Red Sergeant.png", 0, "c"),
-    new piece("Red Lieutenant", 6, 1, true, "./js/Red Pieces/Red Lieutenant.png", 0, "d"),
-    new piece("Red Captain", 5, 1, true, "./js/Red Pieces/Red Captain.png", 0, "e"),
-    new piece("Red Major", 4, 1, true, "./js/Red Pieces/Red Major.png", 0, "f"),
-    new piece("Red Colonel", 3, 1, true, "./js/Red Pieces/Red Colonel.png", 0, "g"),
-    new piece("Red General", 2, 1, true, "./js/Red Pieces/Red General.png", 0, "h"),
-    new piece("Red Marshal", 1, 1, true, "./js/Red Pieces/Red Marshall.png", 0, "i"),
-    new piece("Red Spy", 0, 1, true, "./js/Red Pieces/Red Spy.png", 0, "j"),
-    new piece("Red Bomb", -1, 0, true, "./js/Red Pieces/Red Bomb.png", 0, "k"),
-    new piece("Red Flag", -2, 0, true, "./js/Red Pieces/Red Flag.png", 0, "l"),
+    new piece("Red Scout", 9, 100, true, "./js/Red Pieces/Red Scout.png", 0, "a", "red"),
+    new piece("Red Miner", 8, 1, true, "./js/Red Pieces/Red Miner.png", 0, "b", "red"),
+    new piece("Red Sergeant", 7, 1, true, "./js/Red Pieces/Red Sergeant.png", 0, "c", "red"),
+    new piece("Red Lieutenant", 6, 1, true, "./js/Red Pieces/Red Lieutenant.png", 0, "d", "red"),
+    new piece("Red Captain", 5, 1, true, "./js/Red Pieces/Red Captain.png", 0, "e", "red"),
+    new piece("Red Major", 4, 1, true, "./js/Red Pieces/Red Major.png", 0, "f", "red"),
+    new piece("Red Colonel", 3, 1, true, "./js/Red Pieces/Red Colonel.png", 0, "g", "red"),
+    new piece("Red General", 2, 1, true, "./js/Red Pieces/Red General.png", 0, "h", "red"),
+    new piece("Red Marshal", 1, 1, true, "./js/Red Pieces/Red Marshall.png", 0, "i", "red"),
+    new piece("Red Spy", 0, 1, true, "./js/Red Pieces/Red Spy.png", 0, "j", "red"),
+    new piece("Red Bomb", -1, 0, true, "./js/Red Pieces/Red Bomb.png", 0, "k", "red"),
+    new piece("Red Flag", -2, 0, true, "./js/Red Pieces/Red Flag.png", 0, "l", "red"),
 ]
 
 let BluePieces: piece[] = [
-    new piece("Blue Scout", 9, 100, true, "./js/Blue Pieces/Blue Scout.png", 0, "a"),
-    new piece("Blue Miner", 8, 1, true, "./js/Blue Pieces/Blue Miner.png", 0, "b"),
-    new piece("Blue Sergeant", 7, 1, true, "./js/Blue Pieces/Blue Sergeant.png", 0, "c"),
-    new piece("Blue Lieutenant", 6, 1, true, "./js/Blue Pieces/Blue Lieutenant.png", 0, "d"),
-    new piece("Blue Captain", 5, 1, true, "./js/Blue Pieces/Blue Captain.png", 0, "e"),
-    new piece("Blue Major", 4, 1, true, "./js/Blue Pieces/Blue Major.png", 0, "f"),
-    new piece("Blue Colonel", 3, 1, true, "./js/Blue Pieces/Blue Colonel.png", 0, "g"),
-    new piece("Blue General", 2, 1, true, "./js/Blue Pieces/Blue General.png", 0, "h"),
-    new piece("Blue Marshal", 1, 1, true, "./js/Blue Pieces/Blue Marshall.png", 0, "i"),
-    new piece("Blue Spy", 0, 1, true, "./js/Blue Pieces/Blue Spy.png", 0, "j"),
-    new piece("Blue Bomb", -1, 0, true, "./js/Blue Pieces/Blue Bomb.png", 0, "k"),
-    new piece("Blue Flag", -2, 0, true, "./js/Blue Pieces/Blue Flag.png", 0, "l"),
+    new piece("Blue Scout", 9, 100, true, "./js/Blue Pieces/Blue Scout.png", 0, "a", "blue"),
+    new piece("Blue Miner", 8, 1, true, "./js/Blue Pieces/Blue Miner.png", 0, "b", "blue"),
+    new piece("Blue Sergeant", 7, 1, true, "./js/Blue Pieces/Blue Sergeant.png", 0, "c", "blue"),
+    new piece("Blue Lieutenant", 6, 1, true, "./js/Blue Pieces/Blue Lieutenant.png", 0, "d", "blue"),
+    new piece("Blue Captain", 5, 1, true, "./js/Blue Pieces/Blue Captain.png", 0, "e", "blue"),
+    new piece("Blue Major", 4, 1, true, "./js/Blue Pieces/Blue Major.png", 0, "f", "blue"),
+    new piece("Blue Colonel", 3, 1, true, "./js/Blue Pieces/Blue Colonel.png", 0, "g", "blue"),
+    new piece("Blue General", 2, 1, true, "./js/Blue Pieces/Blue General.png", 0, "h", "blue"),
+    new piece("Blue Marshal", 1, 1, true, "./js/Blue Pieces/Blue Marshall.png", 0, "i", "blue"),
+    new piece("Blue Spy", 0, 1, true, "./js/Blue Pieces/Blue Spy.png", 0, "j", "blue"),
+    new piece("Blue Bomb", -1, 0, true, "./js/Blue Pieces/Blue Bomb.png", 0, "k", "blue"),
+    new piece("Blue Flag", -2, 0, true, "./js/Blue Pieces/Blue Flag.png", 0, "l", "blue"),
 ]
 
 // MAIN FUNTIONS HERE
@@ -394,3 +421,16 @@ async function findGame() {
     console.log(res);
     return res;
 }
+
+// async function sendMove() {
+//     let tmpBoard = new ApiBoard(cellObjects);
+//     let response = await fetch(`${base_url}/api/game/postMove`, {
+//         method: "POST",
+//         headers: {
+//             "Content-Type": "application/json"
+//         },
+//         body: JSON.stringify(Number(localStorage.getItem("lobbyId")), tmpBoard.board, localStorage.getItem("currentUser"), localStorage.getItem("currentTurn"), Boolean(localStorage.getItem("isWin"))),
+//     })
+
+//     return await response.json();
+// }
