@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 class piece {
-    constructor(name, rank, movement, isAlive, image, row, col) {
+    constructor(name, rank, movement, isAlive, image, row, col, color, id) {
         this.name = name;
         this.rank = rank;
         this.movement = movement;
@@ -16,8 +16,15 @@ class piece {
         this.image = image;
         this.row = row;
         this.col = col;
+        this.color = color;
+        this.id = id;
     }
     validMoves() {
+        let validmoves = [];
+        if (this.rank === 2) {
+        }
+        else {
+        }
         return [""]; // implement later
     }
     move() {
@@ -26,11 +33,12 @@ class piece {
 }
 ;
 class cell {
-    constructor(row, col, isWater = false, piece = null) {
+    constructor(row, col, isWater = false, piece = null, element = document.createElement("div")) {
         this.row = row;
         this.col = col;
         this.isWater = isWater;
         this.piece = piece;
+        this.element = element;
     }
 }
 var ColEnum;
@@ -48,8 +56,11 @@ var ColEnum;
 })(ColEnum || (ColEnum = {}));
 ;
 // GLOBAL VARIABLES
+let currentCell = null;
 let board = document.getElementById("game_board");
 let title = document.getElementById("title");
+let cells = [];
+let cellsObject = [];
 var currentUser = null;
 // let base_url: string = "http://localhost:5244";
 let base_url = "https://strategogameserver-4vzb9wy5.b4a.run";
@@ -69,32 +80,32 @@ if (!logout_button)
 renderLoginForm();
 renderRegisterForm();
 let RedPieces = [
-    new piece("Red Scout", 9, 100, true, "./js/Red Pieces/Red Scout.png", 0, "a"),
-    new piece("Red Miner", 8, 1, true, "./js/Red Pieces/Red Miner.png", 0, "b"),
-    new piece("Red Sergeant", 7, 1, true, "./js/Red Pieces/Red Sergeant.png", 0, "c"),
-    new piece("Red Lieutenant", 6, 1, true, "./js/Red Pieces/Red Lieutenant.png", 0, "d"),
-    new piece("Red Captain", 5, 1, true, "./js/Red Pieces/Red Captain.png", 0, "e"),
-    new piece("Red Major", 4, 1, true, "./js/Red Pieces/Red Major.png", 0, "f"),
-    new piece("Red Colonel", 3, 1, true, "./js/Red Pieces/Red Colonel.png", 0, "g"),
-    new piece("Red General", 2, 1, true, "./js/Red Pieces/Red General.png", 0, "h"),
-    new piece("Red Marshal", 1, 1, true, "./js/Red Pieces/Red Marshall.png", 0, "i"),
-    new piece("Red Spy", 0, 1, true, "./js/Red Pieces/Red Spy.png", 0, "j"),
-    new piece("Red Bomb", -1, 0, true, "./js/Red Pieces/Red Bomb.png", 0, "k"),
-    new piece("Red Flag", -2, 0, true, "./js/Red Pieces/Red Flag.png", 0, "l"),
+    new piece("Red Scout", 9, 100, true, "./js/Red Pieces/Red Scout.png", 0, "a", "red", 0),
+    new piece("Red Miner", 8, 1, true, "./js/Red Pieces/Red Miner.png", 0, "b", "red", 1),
+    new piece("Red Sergeant", 7, 1, true, "./js/Red Pieces/Red Sergeant.png", 0, "c", "red", 2),
+    new piece("Red Lieutenant", 6, 1, true, "./js/Red Pieces/Red Lieutenant.png", 0, "d", "red", 3),
+    new piece("Red Captain", 5, 1, true, "./js/Red Pieces/Red Captain.png", 0, "e", "red", 4),
+    new piece("Red Major", 4, 1, true, "./js/Red Pieces/Red Major.png", 0, "f", "red", 5),
+    new piece("Red Colonel", 3, 1, true, "./js/Red Pieces/Red Colonel.png", 0, "g", "red", 6),
+    new piece("Red General", 2, 1, true, "./js/Red Pieces/Red General.png", 0, "h", "red", 7),
+    new piece("Red Marshal", 1, 1, true, "./js/Red Pieces/Red Marshall.png", 0, "i", "red", 8),
+    new piece("Red Spy", 0, 1, true, "./js/Red Pieces/Red Spy.png", 0, "j", "red", 9),
+    new piece("Red Bomb", -1, 0, true, "./js/Red Pieces/Red Bomb.png", 0, "k", "red", 10),
+    new piece("Red Flag", -2, 0, true, "./js/Red Pieces/Red Flag.png", 0, "l", "red", 11),
 ];
 let BluePieces = [
-    new piece("Blue Scout", 9, 100, true, "./js/Blue Pieces/Blue Scout.png", 0, "a"),
-    new piece("Blue Miner", 8, 1, true, "./js/Blue Pieces/Blue Miner.png", 0, "b"),
-    new piece("Blue Sergeant", 7, 1, true, "./js/Blue Pieces/Blue Sergeant.png", 0, "c"),
-    new piece("Blue Lieutenant", 6, 1, true, "./js/Blue Pieces/Blue Lieutenant.png", 0, "d"),
-    new piece("Blue Captain", 5, 1, true, "./js/Blue Pieces/Blue Captain.png", 0, "e"),
-    new piece("Blue Major", 4, 1, true, "./js/Blue Pieces/Blue Major.png", 0, "f"),
-    new piece("Blue Colonel", 3, 1, true, "./js/Blue Pieces/Blue Colonel.png", 0, "g"),
-    new piece("Blue General", 2, 1, true, "./js/Blue Pieces/Blue General.png", 0, "h"),
-    new piece("Blue Marshal", 1, 1, true, "./js/Blue Pieces/Blue Marshall.png", 0, "i"),
-    new piece("Blue Spy", 0, 1, true, "./js/Blue Pieces/Blue Spy.png", 0, "j"),
-    new piece("Blue Bomb", -1, 0, true, "./js/Blue Pieces/Blue Bomb.png", 0, "k"),
-    new piece("Blue Flag", -2, 0, true, "./js/Blue Pieces/Blue Flag.png", 0, "l"),
+    new piece("Blue Scout", 9, 100, true, "./js/Blue Pieces/Blue Scout.png", 0, "a", "blue", 0),
+    new piece("Blue Miner", 8, 1, true, "./js/Blue Pieces/Blue Miner.png", 0, "b", "blue", 1),
+    new piece("Blue Sergeant", 7, 1, true, "./js/Blue Pieces/Blue Sergeant.png", 0, "c", "blue", 2),
+    new piece("Blue Lieutenant", 6, 1, true, "./js/Blue Pieces/Blue Lieutenant.png", 0, "d", "blue", 3),
+    new piece("Blue Captain", 5, 1, true, "./js/Blue Pieces/Blue Captain.png", 0, "e", "blue", 4),
+    new piece("Blue Major", 4, 1, true, "./js/Blue Pieces/Blue Major.png", 0, "f", "blue", 5),
+    new piece("Blue Colonel", 3, 1, true, "./js/Blue Pieces/Blue Colonel.png", 0, "g", "blue", 6),
+    new piece("Blue General", 2, 1, true, "./js/Blue Pieces/Blue General.png", 0, "h", "blue", 7),
+    new piece("Blue Marshal", 1, 1, true, "./js/Blue Pieces/Blue Marshall.png", 0, "i", "blue", 8),
+    new piece("Blue Spy", 0, 1, true, "./js/Blue Pieces/Blue Spy.png", 0, "j", "blue", 9),
+    new piece("Blue Bomb", -1, 0, true, "./js/Blue Pieces/Blue Bomb.png", 0, "k", "blue", 10),
+    new piece("Blue Flag", -2, 0, true, "./js/Blue Pieces/Blue Flag.png", 0, "l", "blue", 11),
 ];
 // INITAILIZE THE BOARD VISUALLY
 buildBoard(board);
@@ -103,32 +114,180 @@ findGame();
 function buildBoard(board) {
     let piece_index = 0;
     for (let i = 0; i < 100; i++) {
-        let cell = document.createElement("div");
-        cell.className = "cell";
-        board === null || board === void 0 ? void 0 : board.appendChild(cell);
+        let HTMLcell = document.createElement("div");
+        let row = Math.floor(i / 10);
+        let col = i % 10;
+        let isWater = false;
+        let piece = null;
+        HTMLcell.className = "cell";
+        board === null || board === void 0 ? void 0 : board.appendChild(HTMLcell);
         if (piece_index < BluePieces.length) {
-            cell.className = "cell";
-            cell.innerText = `${BluePieces[piece_index].rank}`; // for debugging purposes, show the name of the piece in the cell
-            cell.innerHTML = `<img src="${BluePieces[piece_index].image}" alt="${BluePieces[piece_index].name}">`;
-            board === null || board === void 0 ? void 0 : board.appendChild(cell);
+            piece = BluePieces[piece_index];
+            HTMLcell.className = "cell";
+            HTMLcell.innerText = `${piece.rank} (ID: ${piece.id})`; // for debugging purposes, show the name of the piece in the cell
+            HTMLcell.innerHTML = `<img src="${BluePieces[piece_index].image}" alt="${BluePieces[piece_index].name}">`;
+            board === null || board === void 0 ? void 0 : board.appendChild(HTMLcell);
             piece_index++;
-            cell.style.fontSize = "8px"; // make the text smaller to fit in the cell
+            HTMLcell.style.fontSize = "8px"; // make the text smaller to fit in the cell
         }
         if (i > 40 && i < 60) {
             let loc = i % 10;
             if (loc == 2 || loc == 3 || loc == 6 || loc == 7) {
-                cell.className = "cell_water";
+                HTMLcell.className = "cell_water";
+                isWater = true;
             }
             else {
-                cell.addEventListener("click", function () {
-                    cell.classList.toggle("active");
+                HTMLcell.addEventListener("click", (e) => {
+                    if (HTMLcell == (currentCell === null || currentCell === void 0 ? void 0 : currentCell.element)) {
+                        HTMLcell.classList.toggle("active");
+                        cells === null || cells === void 0 ? void 0 : cells.forEach(cell => cell.classList.remove("valid_move"));
+                    }
+                    else {
+                        HTMLcell.classList.toggle("active");
+                        cells === null || cells === void 0 ? void 0 : cells.forEach((cell) => {
+                            cell.classList.remove("active");
+                            cell.classList.remove("valid_move");
+                        });
+                        if (HTMLcell.classList.contains("valid_move")) {
+                            let oldCell = currentCell;
+                            let index = -1;
+                            let row = -1;
+                            let col = -1;
+                            for (let i = 0; i < (cells === null || cells === void 0 ? void 0 : cells.length); i++) {
+                                if (cells && cells[i] == HTMLcell) {
+                                    index = i;
+                                    row = Math.floor(i / 10);
+                                    col = i % 10;
+                                }
+                            }
+                            yield sendMove(Number(localStorage.getItem("lobbyId")), row, col, null);
+                            const newCell = cellsObject[index];
+                            if (newCell.piece) {
+                                newCell.piece.row = row;
+                                newCell.piece.col = String(col);
+                            }
+                            if (oldCell) {
+                                oldCell.piece = null;
+                            }
+                        }
+                    }
                 });
             }
         }
         else {
-            cell.addEventListener("click", function () {
-                cell.classList.toggle("active");
+            HTMLcell.addEventListener("click", function () {
+                if (HTMLcell == (currentCell === null || currentCell === void 0 ? void 0 : currentCell.element)) {
+                    HTMLcell.classList.remove("active");
+                    cells === null || cells === void 0 ? void 0 : cells.forEach(e => e.classList.remove("valid_move"));
+                }
+                else {
+                    cells === null || cells === void 0 ? void 0 : cells.forEach(e => e.classList.remove("active"));
+                    cells === null || cells === void 0 ? void 0 : cells.forEach(e => e.classList.remove("valid_move"));
+                    cellsObject.forEach(e => {
+                        if (e.element == HTMLcell) {
+                            currentCell = e;
+                            showMoves();
+                        }
+                    });
+                    HTMLcell.classList.toggle("active");
+                }
             });
+        }
+        cellsObject.push(new cell(row, col, isWater, piece, HTMLcell));
+        cells === null || cells === void 0 ? void 0 : cells.push(HTMLcell);
+    }
+}
+function showMoves() {
+    var _a, _b, _c, _d, _e, _f, _g;
+    let ranIntoWaterDown = false;
+    let ranIntoWaterUp = false;
+    let ranIntoWaterRight = false;
+    let ranIntoWaterLeft = false;
+    // for blue pieces
+    if (((_a = currentCell === null || currentCell === void 0 ? void 0 : currentCell.piece) === null || _a === void 0 ? void 0 : _a.color) == "blue" && currentCell.piece.isAlive == true && currentCell.piece.rank != -2 && currentCell.piece.rank != -1) {
+        let validMoveCells = [];
+        let validMoveCellObjects = [];
+        if (currentCell.piece.rank != 2) {
+            for (let i = 0; i < (cells === null || cells === void 0 ? void 0 : cells.length); i++) {
+                if ((cells === null || cells === void 0 ? void 0 : cells.length) > 0) {
+                    if (cells && cells[i] == (currentCell === null || currentCell === void 0 ? void 0 : currentCell.element)) {
+                        validMoveCells.push(cells[i + 10]);
+                        validMoveCells.push(cells[i + 1]);
+                        validMoveCells.push(cells[i - 1]);
+                        validMoveCells.push(cells[i - 10]);
+                        validMoveCellObjects.push(cellsObject[i + 10]);
+                        validMoveCellObjects.push(cellsObject[i + 1]);
+                        validMoveCellObjects.push(cellsObject[i - 1]);
+                        validMoveCellObjects.push(cellsObject[i - 10]);
+                    }
+                }
+            }
+            for (let i = 0; i < validMoveCells.length; i++) {
+                if (validMoveCells[i] != null && validMoveCellObjects[i].isWater == false && ((((_c = (_b = validMoveCellObjects[i]) === null || _b === void 0 ? void 0 : _b.piece) === null || _c === void 0 ? void 0 : _c.color) != "blue"))) {
+                    validMoveCells[i].classList.add("valid_move");
+                }
+            }
+        }
+        else if (currentCell.piece.rank == 2) {
+            for (let i = 0; i < (cells === null || cells === void 0 ? void 0 : cells.length); i++) {
+                if (cells && cells[i] == (currentCell === null || currentCell === void 0 ? void 0 : currentCell.element)) {
+                    for (let j = 1; j <= 10; j++) {
+                        //Can move down
+                        if (i + (j * 10) <= cellsObject.length && (i + (j * 10)) >= 0) {
+                            if (cellsObject[i + (j * 10)].col == currentCell.col) {
+                                if (cellsObject[i + (j * 10)].isWater == true) {
+                                    ranIntoWaterDown = true;
+                                }
+                                if (!ranIntoWaterDown) {
+                                    validMoveCellObjects.push(cellsObject[i + (j * 10)]);
+                                    validMoveCells.push(cells[i + (j * 10)]);
+                                }
+                            }
+                        }
+                        //Can move right
+                        if ((i + j) <= cellsObject.length && (i + j) >= 0) {
+                            if (cellsObject[i + (j)].row == currentCell.row) {
+                                if (cellsObject[i + (j)].isWater == true) {
+                                    ranIntoWaterRight = true;
+                                }
+                                if (!ranIntoWaterRight) {
+                                    validMoveCellObjects.push(cellsObject[i + (j)]);
+                                    validMoveCells.push(cells[i + (j)]);
+                                }
+                            }
+                        }
+                        // Can move left
+                        if ((i - j) <= cellsObject.length && (i - j) >= 0) {
+                            if (cellsObject[i - (j)].row == currentCell.row) {
+                                if (cellsObject[i - (j)].isWater) {
+                                    ranIntoWaterLeft = true;
+                                }
+                                if (!ranIntoWaterLeft) {
+                                    validMoveCellObjects.push(cellsObject[i - (j)]);
+                                    validMoveCells.push(cells[i - (j)]);
+                                }
+                            }
+                        }
+                        //Can move up
+                        if ((i - (j * 10)) <= cellsObject.length && (i - (j * 10) >= 0)) {
+                            if (cellsObject[i - (j * 10)].col == currentCell.col) {
+                                if (cellsObject[i - (j * 10)].isWater) {
+                                    ranIntoWaterUp = true;
+                                }
+                                if (!ranIntoWaterUp) {
+                                    validMoveCellObjects.push(cellsObject[i - (j * 10)]);
+                                    validMoveCells.push(cells[i - (j * 10)]);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            for (let i = 0; i < validMoveCells.length; i++) {
+                if (validMoveCells[i] != null && (((_e = (_d = validMoveCellObjects[i]) === null || _d === void 0 ? void 0 : _d.piece) === null || _e === void 0 ? void 0 : _e.color) != "blue" || ((_g = (_f = validMoveCellObjects[i]) === null || _f === void 0 ? void 0 : _f.piece) === null || _g === void 0 ? void 0 : _g.isAlive) == false)) {
+                    validMoveCells[i].classList.add("valid_move");
+                }
+            }
         }
     }
 }
