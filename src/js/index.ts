@@ -521,7 +521,7 @@ function buildEventListener()
 }
 
 async function auth_login(username: string, password: string) {
-    if (localStorage.getItem("currentUser") != "undefined") {
+    if (localStorage.getItem("currentUser") != "undefined" || localStorage.getItem("currentUser") == null) {
         alert("User already logged in!");
         return "User already logged in!"
     }
