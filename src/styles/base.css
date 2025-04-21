@@ -91,9 +91,6 @@ div.cell.active {
 }
 
 .filled_board {
-div.cell.valid_move{
-    background-color: #4FC3F7;
-}
     display: grid;
     grid-template-columns: repeat(10, 1fr);
     width: 70%;
@@ -102,6 +99,10 @@ div.cell.valid_move{
     padding: .5em;
     background-color: var(--black-color);
     box-shadow: 10px 10px var(--shadow-color);
+}
+
+div.cell.valid_move{
+    background-color: #4FC3F7;
 }
 
 .empty_board {
