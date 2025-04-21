@@ -136,8 +136,12 @@ let BluePieces: piece[] = [
     new piece("Blue Flag", -2, 0, true, "./js/Blue Pieces/Blue Flag.png", 0, "l", "blue", 11),
 ]
 // INITAILIZE THE BOARD VISUALLY
-buildEventListener();
-findGame();
+buildEventListener()
+findGame()
+renderLoginForm()
+renderRegisterForm()
+buildLogout()
+buildOnClose()
 
 function buildBoard(board: HTMLElement | null) {
     let piece_index: number = 0;
