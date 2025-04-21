@@ -90,7 +90,10 @@ div.cell.active {
     color: var(--black-color);
 }
 
-#game_board {
+.filled_board {
+div.cell.valid_move{
+    background-color: #4FC3F7;
+}
     display: grid;
     grid-template-columns: repeat(10, 1fr);
     width: 70%;
@@ -99,6 +102,52 @@ div.cell.active {
     padding: .5em;
     background-color: var(--black-color);
     box-shadow: 10px 10px var(--shadow-color);
+}
+
+.empty_board {
+    display: flex;
+    width: 70%;
+    height: 50%;
+    border: 5px solid var(--text-color);
+    border-radius: .5em;
+    padding: .5em;
+    background-color: var(--black-color);
+    box-shadow: 10px 10px var(--shadow-color);
+    justify-content: center;
+    align-items: center;
+}
+
+.game {
+    
+}
+
+#join_game {
+    display: flex;
+    justify-self: center;
+    align-self: center;
+    font-size: x-large;
+}
+
+#box {
+    width: 150px;
+    height: 55px;
+    background-color: rgb(31, 136, 172);
+    border: 2px solid blue;
+    color: blue;
+    border-radius: 2em;
+    padding: 10px;
+    margin: 10px;
+    display: flex;
+    justify-self: center;
+    justify-content: center;
+    transition: 0.5s;
+}
+
+#box:hover {
+    background-color: white;
+    border: 2px solid var(--hover-color);
+    color: var(--hover-color);
+    cursor: pointer;
 }
 
 #auth_links {
