@@ -91,6 +91,9 @@ div.cell.active {
 }
 
 .filled_board {
+div.cell.valid_move{
+    background-color: #4FC3F7;
+}
     display: grid;
     grid-template-columns: repeat(10, 1fr);
     width: 70%;
