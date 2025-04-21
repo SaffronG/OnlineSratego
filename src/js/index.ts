@@ -53,7 +53,7 @@ class ApiBoard {
         this.board = Array();
         for (let i = 0; i < 100; i++) {
             try {
-                this.board[i] = new ApiPiece(board![i].piece!.rank, board![i].piece!.team)
+                this.board[i] = new ApiPiece(board![i].piece!.rank, board![i].piece!.color)
             } catch {
                 this.board[i] = new ApiPiece(0, "NONE")
             }
@@ -107,17 +107,21 @@ let logout_button = document.getElementById("logout_button")
 
 if (logout_button) buildLogout();
 let RedPieces: piece[] = [
+    new piece("Blue Marshal", 1, 1, true, "./js/Red Pieces/Red Marshall.png", 0, "i", "red", 8),
+    new piece("Blue Spy", 0, 1, true, "./js/Red Pieces/Red Spy.png", 0, "j", "red", 9),
+    new piece("Blue Bomb", -1, 0, true, "./js/Red Pieces/Red Bomb.png", 0, "k", "red", 10),
+    new piece("Blue Flag", -2, 0, true, "./js/Red Pieces/Red Flag.png", 0, "l", "red", 11),
+]
 
-piece("Blue Marshal", 1, 1, true, "./js/Blue Pieces/Blue Marshall.png", 0, "i", "blue", 8),
+let BluePieces: piece[] = [
+    new piece("Blue Marshal", 1, 1, true, "./js/Blue Pieces/Blue Marshall.png", 0, "i", "blue", 8),
     new piece("Blue Spy", 0, 1, true, "./js/Blue Pieces/Blue Spy.png", 0, "j", "blue", 9),
     new piece("Blue Bomb", -1, 0, true, "./js/Blue Pieces/Blue Bomb.png", 0, "k", "blue", 10),
     new piece("Blue Flag", -2, 0, true, "./js/Blue Pieces/Blue Flag.png", 0, "l", "blue", 11),
 ]
-
 // INITAILIZE THE BOARD VISUALLY
 buildEventListener();
 buildBoard(board)
-getGames()
 findGame();
 
 function buildBoard(board: HTMLElement | null) {
@@ -148,7 +152,7 @@ function buildBoard(board: HTMLElement | null) {
 
             }
             else {
-                HTMLcell.addEventListener("click", (e) => {
+                HTMLcell.addEventListener("click", async (e) => {
                     if (HTMLcell == currentCell?.element) {
                         HTMLcell.classList.toggle("active");
                         cells?.forEach(cell => cell.classList.remove("valid_move"));
@@ -174,7 +178,7 @@ function buildBoard(board: HTMLElement | null) {
                                     col = i % 10 as ColEnum;
                                 }
                             }
-                            await sendMove(Number(localStorage.getItem("lobbyId")), row, col, null);
+                            await sendMove();
 
                             const newCell = cellsObject[index];
 
@@ -605,15 +609,21 @@ async function findGame() {
     return res;
 }
 
-// async function sendMove() {
-//     let tmpBoard = new ApiBoard(cellObjects);
-//     let response = await fetch(`${base_url}/api/game/postMove`, {
-//         method: "POST",
-//         headers: {
-//             "Content-Type": "application/json"
-//         },
-//         body: JSON.stringify(Number(localStorage.getItem("lobbyId")), tmpBoard.board, localStorage.getItem("currentUser"), localStorage.getItem("currentTurn"), Boolean(localStorage.getItem("isWin"))),
-//     })
+async function sendMove() {
+    let tmpBoard = new ApiBoard(cellsObject);
+    let response = await fetch(`${base_url}/api/game/postMove`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            lobbyId: Number(localStorage.getItem("lobbyId")),
+            board: tmpBoard.board,
+            currentUser: localStorage.getItem("currentUser"),
+            currentTurn: localStorage.getItem("currentTurn"),
+            isWin: Boolean(localStorage.getItem("isWin"))
+        }), // Fixed: Properly structure the JSON body
+    });
 
-//     return await response.json();
-// }
+    return await response.json();
+}
