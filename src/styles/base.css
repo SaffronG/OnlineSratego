@@ -100,6 +100,7 @@ div.cell.active {
     background-color: var(--black-color);
     box-shadow: 10px 10px var(--shadow-color);
 }
+
 div.cell.valid_move{
     background-color: #4FC3F7;
 }
