@@ -103,7 +103,6 @@ let BluePieces = [
 ];
 // INITAILIZE THE BOARD VISUALLY
 buildEventListener();
-buildBoard(board);
 findGame();
 function buildBoard(board) {
     let piece_index = 0;

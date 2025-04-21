@@ -107,13 +107,29 @@ let logout_button = document.getElementById("logout_button")
 
 if (logout_button) buildLogout();
 let RedPieces: piece[] = [
-    new piece("Blue Marshal", 1, 1, true, "./js/Red Pieces/Red Marshall.png", 0, "i", "red", 8),
-    new piece("Blue Spy", 0, 1, true, "./js/Red Pieces/Red Spy.png", 0, "j", "red", 9),
-    new piece("Blue Bomb", -1, 0, true, "./js/Red Pieces/Red Bomb.png", 0, "k", "red", 10),
-    new piece("Blue Flag", -2, 0, true, "./js/Red Pieces/Red Flag.png", 0, "l", "red", 11),
+    new piece("Red Scout", 9, 100, true, "./js/Red Pieces/Red Scout.png", 0, "a", "red", 0),
+    new piece("Red Miner", 8, 1, true, "./js/Red Pieces/Red Miner.png", 0, "b", "red", 1),
+    new piece("Red Sergeant", 7, 1, true, "./js/Red Pieces/Red Sergeant.png", 0, "c", "red", 2),
+    new piece("Red Lieutenant", 6, 1, true, "./js/Red Pieces/Red Lieutenant.png", 0, "d", "red", 3),
+    new piece("Red Captain", 5, 1, true, "./js/Red Pieces/Red Captain.png", 0, "e", "red", 4),
+    new piece("Red Major", 4, 1, true, "./js/Red Pieces/Red Major.png", 0, "f", "red", 5),
+    new piece("Red Colonel", 3, 1, true, "./js/Red Pieces/Red Colonel.png", 0, "g", "red", 6),
+    new piece("Red General", 2, 1, true, "./js/Red Pieces/Red General.png", 0, "h", "red", 7),
+    new piece("Red Marshal", 1, 1, true, "./js/Red Pieces/Red Marshall.png", 0, "i", "red", 8),
+    new piece("Red Spy", 0, 1, true, "./js/Red Pieces/Red Spy.png", 0, "j", "red", 9),
+    new piece("Red Bomb", -1, 0, true, "./js/Red Pieces/Red Bomb.png", 0, "k", "red", 10),
+    new piece("Red Flag", -2, 0, true, "./js/Red Pieces/Red Flag.png", 0, "l", "red", 11),
 ]
 
 let BluePieces: piece[] = [
+    new piece("Blue Scout", 9, 100, true, "./js/Blue Pieces/Blue Scout.png", 0, "a", "blue", 0),
+    new piece("Blue Miner", 8, 1, true, "./js/Blue Pieces/Blue Miner.png", 0, "b", "blue", 1),
+    new piece("Blue Sergeant", 7, 1, true, "./js/Blue Pieces/Blue Sergeant.png", 0, "c", "blue", 2),
+    new piece("Blue Lieutenant", 6, 1, true, "./js/Blue Pieces/Blue Lieutenant.png", 0, "d", "blue", 3),
+    new piece("Blue Captain", 5, 1, true, "./js/Blue Pieces/Blue Captain.png", 0, "e", "blue", 4),
+    new piece("Blue Major", 4, 1, true, "./js/Blue Pieces/Blue Major.png", 0, "f", "blue", 5),
+    new piece("Blue Colonel", 3, 1, true, "./js/Blue Pieces/Blue Colonel.png", 0, "g", "blue", 6),
+    new piece("Blue General", 2, 1, true, "./js/Blue Pieces/Blue General.png", 0, "h", "blue", 7),
     new piece("Blue Marshal", 1, 1, true, "./js/Blue Pieces/Blue Marshall.png", 0, "i", "blue", 8),
     new piece("Blue Spy", 0, 1, true, "./js/Blue Pieces/Blue Spy.png", 0, "j", "blue", 9),
     new piece("Blue Bomb", -1, 0, true, "./js/Blue Pieces/Blue Bomb.png", 0, "k", "blue", 10),
@@ -121,7 +137,6 @@ let BluePieces: piece[] = [
 ]
 // INITAILIZE THE BOARD VISUALLY
 buildEventListener();
-buildBoard(board)
 findGame();
 
 function buildBoard(board: HTMLElement | null) {
