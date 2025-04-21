@@ -59,6 +59,7 @@ var ColEnum;
 let currentCell = null;
 let board = document.getElementById("game_board");
 let title = document.getElementById("title");
+let box = document.getElementById("box");
 let cells = [];
 let cellsObject = [];
 var currentUser = null;
@@ -108,9 +109,10 @@ let BluePieces = [
     new piece("Blue Flag", -2, 0, true, "./js/Blue Pieces/Blue Flag.png", 0, "l", "blue", 11),
 ];
 // INITAILIZE THE BOARD VISUALLY
-buildBoard(board);
+buildEventListener();
 getGames();
 findGame();
+buildBoard(board);
 function buildBoard(board) {
     let piece_index = 0;
     for (let i = 0; i < 100; i++) {
@@ -415,6 +417,14 @@ function buildLogout() {
         console.error("Logout button not found!");
     }
 }
+
+function buildEventListener() {
+    box === null || box === void 0 ? void 0 : box.addEventListener("click", (e) => __awaiter(this, void 0, void 0, function* () {
+        e.preventDefault();
+        let game = yield findGame();
+    }));
+}
+
 function auth_login(username, password) {
     return __awaiter(this, void 0, void 0, function* () {
         if (localStorage.getItem("currentUser") != "undefined") {
@@ -486,6 +496,7 @@ function logout(username) {
         }
     });
 }
+
 function getGames() {
     return __awaiter(this, void 0, void 0, function* () {
         let response = yield fetch(`${base_url}/api/game/getGames`);

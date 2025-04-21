@@ -69,6 +69,7 @@ enum ColEnum {
 let currentCell: cell | null = null;
 let board: HTMLElement | null = document.getElementById("game_board");
 let title: HTMLElement | null = document.getElementById("title");
+let box: HTMLElement | null = document.getElementById("box");
 let cells: HTMLElement[] | null = [];
 let cellsObject: cell[] = [];
 
@@ -120,6 +121,7 @@ let BluePieces: piece[] = [
 ]
 
 // INITAILIZE THE BOARD VISUALLY
+buildEventListener();
 buildBoard(board)
 getGames()
 findGame();
@@ -481,6 +483,14 @@ function buildLogout() {
     } else {
         console.error("Logout button not found!");
     }
+}
+
+function buildEventListener()
+{
+    box?.addEventListener("click", async (e) => {
+        e.preventDefault()
+        let game = await findGame();
+    })
 }
 
 async function auth_login(username: string, password: string) {
