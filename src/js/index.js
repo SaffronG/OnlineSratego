@@ -458,7 +458,7 @@ function renderRegisterForm() {
 function buildOnClose() {
     window.addEventListener("beforeunload", async () => {
         await logout(localStorage.getItem("currentUser"));
-        localStorage.setItem("currentUser", "undefined");
+        localStorage.removeItem("currentUser");
         localStorage.setItem("loggedIn", "false");
         localStorage.setItem("joinedGame", "false");
     });
@@ -469,25 +469,14 @@ function buildLogout() {
             e.preventDefault();
             console.log("CLICKED");
             let currentUser = localStorage.getItem("currentUser");
-            if (!currentUser || currentUser === "undefined") {
-                alert("No user is currently logged in!");
-                return;
+            if (!currentUser || currentUser == undefined) {
+                return "NO USER CURRENTLY LOGGED IN";
             }
-            localStorage.setItem("currentUser", "undefined");
+            localStorage.removeItem("currentUser");
             localStorage.setItem("loggedIn", "false");
             localStorage.setItem("joinedGame", "false");
             let response = await logout(currentUser);
-            if (!response) {
-                localStorage.setItem("currentUser", "undefined");
-                localStorage.setItem("loggedIn", "false");
-                localStorage.setItem("joinedGame", "false");
-                currentUser = null;
-                alert("Logged out successfully!");
-                window.location.replace("./index.html");
-            }
-            else {
-                alert("Logout failed! Please try again.");
-            }
+            alert("Logged out successfully!");
         });
     }
     else {
@@ -548,11 +537,13 @@ async function logout(username) {
             console.error("Logout failed:", errorData);
             throw new Error(`Logout failed with status ${response.status}`);
         }
-        alert("Logged out successfully!");
-        localStorage.setItem("currentUser", "undefined");
-        localStorage.setItem("loggedIn", "false");
-        const responseData = await response.json();
-        return new Error(responseData);
+        else {
+            alert("Logged out successfully!");
+            localStorage.remove("currentUser", "undefined");
+            localStorage.setItem("loggedIn", "false");
+            const responseData = await response.json();
+            return response;
+        }
     }
     catch (error) {
         console.error("An error occurred during logout:", error);
@@ -582,7 +573,7 @@ async function findGame() {
     let res = await response.json();
     return res;
 }
-async function sendMove() {
+async function sendMove(row, col) {
     let tmpBoard = new ApiBoard(cellsObject);
     let response = await fetch(`${base_url}/api/game/postMove`, {
         method: "POST",
@@ -591,11 +582,10 @@ async function sendMove() {
         },
         body: JSON.stringify({
             lobbyId: Number(localStorage.getItem("lobbyId")),
-            board: tmpBoard.board,
-            currentUser: localStorage.getItem("currentUser"),
-            currentTurn: localStorage.getItem("currentTurn"),
-            isWin: Boolean(localStorage.getItem("isWin"))
-        }), // Fixed: Properly structure the JSON body
+            row: row,
+            column: col,
+            time: null
+        }),
     });
     return await response.json();
 }
