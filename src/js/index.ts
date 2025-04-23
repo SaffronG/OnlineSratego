@@ -96,10 +96,9 @@ let board: HTMLElement | null = document.getElementById("game_board");
 let title: HTMLElement | null = document.getElementById("title");
 let cells: HTMLElement[] | null = [];
 let cellsObject: cell[] = [];
-let currentGame: ApiPiece[];
-let joinedGame: Boolean;
 let lobbyId: number;
 let turn: number;
+let joinedGame = localStorage.getItem("joinedGame")
 
 var currentUser: any | null = null;
 // let base_url: string = "http://localhost:5244";
@@ -139,18 +138,25 @@ let BluePieces: piece[] = [
     new piece("Blue Scout", 9, 100, true, "./src/js/Blue Pieces/Blue Scout.png", 0, "a", "blue", 0),
 ]
 // INITAILIZE THE BOARD VISUALLY
-if (!joinedGame) {
-    buildJoin()
-} else {
-    buildBoard(board)
-}
-renderLoginForm()
-renderRegisterForm()
-buildLogout()
-buildOnClose()
+main()
 
-function buildBoard(board: HTMLElement | null) {
-    console.log(joinedGame)
+async function main() {
+    if (joinedGame != "true") {
+        buildJoin()
+    } else {
+        await buildBoard(board)
+    }
+    renderLoginForm()
+    renderRegisterForm()
+    buildLogout()
+    buildOnClose()
+}
+
+async function buildBoard(board: HTMLElement | null) {
+    board?.replaceChildren()
+    board!.classList = "filled_board"
+    let response = await findGame()
+    let currentGame = response.board
     for (let i = 0; i < 100; i++) {
         let HTMLcell: HTMLDivElement = document.createElement("div");
         let row = Math.floor(i / 10);
@@ -158,9 +164,7 @@ function buildBoard(board: HTMLElement | null) {
         let isWater = false;
         HTMLcell.className = "cell";
         let a_piece: ApiPiece = currentGame[i];
-        let piece: piece;
-        console.log(`${i} v`)
-        console.log(currentGame[i])
+        let piece: piece | null = null;
         if (currentGame[i] != null) {
             try {
                 if (i < 41) {
@@ -266,15 +270,13 @@ function buildJoin() {
     boxDiv.addEventListener("click", async (e) => {
         e.preventDefault()
         let response = await findGame();
-        currentGame = response.board;
-        console.log(currentGame)
         board!.classList = "filled_board"
-        joinedGame = true;
+        await localStorage.setItem("joinedGame", "true")
         buildJoin()
         buildBoard(board);
     })
 
-    if (!joinedGame)
+    if (localStorage.getItem("joinedGame") != "true")
         board?.replaceChildren(parTag)
     else {
         board?.replaceChildren();
@@ -506,6 +508,7 @@ function buildOnClose() {
         await logout(localStorage.getItem("currentUser"));
         localStorage.setItem("currentUser", "undefined");
         localStorage.setItem("loggedIn", "false");
+        localStorage.setItem("joinedGame", "false")
     })
 }
 
@@ -523,10 +526,12 @@ function buildLogout() {
 
             localStorage.setItem("currentUser", "undefined");
             localStorage.setItem("loggedIn", "false");
+            localStorage.setItem("joinedGame", "false")
             let response = await logout(currentUser);
             if (!response) {
                 localStorage.setItem("currentUser", "undefined");
                 localStorage.setItem("loggedIn", "false");
+                localStorage.setItem("joinedGame", "false")
                 currentUser = null;
                 alert("Logged out successfully!");
                 window.location.replace("./index.html");
@@ -611,13 +616,6 @@ async function logout(username: string | null) {
     }
 }
 
-// NOT IN USE
-// async function getGames() {
-//     let response = await fetch(`${base_url}/api/game/getGames`)
-
-//     return await response.json();
-// }
-
 async function findGame() {
     // Retrieve the username from localStorage
     let username = localStorage.getItem("currentUser");
@@ -643,7 +641,6 @@ async function findGame() {
     }
 
     let res = await response.json();
-    console.log(res);
     return res;
 }
 
