@@ -4,21 +4,21 @@
 */
 
 :root {
-    --black-color: rgb(255, 201, 85);
-    --text-color: rgb(240, 166, 30);
+    --black-color: rgb(18, 110, 44);
+    --text-color: rgb(251, 204, 117);
     --hover-color: rgb(255, 255, 255);
     --black-border: rgb(48, 42, 42);
     --shadow-color: rgb(20, 19, 19);
-    --water: rgb(93, 93, 229);
+    --water: rgb(74, 74, 204);
 }
 
 @media (prefers-color-scheme: light) {
     body {
-        --black-border: white;
-        --black-color: rgb(242, 217, 185);
-        --text-color: rgb(255, 117, 71);
+        --black-border: rgb(232, 164, 104);
+        --black-color: rgb(18, 110, 44);
+        --text-color: rgb(13, 13, 13);
         --hover-color: rgb(234, 234, 35);
-        --water: rgb(22, 22, 160);
+        --water: rgb(74, 74, 204);
         --shadow-color: rgb(111, 100, 100);
     }
 }
