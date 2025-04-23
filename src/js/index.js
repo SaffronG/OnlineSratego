@@ -104,6 +104,7 @@ let RedPieces = [
     new piece("Red Sergeant", 7, 1, true, "./src/js/Red Pieces/Red Sergeant.png", 0, "c", "red", 2), // 9
     new piece("Red Miner", 8, 1, true, "./src/js/Red Pieces/Red Miner.png", 0, "b", "red", 1), // 10
     new piece("Red Scout", 9, 100, true, "./src/js/Red Pieces/Red Scout.png", 0, "a", "red", 0), // 11
+    new piece("Piece", 99, 100, true, "./src/js/Red Pieces/Red Game Piece.png", 0, "a", "red", 0), // 12
 ];
 let BluePieces = [
     new piece("Blue Flag", -2, 0, true, "./src/js/Blue Pieces/Blue Flag.png", 0, "l", "blue", 11),
@@ -509,8 +510,8 @@ function renderRegisterForm() {
     }
 }
 function buildOnClose() {
-    window.addEventListener("beforeunload", () => __awaiter(this, void 0, void 0, function* () {
-        yield logout(localStorage.getItem("currentUser"));
+    window.addEventListener("beforeunload", async () => {
+        await logout(localStorage.getItem("currentUser"));
         localStorage.setItem("currentUser", "undefined");
         localStorage.setItem("loggedIn", "false");
         localStorage.setItem("joinedGame", "false");
@@ -522,14 +523,13 @@ function buildLogout() {
             e.preventDefault();
             console.log("CLICKED");
             let currentUser = localStorage.getItem("currentUser");
-            if (!currentUser || currentUser === "undefined") {
-                alert("No user is currently logged in!");
-                return;
+            if (!currentUser || currentUser == undefined) {
+                return "NO USER CURRENTLY LOGGED IN";
             }
-            localStorage.setItem("currentUser", "undefined");
+            localStorage.removeItem("currentUser");
             localStorage.setItem("loggedIn", "false");
             localStorage.setItem("joinedGame", "false");
-            let response = yield logout(currentUser);
+            let response = await logout(currentUser);
             if (!response) {
                 localStorage.setItem("currentUser", "undefined");
                 localStorage.setItem("loggedIn", "false");
@@ -541,7 +541,7 @@ function buildLogout() {
             else {
                 alert("Logout failed! Please try again.");
             }
-        }));
+        });
     }
     else {
         console.error("Logout button not found!");
@@ -615,41 +615,20 @@ function register(username, password, email) {
             body: JSON.stringify({ username, password, email })
         });
         if (!response.ok) {
-            console.error("Registration failed:", yield response.text());
-            return response;
+            const errorData = await response.text();
+            console.error("Logout failed:", errorData);
+            throw new Error(`Logout failed with status ${response.status}`);
         }
-        return response;
-    });
-}
-function logout(username) {
-    return __awaiter(this, void 0, void 0, function* () {
-        if (!username) {
-            throw new Error("Username is required for logout.");
-        }
-        try {
-            let response = yield fetch(`${base_url}/api/auth/logout`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ username })
-            });
-            if (!response.ok) {
-                const errorData = yield response.text();
-                console.error("Logout failed:", errorData);
-                throw new Error(`Logout failed with status ${response.status}`);
-            }
-            alert("Logged out successfully!");
-            localStorage.setItem("currentUser", "undefined");
-            localStorage.setItem("loggedIn", "false");
-            const responseData = yield response.json();
-            return new Error(responseData);
-        }
-        catch (error) {
-            console.error("An error occurred during logout:", error);
-            throw error;
-        }
-    });
+        alert("Logged out successfully!");
+        localStorage.setItem("currentUser", "undefined");
+        localStorage.setItem("loggedIn", "false");
+        const responseData = await response.json();
+        return new Error(responseData);
+    }
+    catch (error) {
+        console.error("An error occurred during logout:", error);
+        throw error;
+    }
 }
 function findGame() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -676,24 +655,22 @@ function findGame() {
         return res;
     });
 }
-function sendMove() {
-    return __awaiter(this, void 0, void 0, function* () {
-        let tmpBoard = new ApiBoard(cellsObject);
-        let response = yield fetch(`${base_url}/api/game/postMove`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                lobbyId: Number(localStorage.getItem("lobbyId")),
-                board: tmpBoard.board,
-                currentUser: localStorage.getItem("currentUser"),
-                currentTurn: localStorage.getItem("currentTurn"),
-                isWin: Boolean(localStorage.getItem("isWin"))
-            }), // Fixed: Properly structure the JSON body
-        });
-        return yield response.json();
+async function sendMove() {
+    let tmpBoard = new ApiBoard(cellsObject);
+    let response = await fetch(`${base_url}/api/game/postMove`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            lobbyId: Number(localStorage.getItem("lobbyId")),
+            board: tmpBoard.board,
+            currentUser: localStorage.getItem("currentUser"),
+            currentTurn: localStorage.getItem("currentTurn"),
+            isWin: Boolean(localStorage.getItem("isWin"))
+        }), // Fixed: Properly structure the JSON body
     });
+    return await response.json();
 }
 function endGame(lobbyId) {
     return __awaiter(this, void 0, void 0, function* () {

@@ -121,6 +121,7 @@ let RedPieces: piece[] = [
     new piece("Red Sergeant", 7, 1, true, "./src/js/Red Pieces/Red Sergeant.png", 0, "c", "red", 2),    // 9
     new piece("Red Miner", 8, 1, true, "./src/js/Red Pieces/Red Miner.png", 0, "b", "red", 1),       // 10
     new piece("Red Scout", 9, 100, true, "./src/js/Red Pieces/Red Scout.png", 0, "a", "red", 0),       // 11
+    new piece("Piece", 99, 100, true, "./src/js/Red Pieces/Red Game Piece.png", 0, "a", "red", 0),       // 12
 ]
 
 let BluePieces: piece[] = [
@@ -166,11 +167,13 @@ async function buildBoard(board: HTMLElement | null) {
         HTMLcell.className = "cell";
         let a_piece: ApiPiece = currentGame[i];
         let piece: piece | null = null;
+        console.log(a_piece);
+        console.log(piece);
         if (currentGame[i] != null) {
             try {
                 if (i < 41) {
-                    piece = RedPieces[a_piece.rank + 2]
-                } else if (i > 60) {
+                    piece = RedPieces[12]
+                } else if (i > 59) {
                     piece = BluePieces[a_piece.rank + 2]
                 }
                 HTMLcell.innerHTML = `<img src="../${piece!.image}" alt="${piece!.name}"">`;
@@ -214,18 +217,19 @@ async function buildBoard(board: HTMLElement | null) {
                                     col = i % 10 as ColEnum;
                                 }
                             }
-                            await sendMove(row, String(col));
+                            await sendMove(index);
 
                             const newCell = cellsObject[index];
 
                             if (newCell.piece) {
-                                newCell.piece.row = row;
-                                newCell.piece.col = String(col);
+                                newCell.piece.row = row
+                                newCell.piece.col = String(col)
                             }
 
                             if (oldCell) {
-                                oldCell.piece = null;
+                                oldCell.piece = null
                             }
+                            window.location.reload()
                         }
                     }
                 })
@@ -566,7 +570,7 @@ function renderRegisterForm() {
 function buildOnClose() {
     window.addEventListener("beforeunload", async () => {
         await logout(localStorage.getItem("currentUser"));
-        localStorage.setItem("currentUser", "undefined");
+        localStorage.removeItem("currentUser");
         localStorage.setItem("loggedIn", "false");
         localStorage.setItem("joinedGame", "false")
     })
@@ -579,25 +583,15 @@ function buildLogout() {
             console.log("CLICKED");
 
             let currentUser = localStorage.getItem("currentUser");
-            if (!currentUser || currentUser === "undefined") {
-                alert("No user is currently logged in!");
-                return;
+            if (!currentUser || currentUser == undefined) {
+                return "NO USER CURRENTLY LOGGED IN";
             }
 
-            localStorage.setItem("currentUser", "undefined");
+            localStorage.removeItem("currentUser");
             localStorage.setItem("loggedIn", "false");
             localStorage.setItem("joinedGame", "false")
             let response = await logout(currentUser);
-            if (!response) {
-                localStorage.setItem("currentUser", "undefined");
-                localStorage.setItem("loggedIn", "false");
-                localStorage.setItem("joinedGame", "false")
-                currentUser = null;
-                alert("Logged out successfully!");
-                window.location.replace("./index.html");
-            } else {
-                alert("Logout failed! Please try again.");
-            }
+            alert("Logged out successfully!");
         });
     } else {
         console.error("Logout button not found!");
@@ -665,11 +659,13 @@ async function logout(username: string | null) {
             console.error("Logout failed:", errorData);
             throw new Error(`Logout failed with status ${response.status}`);
         }
-        alert("Logged out successfully!")
-        localStorage.setItem("currentUser", "undefined");
-        localStorage.setItem("loggedIn", "false");
-        const responseData = await response.json();
-        return new Error(responseData);
+        else {
+            alert("Logged out successfully!")
+            localStorage.remove("currentUser", "undefined");
+            localStorage.setItem("loggedIn", "false");
+            const responseData = await response.json();
+            return response;
+        }
     } catch (error) {
         console.error("An error occurred during logout:", error);
         throw error;
@@ -704,7 +700,7 @@ async function findGame() {
     return res;
 }
 
-async function sendMove(row: number, col: string) {
+async function sendMove(index: number) {
     let tmpBoard = new ApiBoard(cellsObject);
     let response = await fetch(`${base_url}/api/game/postMove`, {
         method: "POST",
@@ -713,9 +709,10 @@ async function sendMove(row: number, col: string) {
         },
         body: JSON.stringify({
             lobbyId: Number(localStorage.getItem("lobbyId")),
-            row: row,
-            column: col,
-            time:  null
+            user: localStorage.getItem("currentUser"),
+            index_last: Number,
+            index: Number,
+            time: null
         }),
     });
 
