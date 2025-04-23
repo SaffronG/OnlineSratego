@@ -86,7 +86,7 @@ div.cell.active {
 
 .filled_board {
     display: grid;
-    grid-template-columns: repeat(10, 1fr);
+    grid-template-columns: repeat(10, 10.2%);
     width: 70%;
     border: 5px solid var(--text-color);
     border-radius: .5em;
