@@ -113,6 +113,7 @@ let RedPieces = [
     new piece("Red Sergeant", 7, 1, true, "./src/js/Red Pieces/Red Sergeant.png", 0, "c", "red", 2), // 9
     new piece("Red Miner", 8, 1, true, "./src/js/Red Pieces/Red Miner.png", 0, "b", "red", 1), // 10
     new piece("Red Scout", 9, 100, true, "./src/js/Red Pieces/Red Scout.png", 0, "a", "red", 0), // 11
+    new piece("Piece", 99, 100, true, "./src/js/Red Pieces/Red Game Piece.png", 0, "a", "red", 0), // 12
 ];
 let BluePieces = [
     new piece("Blue Flag", -2, 0, true, "./src/js/Blue Pieces/Blue Flag.png", 0, "l", "blue", 11),
@@ -160,7 +161,7 @@ async function buildBoard(board) {
         if (currentGame[i] != null) {
             try {
                 if (i < 41) {
-                    piece = RedPieces[a_piece.rank + 2];
+                    piece = RedPieces[12];
                 }
                 else if (i > 59) {
                     piece = BluePieces[a_piece.rank + 2];
