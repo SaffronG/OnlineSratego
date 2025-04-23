@@ -386,7 +386,7 @@ function renderLoginForm() {
             e.preventDefault();
             let response = yield auth_login(usernameInput.value, passwordInput.value);
             console.log(response);
-            if (typeof response !== "string" && response.ok) {
+            if (typeof response !== "string" && response.status == 200) {
                 localStorage.setItem("currentUser", usernameInput.value);
                 localStorage.setItem("loggedIn", "true");
                 window.location.replace("./index.html");
@@ -492,30 +492,28 @@ function buildLogout() {
         console.error("Logout button not found!");
     }
 }
-function auth_login(username, password) {
-    return __awaiter(this, void 0, void 0, function* () {
-        if (localStorage.getItem("currentUser") != "undefined" || localStorage.getItem("currentUser") == null) {
-            alert("User already logged in!");
-            return "User already logged in!";
-        }
-        else {
-            let response = yield fetch(`${base_url}/api/auth/login`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ username, password, email: "" })
-            });
-            if (!response.ok) {
-                console.error("Login failed:", yield response.text());
-                return response;
-            }
-            currentUser = response;
-            console.log(response);
-            alert("Login successful!");
+async function auth_login(username, password) {
+    let currentUser = localStorage.getItem("currentUser");
+    if (currentUser != null) {
+        alert("User already logged in!");
+        return `CurrentUser, ${currentUser} already logged in!`;
+    }
+    else {
+        let response = await fetch(`${base_url}/api/auth/login`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ username, password, email: "" })
+        });
+        if (response.status != 200) {
+            console.error("Login failed:", await response.text());
             return response;
         }
-    });
+        console.log(response);
+        alert("Login successful!");
+        return response;
+    }
 }
 function register(username, password, email) {
     return __awaiter(this, void 0, void 0, function* () {
