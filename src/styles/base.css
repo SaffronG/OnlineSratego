@@ -52,32 +52,25 @@ body {
 }
 
 div.cell {
-    width: 3vh;
-    height: 1vh;
-    background-color: var(--text-color);
+    width: 100%;
+    height: 100%;
     justify-content: center;
     align-items: center;
-    margin: .1em;
-    font-size: 8px;
-    padding: 25%;
-    color: var(--black-color);
     cursor: pointer;
     transition: background-color 0.3s ease;
-    box-shadow: 0.5px 0.5px var(--shadow-color);
+    padding: 0;
 }
 
 div.cell_water {
-    width: 3vh;
-    height: 1vh;
+    width: 13vh;
+    height: 8vh;
     background-color: var(--water);
     justify-content: center;
     align-items: center;
-    margin: .1em;
     font-size: 8px;
-    padding: 25%;
     color: var(--black-color);
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    margin: 0;
     box-shadow: 2px 2px var(--shadow-color);
 }
 
@@ -105,6 +98,11 @@ div.cell.valid_move{
     background-color: #4FC3F7;
 }
 
+.cell img {
+    width: 13vh;
+    height: 8vh;
+}
+
 .empty_board {
     display: flex;
     width: 70%;
@@ -116,10 +114,6 @@ div.cell.valid_move{
     box-shadow: 10px 10px var(--shadow-color);
     justify-content: center;
     align-items: center;
-}
-
-.game {
-    
 }
 
 #join_game {
