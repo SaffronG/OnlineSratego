@@ -150,6 +150,7 @@ async function main() {
     renderRegisterForm()
     buildLogout()
     buildOnClose()
+    endGame(1)
 }
 
 async function buildBoard(board: HTMLElement | null) {
@@ -213,7 +214,7 @@ async function buildBoard(board: HTMLElement | null) {
                                     col = i % 10 as ColEnum;
                                 }
                             }
-                            await sendMove();
+                            await sendMove(row, String(col));
 
                             const newCell = cellsObject[index];
 
@@ -288,11 +289,20 @@ function showMoves() {
     let ranIntoWaterUp = false;
     let ranIntoWaterRight = false;
     let ranIntoWaterLeft = false;
+    let ranIntoSameColorPieceUp = false;
+    let ranIntoSameColorPieceDown = false;
+    let ranIntoSameColorPieceRight = false;
+    let ranIntoSameColorPieceLeft = false;
+    let ranIntoOpositeColorPieceLeft = false;
+    let ranIntoOpositeColorPieceRight = false;
+    let ranIntoOpositeColorPieceUp = false;
+    let ranIntoOpositeColorPieceDown = false;
+
     // for blue pieces
     if (currentCell?.piece?.color == "blue" && currentCell.piece.isAlive == true && currentCell.piece.rank != -2 && currentCell.piece.rank != -1) {
         let validMoveCells: HTMLElement[] = [];
         let validMoveCellObjects: cell[] = [];
-        if (currentCell.piece.rank != 2) {
+        if (currentCell.piece.rank != 9) {
 
             for (let i = 0; i < cells?.length!; i++) {
                 if (cells?.length! > 0) {
@@ -317,7 +327,11 @@ function showMoves() {
                 }
             }
         }
-        else if (currentCell.piece.rank == 2) {
+        else if (currentCell.piece.rank == 9) {
+            let firstOpositePieceDown = true;
+            let firstOpositePieceUp = true;
+            let firstOpositePieceLeft = true;
+            let firstOpositePieceRight = true;
             for (let i = 0; i < cells?.length!; i++) {
                 if (cells && cells[i] == currentCell?.element) {
                     for (let j = 1; j <= 10; j++) {
@@ -328,7 +342,20 @@ function showMoves() {
                                 if (cellsObject[i + (j * 10)].isWater == true) {
                                     ranIntoWaterDown = true;
                                 }
-                                if (!ranIntoWaterDown) {
+                                if(cellsObject[i + (j * 10)].piece?.color == "blue")
+                                {
+                                    ranIntoSameColorPieceDown = true;
+                                }
+                                if(cellsObject[i + (j * 10)].piece?.color == "red")
+                                {
+                                    ranIntoOpositeColorPieceDown = true;
+                                    if (!ranIntoWaterDown && !ranIntoSameColorPieceDown && firstOpositePieceDown) {
+                                        validMoveCellObjects.push(cellsObject[i + (j * 10)]);
+                                        validMoveCells.push(cells[i + (j * 10)]);
+                                        firstOpositePieceDown = false;
+                                    }
+                                }
+                                if (!ranIntoWaterDown && !ranIntoSameColorPieceDown) {
                                     validMoveCellObjects.push(cellsObject[i + (j * 10)]);
                                     validMoveCells.push(cells[i + (j * 10)]);
                                 }
@@ -341,7 +368,18 @@ function showMoves() {
                                 if (cellsObject[i + (j)].isWater == true) {
                                     ranIntoWaterRight = true;
                                 }
-                                if (!ranIntoWaterRight) {
+                                if (cellsObject[i + (j)].piece?.color == "blue") {
+                                    ranIntoSameColorPieceRight = true;
+                                }
+                                if (cellsObject[i + (j)].piece?.color == "red") {
+                                    ranIntoOpositeColorPieceRight = true;
+                                    if (!ranIntoWaterRight && !ranIntoSameColorPieceRight && firstOpositePieceRight) {
+                                        validMoveCellObjects.push(cellsObject[i + (j)]);
+                                        validMoveCells.push(cells[i + (j)]);
+                                        firstOpositePieceRight = false;
+                                    }
+                                }
+                                if (!ranIntoWaterRight && !ranIntoSameColorPieceRight) {
                                     validMoveCellObjects.push(cellsObject[i + (j)]);
                                     validMoveCells.push(cells[i + (j)]);
                                 }
@@ -355,7 +393,18 @@ function showMoves() {
                                 if (cellsObject[i - (j)].isWater) {
                                     ranIntoWaterLeft = true;
                                 }
-                                if (!ranIntoWaterLeft) {
+                                if (cellsObject[i - (j)].piece?.color == "blue") {
+                                    ranIntoSameColorPieceLeft = true;
+                                }
+                                if (cellsObject[i - (j)].piece?.color == "red") {
+                                    ranIntoOpositeColorPieceLeft = true;
+                                    if (!ranIntoWaterLeft && !ranIntoSameColorPieceLeft && firstOpositePieceLeft) {
+                                        validMoveCellObjects.push(cellsObject[i - (j)]);
+                                        validMoveCells.push(cells[i - (j)]);
+                                        firstOpositePieceLeft = false;
+                                    }
+                                }
+                                if (!ranIntoWaterLeft && !ranIntoSameColorPieceLeft) {
                                     validMoveCellObjects.push(cellsObject[i - (j)]);
                                     validMoveCells.push(cells[i - (j)]);
                                 }
@@ -369,7 +418,18 @@ function showMoves() {
                                 if (cellsObject[i - (j * 10)].isWater) {
                                     ranIntoWaterUp = true;
                                 }
-                                if (!ranIntoWaterUp) {
+                                if (cellsObject[i - (j * 10)].piece?.color == "blue") {
+                                    ranIntoSameColorPieceUp = true;
+                                }
+                                if (cellsObject[i - (j * 10)].piece?.color == "red") {
+                                    ranIntoOpositeColorPieceUp = true;
+                                    if (!ranIntoWaterUp && !ranIntoSameColorPieceUp && firstOpositePieceUp) {
+                                        validMoveCellObjects.push(cellsObject[i - (j * 10)]);
+                                        validMoveCells.push(cells[i - (j * 10)]);
+                                        firstOpositePieceUp = false;
+                                    }
+                                }
+                                if (!ranIntoWaterUp && !ranIntoSameColorPieceUp) {
                                     validMoveCellObjects.push(cellsObject[i - (j * 10)]);
                                     validMoveCells.push(cells[i - (j * 10)]);
                                 }
@@ -662,7 +722,7 @@ async function sendMove(row: number, col: string) {
     return await response.json();
 }
 
-async function endGame() {
+async function endGame(lobbyId: Number) {
     let response = await fetch(`${base_url}/api/game/endGame`, {
         method: "POST",
         headers: {
