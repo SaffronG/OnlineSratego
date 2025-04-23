@@ -388,7 +388,7 @@ function renderLoginForm() {
             e.preventDefault();
             let response = await auth_login(usernameInput.value, passwordInput.value);
             console.log(response);
-            if (typeof response !== "string" && response.ok) {
+            if (typeof response !== "string" && response.status == 200) {
                 localStorage.setItem("currentUser", usernameInput.value);
                 localStorage.setItem("loggedIn", "true");
                 window.location.replace("./index.html");
@@ -495,9 +495,10 @@ function buildLogout() {
     }
 }
 async function auth_login(username, password) {
-    if (localStorage.getItem("currentUser") != "undefined" || localStorage.getItem("currentUser") == null) {
+    let currentUser = localStorage.getItem("currentUser");
+    if (currentUser != null) {
         alert("User already logged in!");
-        return "User already logged in!";
+        return `CurrentUser, ${currentUser} already logged in!`;
     }
     else {
         let response = await fetch(`${base_url}/api/auth/login`, {
@@ -507,11 +508,10 @@ async function auth_login(username, password) {
             },
             body: JSON.stringify({ username, password, email: "" })
         });
-        if (!response.ok) {
+        if (response.status != 200) {
             console.error("Login failed:", await response.text());
             return response;
         }
-        currentUser = response;
         console.log(response);
         alert("Login successful!");
         return response;

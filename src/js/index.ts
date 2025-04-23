@@ -423,7 +423,7 @@ function renderLoginForm() {
             e.preventDefault()
             let response = await auth_login(usernameInput.value, passwordInput.value);
             console.log(response)
-            if (typeof response !== "string" && response.ok) {
+            if (typeof response !== "string" && response.status == 200) {
                 localStorage.setItem("currentUser", usernameInput.value)
                 localStorage.setItem("loggedIn", "true")
                 window.location.replace("./index.html")
@@ -545,9 +545,10 @@ function buildLogout() {
 }
 
 async function auth_login(username: string, password: string) {
-    if (localStorage.getItem("currentUser") != "undefined" || localStorage.getItem("currentUser") == null) {
+    let currentUser: string | null = localStorage.getItem("currentUser");
+    if (currentUser != null) {
         alert("User already logged in!");
-        return "User already logged in!"
+        return `CurrentUser, ${currentUser} already logged in!`
     }
     else {
         let response: Response = await fetch(`${base_url}/api/auth/login`, {
@@ -558,11 +559,10 @@ async function auth_login(username: string, password: string) {
             body: JSON.stringify({ username, password, email: "" })
         });
 
-        if (!response.ok) {
+        if (response.status != 200) {
             console.error("Login failed:", await response.text());
             return response;
         }
-        currentUser = response;
         console.log(response);
         alert("Login successful!");
         return response;
@@ -644,7 +644,7 @@ async function findGame() {
     return res;
 }
 
-async function sendMove() {
+async function sendMove(row: number, col: string) {
     let tmpBoard = new ApiBoard(cellsObject);
     let response = await fetch(`${base_url}/api/game/postMove`, {
         method: "POST",
@@ -653,11 +653,10 @@ async function sendMove() {
         },
         body: JSON.stringify({
             lobbyId: Number(localStorage.getItem("lobbyId")),
-            board: tmpBoard.board,
-            currentUser: localStorage.getItem("currentUser"),
-            currentTurn: localStorage.getItem("currentTurn"),
-            isWin: Boolean(localStorage.getItem("isWin"))
-        }), // Fixed: Properly structure the JSON body
+            row: row,
+            column: col,
+            time:  null
+        }),
     });
 
     return await response.json();
