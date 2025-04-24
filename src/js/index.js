@@ -186,12 +186,9 @@ function buildBoard(board) {
                         }
                         else {
                             HTMLcell.classList.toggle("active");
-                            cells === null || cells === void 0 ? void 0 : cells.forEach((cell) => {
-                                cell.classList.remove("active");
-                                cell.classList.remove("valid_move");
-                            });
                             if (HTMLcell.classList.contains("valid_move")) {
                                 let oldCell = currentCell;
+                                let oldCellIndex = -1;
                                 let index = -1;
                                 let row = -1;
                                 let col = -1;
@@ -202,7 +199,13 @@ function buildBoard(board) {
                                         col = i % 10;
                                     }
                                 }
-                                yield sendMove(index);
+                                for (let i = 0; i < cellsObject.length; i++) {
+                                    if (cellsObject[i].element == (currentCell === null || currentCell === void 0 ? void 0 : currentCell.element)) {
+                                        oldCellIndex = i;
+                                        break;
+                                    }
+                                }
+                                yield sendMove(oldCellIndex, index);
                                 const newCell = cellsObject[index];
                                 if (newCell.piece) {
                                     newCell.piece.row = row;
@@ -211,8 +214,13 @@ function buildBoard(board) {
                                 if (oldCell) {
                                     oldCell.piece = null;
                                 }
-                                window.location.reload();
+                                console.log(newCell.piece);
+                                // window.location.reload()
                             }
+                            cells === null || cells === void 0 ? void 0 : cells.forEach((cell) => {
+                                cell.classList.remove("active");
+                                cell.classList.remove("valid_move");
+                            });
                         }
                     }));
                 }
@@ -638,7 +646,7 @@ function findGame() {
         return res;
     });
 }
-function sendMove(index) {
+function sendMove(index_last, index) {
     return __awaiter(this, void 0, void 0, function* () {
         let tmpBoard = new ApiBoard(cellsObject);
         let response = yield fetch(`${base_url}/api/game/postMove`, {

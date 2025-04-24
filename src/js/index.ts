@@ -201,12 +201,9 @@ async function buildBoard(board: HTMLElement | null) {
                     }
                     else {
                         HTMLcell.classList.toggle("active");
-                        cells?.forEach((cell) => {
-                            cell.classList.remove("active");
-                            cell.classList.remove("valid_move");
-                        });
                         if (HTMLcell.classList.contains("valid_move")) {
                             let oldCell = currentCell;
+                            let oldCellIndex = -1;
                             let index = -1;
                             let row = -1;
                             let col = -1;
@@ -217,20 +214,32 @@ async function buildBoard(board: HTMLElement | null) {
                                     col = i % 10 as ColEnum;
                                 }
                             }
-                            await sendMove(index);
-
-                            const newCell = cellsObject[index];
-
-                            if (newCell.piece) {
-                                newCell.piece.row = row
-                                newCell.piece.col = String(col)
+                            for (let i = 0; i < cellsObject.length; i++)
+                                {
+                                    if (cellsObject[i].element == currentCell?.element) {
+                                        oldCellIndex = i;
+                                        break;
+                                    }
+                                }
+                                await sendMove(oldCellIndex, index);
+                                
+                                const newCell = cellsObject[index];
+                                
+                                if (newCell.piece) {
+                                    newCell.piece.row = row
+                                    newCell.piece.col = String(col)
+                                }
+                                
+                                if (oldCell) {
+                                    oldCell.piece = null
+                                }
+                                console.log(newCell.piece);
+                                // window.location.reload()
                             }
-
-                            if (oldCell) {
-                                oldCell.piece = null
-                            }
-                            window.location.reload()
-                        }
+                            cells?.forEach((cell) => {
+                                cell.classList.remove("active");
+                                cell.classList.remove("valid_move");
+                            });
                     }
                 })
             }
@@ -700,7 +709,7 @@ async function findGame() {
     return res;
 }
 
-async function sendMove(index: number) {
+async function sendMove(index_last: number, index: number) {
     let tmpBoard = new ApiBoard(cellsObject);
     let response = await fetch(`${base_url}/api/game/postMove`, {
         method: "POST",
