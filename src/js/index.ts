@@ -151,7 +151,6 @@ async function main() {
     renderRegisterForm()
     buildLogout()
     buildOnClose()
-    endGame(1)
 }
 
 async function buildBoard(board: HTMLElement | null) {
@@ -261,30 +260,34 @@ async function buildBoard(board: HTMLElement | null) {
     }
 }
 
-function buildJoin() {
+async function buildJoin() {
     // <p><div id="box"><p id="join_game">Join Game</p></div></p>
-    let parTag: HTMLParagraphElement = document.createElement('p')
-    let boxDiv: HTMLDivElement = document.createElement('div')
-    boxDiv.id = "box"
-    let innerP: HTMLParagraphElement = document.createElement('p')
-    innerP.id = 'join_game'
-    innerP.innerText = 'Join Game'
-    boxDiv.appendChild(innerP)
-    parTag.appendChild(boxDiv)
+    if (await isAuthenticated(localStorage.getItem("currentUser"))) {
+        let parTag: HTMLParagraphElement = document.createElement('p')
+        let boxDiv: HTMLDivElement = document.createElement('div')
+        boxDiv.id = "box"
+        let innerP: HTMLParagraphElement = document.createElement('p')
+        innerP.id = 'join_game'
+        innerP.innerText = 'Join Game'
+        boxDiv.appendChild(innerP)
+        parTag.appendChild(boxDiv)
 
-    boxDiv.addEventListener("click", async (e) => {
-        e.preventDefault()
-        let response = await findGame();
-        board!.classList = "filled_board"
-        await localStorage.setItem("joinedGame", "true")
-        buildJoin()
-        buildBoard(board);
-    })
+        boxDiv.addEventListener("click", async (e) => {
+            e.preventDefault()
+            let response = await findGame();
+            board!.classList = "filled_board"
+            await localStorage.setItem("joinedGame", "true")
+            buildJoin()
+            buildBoard(board);
+        })
 
-    if (localStorage.getItem("joinedGame") != "true")
-        board?.replaceChildren(parTag)
-    else {
-        board?.replaceChildren();
+        if (localStorage.getItem("joinedGame") != "true")
+            board?.replaceChildren(parTag)
+        else {
+            board?.replaceChildren()
+        }
+    } else {
+        alert("You are not logged in!")
     }
 }
 
@@ -346,12 +349,10 @@ function showMoves() {
                                 if (cellsObject[i + (j * 10)].isWater == true) {
                                     ranIntoWaterDown = true;
                                 }
-                                if(cellsObject[i + (j * 10)].piece?.color == "blue")
-                                {
+                                if (cellsObject[i + (j * 10)].piece?.color == "blue") {
                                     ranIntoSameColorPieceDown = true;
                                 }
-                                if(cellsObject[i + (j * 10)].piece?.color == "red")
-                                {
+                                if (cellsObject[i + (j * 10)].piece?.color == "red") {
                                     ranIntoOpositeColorPieceDown = true;
                                     if (!ranIntoWaterDown && !ranIntoSameColorPieceDown && firstOpositePieceDown) {
                                         validMoveCellObjects.push(cellsObject[i + (j * 10)]);
@@ -742,4 +743,22 @@ async function getBoard() {
     });
 
     return await response.json();
+}
+
+async function isAuthenticated(username: string | null): Promise<Boolean> {
+    let response = await fetch(`${base_url}/api/auth/isAuthenticated`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(username)
+    })
+
+    if (response.status == 200) {
+        return true
+    } else if (response.status == 404) {
+        return false
+    } else {
+        throw new Error(`${response.status}: SERVER ERROR\n${response.statusText}`)
+    }
 }
