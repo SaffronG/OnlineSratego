@@ -143,140 +143,143 @@ async function main() {
     buildLogout();
     buildOnClose();
 }
-function buildBoard(board) {
-    return __awaiter(this, void 0, void 0, function* () {
-        board === null || board === void 0 ? void 0 : board.replaceChildren();
-        board.classList = "filled_board";
-        let response = yield findGame();
-        let currentGame = response.board;
-        for (let i = 0; i < 100; i++) {
-            let HTMLcell = document.createElement("div");
-            let row = Math.floor(i / 10);
-            let col = i % 10;
-            let isWater = false;
-            HTMLcell.className = "cell";
-            let a_piece = currentGame[i];
-            let piece = null;
-            console.log(a_piece);
-            console.log(piece);
-            if (currentGame[i] != null) {
-                try {
-                    if (i < 41) {
-                        piece = RedPieces[12];
-                    }
-                    else if (i > 59) {
-                        piece = BluePieces[a_piece.rank + 2];
-                    }
-                    HTMLcell.innerHTML = `<img src="../${piece.image}" alt="${piece.name}"">`;
+async function buildBoard(board) {
+    board?.replaceChildren();
+    board.classList = "filled_board";
+    let response = await findGame();
+    let currentGame = response.board;
+    for (let i = 0; i < 100; i++) {
+        let HTMLcell = document.createElement("div");
+        let row = Math.floor(i / 10);
+        let col = i % 10;
+        let isWater = false;
+        HTMLcell.className = "cell";
+        let a_piece = currentGame[i];
+        let piece = null;
+        console.log(a_piece);
+        console.log(piece);
+        if (currentGame[i] != null) {
+            try {
+                if (i < 41) {
+                    piece = RedPieces[12];
                 }
-                catch (_a) {
-                    HTMLcell.innerHTML = " ";
+                else if (i > 59) {
+                    piece = BluePieces[a_piece.rank + 2];
                 }
+                HTMLcell.innerHTML = `<img src="../${piece.image}" alt="${piece.name}"">`;
             }
-            else {
+            catch {
                 HTMLcell.innerHTML = " ";
             }
-            HTMLcell.className = "cell";
-            board === null || board === void 0 ? void 0 : board.appendChild(HTMLcell);
-            if (i > 40 && i < 60) {
-                let loc = i % 10;
-                if (loc == 2 || loc == 3 || loc == 6 || loc == 7) {
-                    HTMLcell.className = "cell_water";
-                    isWater = true;
-                }
-                else {
-                    HTMLcell.addEventListener("click", (e) => __awaiter(this, void 0, void 0, function* () {
-                        if (HTMLcell == (currentCell === null || currentCell === void 0 ? void 0 : currentCell.element)) {
-                            HTMLcell.classList.toggle("active");
-                            cells === null || cells === void 0 ? void 0 : cells.forEach(cell => cell.classList.remove("valid_move"));
-                        }
-                        else {
-                            HTMLcell.classList.toggle("active");
-                            if (HTMLcell.classList.contains("valid_move")) {
-                                let oldCell = currentCell;
-                                let oldCellIndex = -1;
-                                let index = -1;
-                                let row = -1;
-                                let col = -1;
-                                for (let i = 0; i < (cells === null || cells === void 0 ? void 0 : cells.length); i++) {
-                                    if (cells && cells[i] == HTMLcell) {
-                                        index = i;
-                                        row = Math.floor(i / 10);
-                                        col = i % 10;
-                                    }
-                                }
-                                for (let i = 0; i < cellsObject.length; i++) {
-                                    if (cellsObject[i].element == (currentCell === null || currentCell === void 0 ? void 0 : currentCell.element)) {
-                                        oldCellIndex = i;
-                                        break;
-                                    }
-                                }
-                                yield sendMove(oldCellIndex, index);
-                                const newCell = cellsObject[index];
-                                if (newCell.piece) {
-                                    newCell.piece.row = row;
-                                    newCell.piece.col = String(col);
-                                }
-                                if (oldCell) {
-                                    oldCell.piece = null;
-                                }
-                                console.log(newCell.piece);
-                                // window.location.reload()
-                            }
-                            cells === null || cells === void 0 ? void 0 : cells.forEach((cell) => {
-                                cell.classList.remove("active");
-                                cell.classList.remove("valid_move");
-                            });
-                        }
-                    }));
-                }
+        }
+        else {
+            HTMLcell.innerHTML = " ";
+        }
+        HTMLcell.className = "cell";
+        board?.appendChild(HTMLcell);
+        if (i > 40 && i < 60) {
+            let loc = i % 10;
+            if (loc == 2 || loc == 3 || loc == 6 || loc == 7) {
+                HTMLcell.className = "cell_water";
+                isWater = true;
             }
             else {
-                HTMLcell.addEventListener("click", function () {
-                    if (HTMLcell == (currentCell === null || currentCell === void 0 ? void 0 : currentCell.element)) {
-                        HTMLcell.classList.remove("active");
-                        cells === null || cells === void 0 ? void 0 : cells.forEach(e => e.classList.remove("valid_move"));
+                HTMLcell.addEventListener("click", async (e) => {
+                    if (HTMLcell == currentCell?.element) {
+                        HTMLcell.classList.toggle("active");
+                        cells?.forEach(cell => cell.classList.remove("valid_move"));
                     }
                     else {
-                        cells === null || cells === void 0 ? void 0 : cells.forEach(e => e.classList.remove("active"));
-                        cells === null || cells === void 0 ? void 0 : cells.forEach(e => e.classList.remove("valid_move"));
-                        cellsObject.forEach(e => {
-                            if (e.element == HTMLcell) {
-                                currentCell = e;
-                                showMoves();
-                            }
-                        });
                         HTMLcell.classList.toggle("active");
+                        if (HTMLcell.classList.contains("valid_move")) {
+                            let oldCell = currentCell;
+                            let oldCellIndex = -1;
+                            let index = -1;
+                            let row = -1;
+                            let col = -1;
+                            for (let i = 0; i < cells?.length; i++) {
+                                if (cells && cells[i] == HTMLcell) {
+                                    index = i;
+                                    row = Math.floor(i / 10);
+                                    col = i % 10;
+                                }
+                            }
+                            for (let i = 0; i < cellsObject.length; i++) {
+                                if (cellsObject[i].element == currentCell?.element) {
+                                    oldCellIndex = i;
+                                    break;
+                                }
+                            }
+                            await sendMove(oldCellIndex, index);
+                            const newCell = cellsObject[index];
+                            if (newCell.piece) {
+                                newCell.piece.row = row;
+                                newCell.piece.col = String(col);
+                            }
+                            if (oldCell) {
+                                oldCell.piece = null;
+                            }
+                            console.log(newCell.piece);
+                            // window.location.reload()
+                        }
+                        cells?.forEach((cell) => {
+                            cell.classList.remove("active");
+                            cell.classList.remove("valid_move");
+                        });
                     }
                 });
             }
-            cellsObject.push(new cell(row, col, isWater, piece, HTMLcell));
-            cells === null || cells === void 0 ? void 0 : cells.push(HTMLcell);
         }
-    });
+        else {
+            HTMLcell.addEventListener("click", function () {
+                if (HTMLcell == currentCell?.element) {
+                    HTMLcell.classList.remove("active");
+                    cells?.forEach(e => e.classList.remove("valid_move"));
+                }
+                else {
+                    cells?.forEach(e => e.classList.remove("active"));
+                    cells?.forEach(e => e.classList.remove("valid_move"));
+                    cellsObject.forEach(e => {
+                        if (e.element == HTMLcell) {
+                            currentCell = e;
+                            showMoves();
+                        }
+                    });
+                    HTMLcell.classList.toggle("active");
+                }
+            });
+        }
+        cellsObject.push(new cell(row, col, isWater, piece, HTMLcell));
+        cells?.push(HTMLcell);
+    }
 }
-function buildJoin() {
+async function buildJoin() {
     // <p><div id="box"><p id="join_game">Join Game</p></div></p>
-    let parTag = document.createElement('p');
-    let boxDiv = document.createElement('div');
-    boxDiv.id = "box";
-    let innerP = document.createElement('p');
-    innerP.id = 'join_game';
-    innerP.innerText = 'Join Game';
-    boxDiv.appendChild(innerP);
-    parTag.appendChild(boxDiv);
-    boxDiv.addEventListener("click", async (e) => {
-        e.preventDefault();
-        let response = await findGame();
-        board.classList = "filled_board";
-        await localStorage.setItem("joinedGame", "true");
-        buildJoin();
-        buildBoard(board);
-    });
-    if (localStorage.getItem("joinedGame") != "true")
-        board?.replaceChildren(parTag);
+    if (await isAuthenticated(localStorage.getItem("currentUser"))) {
+        let parTag = document.createElement('p');
+        let boxDiv = document.createElement('div');
+        boxDiv.id = "box";
+        let innerP = document.createElement('p');
+        innerP.id = 'join_game';
+        innerP.innerText = 'Join Game';
+        boxDiv.appendChild(innerP);
+        parTag.appendChild(boxDiv);
+        boxDiv.addEventListener("click", async (e) => {
+            e.preventDefault();
+            let response = await findGame();
+            board.classList = "filled_board";
+            await localStorage.setItem("joinedGame", "true");
+            buildJoin();
+            buildBoard(board);
+        });
+        if (localStorage.getItem("joinedGame") != "true")
+            board?.replaceChildren(parTag);
+        else {
+            board?.replaceChildren();
+        }
+    }
     else {
-        board?.replaceChildren();
+        alert("You are not logged in!");
     }
 }
 function showMoves() {
@@ -643,24 +646,22 @@ async function findGame() {
     let res = await response.json();
     return res;
 }
-function sendMove(index) {
-    return __awaiter(this, void 0, void 0, function* () {
-        let tmpBoard = new ApiBoard(cellsObject);
-        let response = yield fetch(`${base_url}/api/game/postMove`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                lobbyId: Number(localStorage.getItem("lobbyId")),
-                user: localStorage.getItem("currentUser"),
-                index_last: Number,
-                index: Number,
-                time: null
-            }),
-        });
-        return yield response.json();
+async function sendMove(index_last, index) {
+    let tmpBoard = new ApiBoard(cellsObject);
+    let response = await fetch(`${base_url}/api/game/postMove`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            lobbyId: Number(localStorage.getItem("lobbyId")),
+            user: localStorage.getItem("currentUser"),
+            index_last: Number,
+            index: Number,
+            time: null
+        }),
     });
+    return await response.json();
 }
 async function endGame(lobbyId) {
     let response = await fetch(`${base_url}/api/game/endGame`, {
@@ -682,4 +683,22 @@ async function getBoard() {
         body: JSON.stringify({ lobbyId, user, turn })
     });
     return await response.json();
+}
+async function isAuthenticated(username) {
+    let response = await fetch(`${base_url}/api/auth/isAuthenticated`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(username)
+    });
+    if (response.status == 200) {
+        return true;
+    }
+    else if (response.status == 404) {
+        return false;
+    }
+    else {
+        throw new Error(`${response.status}: SERVER ERROR\n${response.statusText}`);
+    }
 }

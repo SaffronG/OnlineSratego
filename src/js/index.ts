@@ -166,8 +166,6 @@ async function buildBoard(board: HTMLElement | null) {
         HTMLcell.className = "cell";
         let a_piece: ApiPiece = currentGame[i];
         let piece: piece | null = null;
-        console.log(a_piece);
-        console.log(piece);
         if (currentGame[i] != null) {
             try {
                 if (i < 41) {
