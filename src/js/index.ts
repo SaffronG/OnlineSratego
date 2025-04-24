@@ -301,6 +301,10 @@ function showMoves() {
     let ranIntoOpositeColorPieceRight = false;
     let ranIntoOpositeColorPieceUp = false;
     let ranIntoOpositeColorPieceDown = false;
+    let firstOpositePieceDown = true;
+    let firstOpositePieceUp = true;
+    let firstOpositePieceLeft = true;
+    let firstOpositePieceRight = true;
 
     // for blue pieces
     if (currentCell?.piece?.color == "blue" && currentCell.piece.isAlive == true && currentCell.piece.rank != -2 && currentCell.piece.rank != -1) {
@@ -332,15 +336,11 @@ function showMoves() {
             }
         }
         else if (currentCell.piece.rank == 9) {
-            let firstOpositePieceDown = true;
-            let firstOpositePieceUp = true;
-            let firstOpositePieceLeft = true;
-            let firstOpositePieceRight = true;
             for (let i = 0; i < cells?.length!; i++) {
                 if (cells && cells[i] == currentCell?.element) {
                     for (let j = 1; j <= 10; j++) {
                         //Can move down
-                        if (i + (j * 10) <= cellsObject.length && (i + (j * 10)) >= 0) {
+                        if (i + (j * 10) < cellsObject.length && (i + (j * 10)) >= 0) {
 
                             if (cellsObject[i + (j * 10)].col == currentCell.col) {
                                 if (cellsObject[i + (j * 10)].isWater == true) {
@@ -366,7 +366,7 @@ function showMoves() {
                             }
                         }
                         //Can move right
-                        if ((i + j) <= cellsObject.length && (i + j) >= 0) {
+                        if ((i + j) < cellsObject.length && (i + j) >= 0) {
 
                             if (cellsObject[i + (j)].row == currentCell.row) {
                                 if (cellsObject[i + (j)].isWater == true) {
@@ -391,7 +391,7 @@ function showMoves() {
                         }
 
                         // Can move left
-                        if ((i - j) <= cellsObject.length && (i - j) >= 0) {
+                        if ((i - j) < cellsObject.length && (i - j) >= 0) {
 
                             if (cellsObject[i - (j)].row == currentCell.row) {
                                 if (cellsObject[i - (j)].isWater) {
@@ -416,7 +416,7 @@ function showMoves() {
                         }
 
                         //Can move up
-                        if ((i - (j * 10)) <= cellsObject.length && (i - (j * 10) >= 0)) {
+                        if ((i - (j * 10)) < cellsObject.length && (i - (j * 10) >= 0)) {
 
                             if (cellsObject[i - (j * 10)].col == currentCell.col) {
                                 if (cellsObject[i - (j * 10)].isWater) {
@@ -427,13 +427,13 @@ function showMoves() {
                                 }
                                 if (cellsObject[i - (j * 10)].piece?.color == "red") {
                                     ranIntoOpositeColorPieceUp = true;
-                                    if (!ranIntoWaterUp && !ranIntoSameColorPieceUp && firstOpositePieceUp) {
+                                    if (!ranIntoWaterUp && !ranIntoSameColorPieceUp && ranIntoOpositeColorPieceUp && firstOpositePieceUp) {
                                         validMoveCellObjects.push(cellsObject[i - (j * 10)]);
                                         validMoveCells.push(cells[i - (j * 10)]);
                                         firstOpositePieceUp = false;
                                     }
                                 }
-                                if (!ranIntoWaterUp && !ranIntoSameColorPieceUp) {
+                                else if (!ranIntoWaterUp && !ranIntoSameColorPieceUp) {
                                     validMoveCellObjects.push(cellsObject[i - (j * 10)]);
                                     validMoveCells.push(cells[i - (j * 10)]);
                                 }

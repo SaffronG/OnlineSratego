@@ -151,12 +151,14 @@ function buildBoard(board) {
             HTMLcell.className = "cell";
             let a_piece = currentGame[i];
             let piece = null;
+            console.log(a_piece);
+            console.log(piece);
             if (currentGame[i] != null) {
                 try {
                     if (i < 41) {
-                        piece = RedPieces[a_piece.rank + 2];
+                        piece = RedPieces[12];
                     }
-                    else if (i > 60) {
+                    else if (i > 59) {
                         piece = BluePieces[a_piece.rank + 2];
                     }
                     HTMLcell.innerHTML = `<img src="../${piece.image}" alt="${piece.name}"">`;
@@ -200,7 +202,7 @@ function buildBoard(board) {
                                         col = i % 10;
                                     }
                                 }
-                                yield sendMove();
+                                yield sendMove(index);
                                 const newCell = cellsObject[index];
                                 if (newCell.piece) {
                                     newCell.piece.row = row;
@@ -209,6 +211,7 @@ function buildBoard(board) {
                                 if (oldCell) {
                                     oldCell.piece = null;
                                 }
+                                window.location.reload();
                             }
                         }
                     }));
@@ -276,6 +279,10 @@ function showMoves() {
     let ranIntoOpositeColorPieceRight = false;
     let ranIntoOpositeColorPieceUp = false;
     let ranIntoOpositeColorPieceDown = false;
+    let firstOpositePieceDown = true;
+    let firstOpositePieceUp = true;
+    let firstOpositePieceLeft = true;
+    let firstOpositePieceRight = true;
     // for blue pieces
     if (((_a = currentCell === null || currentCell === void 0 ? void 0 : currentCell.piece) === null || _a === void 0 ? void 0 : _a.color) == "blue" && currentCell.piece.isAlive == true && currentCell.piece.rank != -2 && currentCell.piece.rank != -1) {
         let validMoveCells = [];
@@ -302,15 +309,11 @@ function showMoves() {
             }
         }
         else if (currentCell.piece.rank == 9) {
-            let firstOpositePieceDown = true;
-            let firstOpositePieceUp = true;
-            let firstOpositePieceLeft = true;
-            let firstOpositePieceRight = true;
             for (let i = 0; i < (cells === null || cells === void 0 ? void 0 : cells.length); i++) {
                 if (cells && cells[i] == (currentCell === null || currentCell === void 0 ? void 0 : currentCell.element)) {
                     for (let j = 1; j <= 10; j++) {
                         //Can move down
-                        if (i + (j * 10) <= cellsObject.length && (i + (j * 10)) >= 0) {
+                        if (i + (j * 10) < cellsObject.length && (i + (j * 10)) >= 0) {
                             if (cellsObject[i + (j * 10)].col == currentCell.col) {
                                 if (cellsObject[i + (j * 10)].isWater == true) {
                                     ranIntoWaterDown = true;
@@ -333,7 +336,7 @@ function showMoves() {
                             }
                         }
                         //Can move right
-                        if ((i + j) <= cellsObject.length && (i + j) >= 0) {
+                        if ((i + j) < cellsObject.length && (i + j) >= 0) {
                             if (cellsObject[i + (j)].row == currentCell.row) {
                                 if (cellsObject[i + (j)].isWater == true) {
                                     ranIntoWaterRight = true;
@@ -356,7 +359,7 @@ function showMoves() {
                             }
                         }
                         // Can move left
-                        if ((i - j) <= cellsObject.length && (i - j) >= 0) {
+                        if ((i - j) < cellsObject.length && (i - j) >= 0) {
                             if (cellsObject[i - (j)].row == currentCell.row) {
                                 if (cellsObject[i - (j)].isWater) {
                                     ranIntoWaterLeft = true;
@@ -379,7 +382,7 @@ function showMoves() {
                             }
                         }
                         //Can move up
-                        if ((i - (j * 10)) <= cellsObject.length && (i - (j * 10) >= 0)) {
+                        if ((i - (j * 10)) < cellsObject.length && (i - (j * 10) >= 0)) {
                             if (cellsObject[i - (j * 10)].col == currentCell.col) {
                                 if (cellsObject[i - (j * 10)].isWater) {
                                     ranIntoWaterUp = true;
@@ -389,13 +392,13 @@ function showMoves() {
                                 }
                                 if (((_l = cellsObject[i - (j * 10)].piece) === null || _l === void 0 ? void 0 : _l.color) == "red") {
                                     ranIntoOpositeColorPieceUp = true;
-                                    if (!ranIntoWaterUp && !ranIntoSameColorPieceUp && firstOpositePieceUp) {
+                                    if (!ranIntoWaterUp && !ranIntoSameColorPieceUp && ranIntoOpositeColorPieceUp && firstOpositePieceUp) {
                                         validMoveCellObjects.push(cellsObject[i - (j * 10)]);
                                         validMoveCells.push(cells[i - (j * 10)]);
                                         firstOpositePieceUp = false;
                                     }
                                 }
-                                if (!ranIntoWaterUp && !ranIntoSameColorPieceUp) {
+                                else if (!ranIntoWaterUp && !ranIntoSameColorPieceUp) {
                                     validMoveCellObjects.push(cellsObject[i - (j * 10)]);
                                     validMoveCells.push(cells[i - (j * 10)]);
                                 }
@@ -510,9 +513,9 @@ function renderRegisterForm() {
     }
 }
 function buildOnClose() {
-    window.addEventListener("beforeunload", async () => {
-        await logout(localStorage.getItem("currentUser"));
-        localStorage.setItem("currentUser", "undefined");
+    window.addEventListener("beforeunload", () => __awaiter(this, void 0, void 0, function* () {
+        yield logout(localStorage.getItem("currentUser"));
+        localStorage.removeItem("currentUser");
         localStorage.setItem("loggedIn", "false");
         localStorage.setItem("joinedGame", "false");
     }));
@@ -529,61 +532,20 @@ function buildLogout() {
             localStorage.removeItem("currentUser");
             localStorage.setItem("loggedIn", "false");
             localStorage.setItem("joinedGame", "false");
-            let response = await logout(currentUser);
-            if (!response) {
-                localStorage.setItem("currentUser", "undefined");
-                localStorage.setItem("loggedIn", "false");
-                localStorage.setItem("joinedGame", "false");
-                currentUser = null;
-                alert("Logged out successfully!");
-                window.location.replace("./index.html");
-            }
-            else {
-                alert("Logout failed! Please try again.");
-            }
-        });
+            let response = yield logout(currentUser);
+            alert("Logged out successfully!");
+        }));
     }
     else {
         console.error("Logout button not found!");
     }
 }
-<<<<<<< Updated upstream
-async function auth_login(username, password) {
-    let currentUser = localStorage.getItem("currentUser");
-    if (currentUser != null) {
-        alert("User already logged in!");
-        return `CurrentUser, ${currentUser} already logged in!`;
-    }
-    else {
-        let response = await fetch(`${base_url}/api/auth/login`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ username, password, email: "" })
-        });
-        if (response.status != 200) {
-            console.error("Login failed:", await response.text());
-            return response;
-        }
-        console.log(response);
-        alert("Login successful!");
-        return response;
-    }
-}
-async function register(username, password, email) {
-    let response = await fetch(`${base_url}/api/auth/register`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ username, password, email })
-=======
 function auth_login(username, password) {
     return __awaiter(this, void 0, void 0, function* () {
-        if (localStorage.getItem("currentUser") != "undefined" || localStorage.getItem("currentUser") == null) {
+        let currentUser = localStorage.getItem("currentUser");
+        if (currentUser != null) {
             alert("User already logged in!");
-            return "User already logged in!";
+            return `CurrentUser, ${currentUser} already logged in!`;
         }
         else {
             let response = yield fetch(`${base_url}/api/auth/login`, {
@@ -593,16 +555,14 @@ function auth_login(username, password) {
                 },
                 body: JSON.stringify({ username, password, email: "" })
             });
-            if (!response.ok) {
+            if (response.status != 200) {
                 console.error("Login failed:", yield response.text());
                 return response;
             }
-            currentUser = response;
             console.log(response);
             alert("Login successful!");
             return response;
         }
->>>>>>> Stashed changes
     });
 }
 function register(username, password, email) {
@@ -615,20 +575,43 @@ function register(username, password, email) {
             body: JSON.stringify({ username, password, email })
         });
         if (!response.ok) {
-            const errorData = await response.text();
-            console.error("Logout failed:", errorData);
-            throw new Error(`Logout failed with status ${response.status}`);
+            console.error("Registration failed:", yield response.text());
+            return response;
         }
-        alert("Logged out successfully!");
-        localStorage.setItem("currentUser", "undefined");
-        localStorage.setItem("loggedIn", "false");
-        const responseData = await response.json();
-        return new Error(responseData);
-    }
-    catch (error) {
-        console.error("An error occurred during logout:", error);
-        throw error;
-    }
+        return response;
+    });
+}
+function logout(username) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (!username) {
+            throw new Error("Username is required for logout.");
+        }
+        try {
+            let response = yield fetch(`${base_url}/api/auth/logout`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ username })
+            });
+            if (!response.ok) {
+                const errorData = yield response.text();
+                console.error("Logout failed:", errorData);
+                throw new Error(`Logout failed with status ${response.status}`);
+            }
+            else {
+                alert("Logged out successfully!");
+                localStorage.remove("currentUser", "undefined");
+                localStorage.setItem("loggedIn", "false");
+                const responseData = yield response.json();
+                return response;
+            }
+        }
+        catch (error) {
+            console.error("An error occurred during logout:", error);
+            throw error;
+        }
+    });
 }
 function findGame() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -655,22 +638,24 @@ function findGame() {
         return res;
     });
 }
-async function sendMove() {
-    let tmpBoard = new ApiBoard(cellsObject);
-    let response = await fetch(`${base_url}/api/game/postMove`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            lobbyId: Number(localStorage.getItem("lobbyId")),
-            board: tmpBoard.board,
-            currentUser: localStorage.getItem("currentUser"),
-            currentTurn: localStorage.getItem("currentTurn"),
-            isWin: Boolean(localStorage.getItem("isWin"))
-        }), // Fixed: Properly structure the JSON body
+function sendMove(index) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let tmpBoard = new ApiBoard(cellsObject);
+        let response = yield fetch(`${base_url}/api/game/postMove`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                lobbyId: Number(localStorage.getItem("lobbyId")),
+                user: localStorage.getItem("currentUser"),
+                index_last: Number,
+                index: Number,
+                time: null
+            }),
+        });
+        return yield response.json();
     });
-    return await response.json();
 }
 function endGame(lobbyId) {
     return __awaiter(this, void 0, void 0, function* () {
