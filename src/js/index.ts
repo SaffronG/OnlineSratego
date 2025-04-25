@@ -629,7 +629,7 @@ function showMoves() {
     ) {
         let validMoveCells: HTMLElement[] = [];
         let validMoveCellObjects: cell[] = [];
-        if (currentCell.piece.rank != 9) {
+        if (currentCell.piece.rank != 2) {
             for (let i = 0; i < cells?.length!; i++) {
                 if (cells?.length! > 0) {
                     if (cells && cells[i] == currentCell?.element) {
@@ -653,7 +653,7 @@ function showMoves() {
                     (validMoveCells[i] as HTMLElement).classList.add("valid_move");
                 }
             }
-        } else if (currentCell.piece.rank == 9) {
+        } else if (currentCell.piece.rank == 2) {
             for (let i = 0; i < cells?.length!; i++) {
                 if (cells && cells[i] == currentCell?.element) {
                     for (let j = 1; j <= 10; j++) {
