@@ -183,7 +183,7 @@ async function buildBoard(board: HTMLElement | null) {
         HTMLcell.className = "cell";
         board?.appendChild(HTMLcell);
 
-        if (i > 40 && i < 60) {
+        if (i > 39 && i < 60) {
             let loc = i % 10
             if (loc == 2 || loc == 3 || loc == 6 || loc == 7) {
                 HTMLcell.className = "cell_water"
@@ -220,6 +220,8 @@ async function buildBoard(board: HTMLElement | null) {
                                         break;
                                     }
                                 }
+                                console.log("Old Cell Index", oldCellIndex);
+                                console.log("New Cell Index", index);
                                 await sendMove(oldCellIndex, index);
                                 
                                 const newCell = cellsObject[index];
@@ -227,7 +229,6 @@ async function buildBoard(board: HTMLElement | null) {
                                 if (oldCell?.piece) {
                                     newCell.piece = oldCell.piece;
                                     if (newCell.piece) {
-                                        console.log("Reached the update");
                                         newCell.piece.row = row;
                                         newCell.piece.col = colLetter;
                                     }
@@ -237,7 +238,16 @@ async function buildBoard(board: HTMLElement | null) {
                                 if (oldCell) {
                                     oldCell.piece = null
                                 }
-                                window.location.reload()
+                                if(cells)
+                                {
+                                    let oldCellElement = cells[oldCellIndex];
+                                    let newCellElement = cells[index];
+                                    let temp = oldCellElement.innerHTML;
+                                    newCellElement.innerHTML = temp;
+                                    oldCellElement.innerHTML = " ";
+                                    oldCellElement.classList.remove("active");
+                                }
+                                // window.location.reload()
 
                             }
                             cells?.forEach((cell) => {
