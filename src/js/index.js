@@ -160,14 +160,7 @@ async function buildBoard(board) {
         let piece = null;
         if (currentGame[i] != null) {
             try {
-                console.log(a_piece);
-                console.log(response);
                 piece = a_piece.user == localStorage.getItem("currentUser") ? BluePieces[a_piece.rank + 2] : RedPieces[12];
-                // if (i < 41) {
-                //   piece = a_piece.visible ? RedPieces[a_piece.rank + 2] : RedPieces[12];
-                // } else if (i > 59) {
-                //   piece = BluePieces[a_piece.rank + 2];
-                // }
                 HTMLcell.innerHTML = `<img src="../${piece.image}" alt="${piece.name}"">`;
             }
             catch {
@@ -175,9 +168,9 @@ async function buildBoard(board) {
             }
         }
         else {
+            console.log("NO PIECE FOUND");
             HTMLcell.innerHTML = " ";
         }
-        HTMLcell.className = "cell";
         board?.appendChild(HTMLcell);
         if (i > 40 && i < 60) {
             let loc = i % 10;
@@ -222,7 +215,7 @@ async function buildBoard(board) {
                                 oldCell.piece = null;
                             }
                             console.log(newCell.piece);
-                            // window.location.reload()
+                            window.location.reload();
                         }
                         cells?.forEach((cell) => {
                             cell.classList.remove("active");
