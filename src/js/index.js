@@ -667,8 +667,8 @@ async function sendMove(index_last, index) {
         body: JSON.stringify({
             lobbyId: Number(localStorage.getItem("lobbyId")),
             user: localStorage.getItem("currentUser"),
-            index_last: Number,
-            index: Number,
+            index_last: index_last,
+            index: index,
             time: null,
         }),
     });
