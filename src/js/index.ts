@@ -465,7 +465,9 @@ async function buildBoard(board: HTMLElement | null) {
     let piece: piece | null = null;
     if (currentGame[i] != null) {
       try {
-        piece = a_piece.user == "user_a" ? BluePieces[a_piece.rank + 2] : RedPieces[12];
+        console.log(a_piece);
+        console.log(response);
+        piece = a_piece.user == localStorage.getItem("currentUser") ? BluePieces[a_piece.rank + 2] : RedPieces[12];
         // if (i < 41) {
         //   piece = a_piece.visible ? RedPieces[a_piece.rank + 2] : RedPieces[12];
         // } else if (i > 59) {
