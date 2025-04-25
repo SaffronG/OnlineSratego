@@ -177,7 +177,7 @@ async function buildBoard(board: HTMLElement | null) {
                 } else if (i > 59) {
                     piece = BluePieces[a_piece.rank + 2]
                 }
-                HTMLcell.innerHTML = `<img src="../${piece!.image}" alt="${piece!.name}"">`;
+                HTMLcell.innerHTML = `<img src="../${piece!.image}" alt="${piece!.name}"<id="${i}>">`;
             } catch {
                 HTMLcell.innerHTML = " ";
             }
@@ -208,11 +208,13 @@ async function buildBoard(board: HTMLElement | null) {
                             let index = -1;
                             let row = -1;
                             let col = -1;
-                            for (let i = 0; i < cells?.length!; i++) {
-                                if (cells && cells[i] == HTMLcell) {
+                            let colLetter = "";
+                            for (let i = 0; i < cellsObject?.length!; i++) {
+                                if (cellsObject && cellsObject[i].element === HTMLcell) {
                                     index = i;
                                     row = Math.floor(i / 10);
-                                    col = i % 10 as ColEnum;
+                                    col = i % 10 + 1;
+                                    colLetter = ColEnum[col];
                                 }
                             }
                             for (let i = 0; i < cellsObject.length; i++)
@@ -226,21 +228,27 @@ async function buildBoard(board: HTMLElement | null) {
                                 
                                 const newCell = cellsObject[index];
                                 
-                                if (newCell.piece) {
-                                    newCell.piece.row = row
-                                    newCell.piece.col = String(col)
+                                if (oldCell?.piece) {
+                                    newCell.piece = oldCell.piece;
+                                    if (newCell.piece) {
+                                        console.log("Reached the update");
+                                        newCell.piece.row = row;
+                                        newCell.piece.col = colLetter;
+                                    }
                                 }
+                                console.log("New Cell Piece", newCell.piece);
                                 
                                 if (oldCell) {
                                     oldCell.piece = null
                                 }
-                                console.log(newCell.piece);
-                                // window.location.reload()
+                                window.location.reload()
+
                             }
                             cells?.forEach((cell) => {
                                 cell.classList.remove("active");
                                 cell.classList.remove("valid_move");
                             });
+                            
                     }
                 })
             }
