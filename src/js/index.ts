@@ -452,27 +452,27 @@ async function main() {
 }
 
 // Call findGame() every second if joinedGame is true
-let gameInterval = null;
+// let gameInterval = null;
 
-if (localStorage.getItem("joinedGame") === "true") {
-    gameInterval = setInterval(async () => {
-        try {
-            let response = await findGame();
-            clearInterval(gameInterval!); // Reset the interval
-            if (response.status === 200 && response.isWin != null) {
-                alert(response.message);
-                localStorage.setItem("joinedGame", "false");
-            } else {
-                alert(response.message);
-                localStorage.setItem("joinedGame", "false");
-            }
-            console.log("Game state updated:", response);
-        } catch (error) {
-            console.error("Error fetching game state:", error);
-            clearInterval(gameInterval!); // Stop the interval on error
-        }
-    }, 1000);
-}
+// if (localStorage.getItem("joinedGame") === "true") {
+//     gameInterval = setInterval(async () => {
+//         try {
+//             let response = await findGame();
+//             clearInterval(gameInterval!); // Reset the interval
+//             if (response.status === 200 && response.isWin != null) {
+//                 alert(response.message);
+//                 localStorage.setItem("joinedGame", "false");
+//             } else {
+//                 alert(response.message);
+//                 localStorage.setItem("joinedGame", "false");
+//             }
+//             console.log("Game state updated:", response);
+//         } catch (error) {
+//             console.error("Error fetching game state:", error);
+//             clearInterval(gameInterval!); // Stop the interval on error
+//         }
+//     }, 1000);
+// }
 
 async function buildBoard(board: HTMLElement | null) {
     board?.replaceChildren();
