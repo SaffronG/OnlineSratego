@@ -223,31 +223,7 @@ async function buildBoard(board: HTMLElement | null) {
                                 console.log("Old Cell Index", oldCellIndex);
                                 console.log("New Cell Index", index);
                                 await sendMove(oldCellIndex, index);
-                                
-                                const newCell = cellsObject[index];
-                                
-                                if (oldCell?.piece) {
-                                    newCell.piece = oldCell.piece;
-                                    if (newCell.piece) {
-                                        newCell.piece.row = row;
-                                        newCell.piece.col = colLetter;
-                                    }
-                                }
-                                console.log("New Cell Piece", newCell.piece);
-                                
-                                if (oldCell) {
-                                    oldCell.piece = null
-                                }
-                                if(cells)
-                                {
-                                    let oldCellElement = cells[oldCellIndex];
-                                    let newCellElement = cells[index];
-                                    let temp = oldCellElement.innerHTML;
-                                    newCellElement.innerHTML = temp;
-                                    oldCellElement.innerHTML = " ";
-                                    oldCellElement.classList.remove("active");
-                                }
-                                // window.location.reload()
+                                window.location.reload()
 
                             }
                             cells?.forEach((cell) => {
