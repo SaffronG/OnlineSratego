@@ -160,12 +160,12 @@ async function buildBoard(board) {
         let piece = null;
         if (currentGame[i] != null) {
             try {
-                if (i < 41) {
-                    piece = a_piece.visible ? RedPieces[a_piece.rank + 2] : RedPieces[12];
-                }
-                else if (i > 59) {
-                    piece = BluePieces[a_piece.rank + 2];
-                }
+                piece = a_piece.user == localStorage.getItem("currentUser") ? BluePieces[a_piece.rank + 2] : RedPieces[12];
+                // if (i < 41) {
+                //   piece = a_piece.visible ? RedPieces[a_piece.rank + 2] : RedPieces[12];
+                // } else if (i > 59) {
+                //   piece = BluePieces[a_piece.rank + 2];
+                // }
                 HTMLcell.innerHTML = `<img src="../${piece.image}" alt="${piece.name}"">`;
             }
             catch {
