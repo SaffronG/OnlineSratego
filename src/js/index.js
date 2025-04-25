@@ -34,7 +34,6 @@ class piece {
         return false; // implement later
     }
 }
-;
 class ApiPiece {
     rank;
     user;
@@ -86,7 +85,6 @@ var ColEnum;
     ColEnum[ColEnum["i"] = 9] = "i";
     ColEnum[ColEnum["j"] = 10] = "j";
 })(ColEnum || (ColEnum = {}));
-;
 // GLOBAL VARIABLES
 let currentCell = null;
 let board = document.getElementById("game_board");
@@ -155,7 +153,7 @@ async function buildBoard(board) {
     for (let i = 0; i < 100; i++) {
         let HTMLcell = document.createElement("div");
         let row = Math.floor(i / 10);
-        let col = i % 10;
+        let col = (i % 10);
         let isWater = false;
         HTMLcell.className = "cell";
         let a_piece = currentGame[i];
@@ -189,7 +187,7 @@ async function buildBoard(board) {
                 HTMLcell.addEventListener("click", async (e) => {
                     if (HTMLcell == currentCell?.element) {
                         HTMLcell.classList.toggle("active");
-                        cells?.forEach(cell => cell.classList.remove("valid_move"));
+                        cells?.forEach((cell) => cell.classList.remove("valid_move"));
                     }
                     else {
                         HTMLcell.classList.toggle("active");
@@ -203,7 +201,7 @@ async function buildBoard(board) {
                                 if (cells && cells[i] == HTMLcell) {
                                     index = i;
                                     row = Math.floor(i / 10);
-                                    col = i % 10;
+                                    col = (i % 10);
                                 }
                             }
                             for (let i = 0; i < cellsObject.length; i++) {
@@ -236,12 +234,12 @@ async function buildBoard(board) {
             HTMLcell.addEventListener("click", function () {
                 if (HTMLcell == currentCell?.element) {
                     HTMLcell.classList.remove("active");
-                    cells?.forEach(e => e.classList.remove("valid_move"));
+                    cells?.forEach((e) => e.classList.remove("valid_move"));
                 }
                 else {
-                    cells?.forEach(e => e.classList.remove("active"));
-                    cells?.forEach(e => e.classList.remove("valid_move"));
-                    cellsObject.forEach(e => {
+                    cells?.forEach((e) => e.classList.remove("active"));
+                    cells?.forEach((e) => e.classList.remove("valid_move"));
+                    cellsObject.forEach((e) => {
                         if (e.element == HTMLcell) {
                             currentCell = e;
                             showMoves();
@@ -257,12 +255,12 @@ async function buildBoard(board) {
 }
 async function buildJoin() {
     // <p><div id="box"><p id="join_game">Join Game</p></div></p>
-    let parTag = document.createElement('p');
-    let boxDiv = document.createElement('div');
+    let parTag = document.createElement("p");
+    let boxDiv = document.createElement("div");
     boxDiv.id = "box";
-    let innerP = document.createElement('p');
-    innerP.id = 'join_game';
-    innerP.innerText = 'Join Game';
+    let innerP = document.createElement("p");
+    innerP.id = "join_game";
+    innerP.innerText = "Join Game";
     boxDiv.appendChild(innerP);
     parTag.appendChild(boxDiv);
     boxDiv.addEventListener("click", async (e) => {
@@ -297,7 +295,10 @@ function showMoves() {
     let firstOpositePieceLeft = true;
     let firstOpositePieceRight = true;
     // for blue pieces
-    if (currentCell?.piece?.color == "blue" && currentCell.piece.isAlive == true && currentCell.piece.rank != -2 && currentCell.piece.rank != -1) {
+    if (currentCell?.piece?.color == "blue" &&
+        currentCell.piece.isAlive == true &&
+        currentCell.piece.rank != -2 &&
+        currentCell.piece.rank != -1) {
         let validMoveCells = [];
         let validMoveCellObjects = [];
         if (currentCell.piece.rank != 9) {
@@ -316,7 +317,9 @@ function showMoves() {
                 }
             }
             for (let i = 0; i < validMoveCells.length; i++) {
-                if (validMoveCells[i] != null && validMoveCellObjects[i].isWater == false && ((validMoveCellObjects[i]?.piece?.color != "blue"))) {
+                if (validMoveCells[i] != null &&
+                    validMoveCellObjects[i].isWater == false &&
+                    validMoveCellObjects[i]?.piece?.color != "blue") {
                     validMoveCells[i].classList.add("valid_move");
                 }
             }
@@ -326,94 +329,103 @@ function showMoves() {
                 if (cells && cells[i] == currentCell?.element) {
                     for (let j = 1; j <= 10; j++) {
                         //Can move down
-                        if (i + (j * 10) < cellsObject.length && (i + (j * 10)) >= 0) {
-                            if (cellsObject[i + (j * 10)].col == currentCell.col) {
-                                if (cellsObject[i + (j * 10)].isWater == true) {
+                        if (i + j * 10 < cellsObject.length && i + j * 10 >= 0) {
+                            if (cellsObject[i + j * 10].col == currentCell.col) {
+                                if (cellsObject[i + j * 10].isWater == true) {
                                     ranIntoWaterDown = true;
                                 }
-                                if (cellsObject[i + (j * 10)].piece?.color == "blue") {
+                                if (cellsObject[i + j * 10].piece?.color == "blue") {
                                     ranIntoSameColorPieceDown = true;
                                 }
-                                if (cellsObject[i + (j * 10)].piece?.color == "red") {
+                                if (cellsObject[i + j * 10].piece?.color == "red") {
                                     ranIntoOpositeColorPieceDown = true;
-                                    if (!ranIntoWaterDown && !ranIntoSameColorPieceDown && firstOpositePieceDown) {
-                                        validMoveCellObjects.push(cellsObject[i + (j * 10)]);
-                                        validMoveCells.push(cells[i + (j * 10)]);
+                                    if (!ranIntoWaterDown &&
+                                        !ranIntoSameColorPieceDown &&
+                                        firstOpositePieceDown) {
+                                        validMoveCellObjects.push(cellsObject[i + j * 10]);
+                                        validMoveCells.push(cells[i + j * 10]);
                                         firstOpositePieceDown = false;
                                     }
                                 }
                                 if (!ranIntoWaterDown && !ranIntoSameColorPieceDown) {
-                                    validMoveCellObjects.push(cellsObject[i + (j * 10)]);
-                                    validMoveCells.push(cells[i + (j * 10)]);
+                                    validMoveCellObjects.push(cellsObject[i + j * 10]);
+                                    validMoveCells.push(cells[i + j * 10]);
                                 }
                             }
                         }
                         //Can move right
-                        if ((i + j) < cellsObject.length && (i + j) >= 0) {
-                            if (cellsObject[i + (j)].row == currentCell.row) {
-                                if (cellsObject[i + (j)].isWater == true) {
+                        if (i + j < cellsObject.length && i + j >= 0) {
+                            if (cellsObject[i + j].row == currentCell.row) {
+                                if (cellsObject[i + j].isWater == true) {
                                     ranIntoWaterRight = true;
                                 }
-                                if (cellsObject[i + (j)].piece?.color == "blue") {
+                                if (cellsObject[i + j].piece?.color == "blue") {
                                     ranIntoSameColorPieceRight = true;
                                 }
-                                if (cellsObject[i + (j)].piece?.color == "red") {
+                                if (cellsObject[i + j].piece?.color == "red") {
                                     ranIntoOpositeColorPieceRight = true;
-                                    if (!ranIntoWaterRight && !ranIntoSameColorPieceRight && firstOpositePieceRight) {
-                                        validMoveCellObjects.push(cellsObject[i + (j)]);
-                                        validMoveCells.push(cells[i + (j)]);
+                                    if (!ranIntoWaterRight &&
+                                        !ranIntoSameColorPieceRight &&
+                                        firstOpositePieceRight) {
+                                        validMoveCellObjects.push(cellsObject[i + j]);
+                                        validMoveCells.push(cells[i + j]);
                                         firstOpositePieceRight = false;
                                     }
                                 }
                                 if (!ranIntoWaterRight && !ranIntoSameColorPieceRight) {
-                                    validMoveCellObjects.push(cellsObject[i + (j)]);
-                                    validMoveCells.push(cells[i + (j)]);
+                                    validMoveCellObjects.push(cellsObject[i + j]);
+                                    validMoveCells.push(cells[i + j]);
                                 }
                             }
                         }
                         // Can move left
-                        if ((i - j) < cellsObject.length && (i - j) >= 0) {
-                            if (cellsObject[i - (j)].row == currentCell.row) {
-                                if (cellsObject[i - (j)].isWater) {
+                        if (i - j < cellsObject.length && i - j >= 0) {
+                            if (cellsObject[i - j].row == currentCell.row) {
+                                if (cellsObject[i - j].isWater) {
                                     ranIntoWaterLeft = true;
                                 }
-                                if (cellsObject[i - (j)].piece?.color == "blue") {
+                                if (cellsObject[i - j].piece?.color == "blue") {
                                     ranIntoSameColorPieceLeft = true;
                                 }
-                                if (cellsObject[i - (j)].piece?.color == "red") {
+                                if (cellsObject[i - j].piece?.color == "red") {
                                     ranIntoOpositeColorPieceLeft = true;
-                                    if (!ranIntoWaterLeft && !ranIntoSameColorPieceLeft && firstOpositePieceLeft) {
-                                        validMoveCellObjects.push(cellsObject[i - (j)]);
-                                        validMoveCells.push(cells[i - (j)]);
+                                    if (!ranIntoWaterLeft &&
+                                        !ranIntoSameColorPieceLeft &&
+                                        firstOpositePieceLeft) {
+                                        validMoveCellObjects.push(cellsObject[i - j]);
+                                        validMoveCells.push(cells[i - j]);
                                         firstOpositePieceLeft = false;
                                     }
                                 }
                                 if (!ranIntoWaterLeft && !ranIntoSameColorPieceLeft) {
-                                    validMoveCellObjects.push(cellsObject[i - (j)]);
-                                    validMoveCells.push(cells[i - (j)]);
+                                    validMoveCellObjects.push(cellsObject[i - j]);
+                                    validMoveCells.push(cells[i - j]);
                                 }
                             }
                         }
                         //Can move up
-                        if ((i - (j * 10)) < cellsObject.length && (i - (j * 10) >= 0)) {
-                            if (cellsObject[i - (j * 10)].col == currentCell.col) {
-                                if (cellsObject[i - (j * 10)].isWater) {
+                        if (i - j * 10 < cellsObject.length && i - j * 10 >= 0) {
+                            if (cellsObject[i - j * 10].col == currentCell.col) {
+                                if (cellsObject[i - j * 10].isWater) {
                                     ranIntoWaterUp = true;
                                 }
-                                if (cellsObject[i - (j * 10)].piece?.color == "blue") {
+                                if (cellsObject[i - j * 10].piece?.color == "blue") {
                                     ranIntoSameColorPieceUp = true;
                                 }
-                                if (cellsObject[i - (j * 10)].piece?.color == "red") {
+                                if (cellsObject[i - j * 10].piece?.color == "red") {
                                     ranIntoOpositeColorPieceUp = true;
-                                    if (!ranIntoWaterUp && !ranIntoSameColorPieceUp && ranIntoOpositeColorPieceUp && firstOpositePieceUp) {
-                                        validMoveCellObjects.push(cellsObject[i - (j * 10)]);
-                                        validMoveCells.push(cells[i - (j * 10)]);
+                                    if (!ranIntoWaterUp &&
+                                        !ranIntoSameColorPieceUp &&
+                                        ranIntoOpositeColorPieceUp &&
+                                        firstOpositePieceUp) {
+                                        validMoveCellObjects.push(cellsObject[i - j * 10]);
+                                        validMoveCells.push(cells[i - j * 10]);
                                         firstOpositePieceUp = false;
                                     }
                                 }
                                 else if (!ranIntoWaterUp && !ranIntoSameColorPieceUp) {
-                                    validMoveCellObjects.push(cellsObject[i - (j * 10)]);
-                                    validMoveCells.push(cells[i - (j * 10)]);
+                                    validMoveCellObjects.push(cellsObject[i - j * 10]);
+                                    validMoveCells.push(cells[i - j * 10]);
                                 }
                             }
                         }
@@ -421,7 +433,9 @@ function showMoves() {
                 }
             }
             for (let i = 0; i < validMoveCells.length; i++) {
-                if (validMoveCells[i] != null && (validMoveCellObjects[i]?.piece?.color != "blue" || validMoveCellObjects[i]?.piece?.isAlive == false)) {
+                if (validMoveCells[i] != null &&
+                    (validMoveCellObjects[i]?.piece?.color != "blue" ||
+                        validMoveCellObjects[i]?.piece?.isAlive == false)) {
                     validMoveCells[i].classList.add("valid_move");
                 }
             }
@@ -563,9 +577,9 @@ async function auth_login(username, password) {
         let response = await fetch(`${base_url}/api/auth/login`, {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
             },
-            body: JSON.stringify({ username, password, email: "" })
+            body: JSON.stringify({ username, password, email: "" }),
         });
         if (response.status != 200) {
             console.error("Login failed:", await response.text());
@@ -580,9 +594,9 @@ async function register(username, password, email) {
     let response = await fetch(`${base_url}/api/auth/register`, {
         method: "POST",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username, password, email })
+        body: JSON.stringify({ username, password, email }),
     });
     if (!response.ok) {
         console.error("Registration failed:", await response.text());
@@ -598,9 +612,9 @@ async function logout(username) {
         let response = await fetch(`${base_url}/api/auth/logout`, {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
             },
-            body: JSON.stringify({ username })
+            body: JSON.stringify({ username }),
         });
         if (!response.ok) {
             const errorData = await response.text();
@@ -632,7 +646,7 @@ async function findGame() {
     let response = await fetch(`${base_url}/api/game/findGame`, {
         method: "POST",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
         },
         body: JSON.stringify({ username }), // Fixed: Stringify the body
     });
@@ -648,14 +662,14 @@ async function sendMove(index_last, index) {
     let response = await fetch(`${base_url}/api/game/postMove`, {
         method: "POST",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
         },
         body: JSON.stringify({
             lobbyId: Number(localStorage.getItem("lobbyId")),
             user: localStorage.getItem("currentUser"),
             index_last: Number,
             index: Number,
-            time: null
+            time: null,
         }),
     });
     return await response.json();
@@ -664,7 +678,7 @@ async function endGame(lobbyId) {
     let response = await fetch(`${base_url}/api/game/endGame`, {
         method: "POST",
         headers: {
-            "Content-Type": "application/ason"
+            "Content-Type": "application/ason",
         },
         body: JSON.stringify(lobbyId),
     });
@@ -675,9 +689,9 @@ async function getBoard() {
     let response = await fetch(`${base_url}/api/game/getBoard`, {
         method: "POST",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
         },
-        body: JSON.stringify({ lobbyId, user, turn })
+        body: JSON.stringify({ lobbyId, user, turn }),
     });
     return await response.json();
 }
@@ -685,9 +699,9 @@ async function isAuthenticated(username) {
     let response = await fetch(`${base_url}/api/auth/isAuthenticated`, {
         method: "POST",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
         },
-        body: JSON.stringify(username)
+        body: JSON.stringify(username),
     });
     if (response.status == 200) {
         return true;
