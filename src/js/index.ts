@@ -481,7 +481,9 @@ async function buildBoard(board: HTMLElement | null) {
       if (loc == 2 || loc == 3 || loc == 6 || loc == 7) {
         HTMLcell.className = "cell_water";
         isWater = true;
-      } else {
+      }
+      } 
+      
         HTMLcell.addEventListener("click", async (e) => {
           if (HTMLcell == currentCell?.element) {
             HTMLcell.classList.toggle("active");
@@ -528,8 +530,6 @@ async function buildBoard(board: HTMLElement | null) {
             });
           }
         });
-      }
-    } else {
       HTMLcell.addEventListener("click", function () {
         if (HTMLcell == currentCell?.element) {
           HTMLcell.classList.remove("active");
@@ -546,7 +546,6 @@ async function buildBoard(board: HTMLElement | null) {
           HTMLcell.classList.toggle("active");
         }
       });
-    }
     cellsObject.push(new cell(row, col, isWater, piece, HTMLcell));
     cells?.push(HTMLcell);
   }
