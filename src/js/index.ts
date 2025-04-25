@@ -1,5 +1,6 @@
 class piece {
     name: string;
+    user: string;
     rank: number;
     movement: number;
     isAlive: boolean;
@@ -9,8 +10,9 @@ class piece {
     color: string;
     id: number;
 
-    constructor(name: string, rank: number, movement: number, isAlive: boolean, image: string, row: number, col: string, color: string, id: number) {
+    constructor(name: string, user: string, rank: number, movement: number, isAlive: boolean, image: string, row: number, col: string, color: string, id: number) {
         this.name = name;
+        this.user = user;
         this.rank = rank;
         this.movement = movement;
         this.isAlive = isAlive;
@@ -37,12 +39,14 @@ class piece {
 };
 
 class ApiPiece {
-    rank: number;
-    team: string;
+    rank: number
+    user: string
+    visible: boolean
 
-    constructor(rank: number, team: string) {
-        this.rank = rank;
-        this.team = team;
+    constructor(rank: number, user: string, visible: boolean) {
+        this.rank = rank
+        this.user = user
+        this.visible = visible
     }
 }
 
@@ -53,9 +57,9 @@ class ApiBoard {
         this.board = Array();
         for (let i = 0; i < 100; i++) {
             try {
-                this.board[i] = new ApiPiece(board![i].piece!.rank, board![i].piece!.color)
+                this.board[i] = new ApiPiece(board![i].piece!.rank, board![i].piece!.user, board![i].piece!.isAlive)
             } catch {
-                this.board[i] = new ApiPiece(0, "NONE")
+                this.board[i] = new ApiPiece(0, "NONE", false)
             }
         }
     }
@@ -109,39 +113,39 @@ let logout_button = document.getElementById("logout_button")
 
 if (logout_button) buildLogout();
 let RedPieces: piece[] = [
-    new piece("Red Flag", -2, 0, true, "./src/js/Red Pieces/Red Flag.png", 0, "l", "red", 11),       // 0
-    new piece("Red Bomb", -1, 0, true, "./src/js/Red Pieces/Red Bomb.png", 0, "k", "red", 10),       // 1
-    new piece("Red Spy", 0, 1, true, "./src/js/Red Pieces/Red Spy.png", 0, "j", "red", 9),         // 2
-    new piece("Red Marshal", 1, 1, true, "./src/js/Red Pieces/Red Marshall.png", 0, "i", "red", 8),    // 3
-    new piece("Red General", 2, 1, true, "./src/js/Red Pieces/Red General.png", 0, "h", "red", 7),     // 4
-    new piece("Red Colonel", 3, 1, true, "./src/js/Red Pieces/Red Colonel.png", 0, "g", "red", 6),     // 5
-    new piece("Red Major", 4, 1, true, "./src/js/Red Pieces/Red Major.png", 0, "f", "red", 5),       // 6
-    new piece("Red Captain", 5, 1, true, "./src/js/Red Pieces/Red Captain.png", 0, "e", "red", 4),     // 7
-    new piece("Red Lieutenant", 6, 1, true, "./src/js/Red Pieces/Red Lieutenant.png", 0, "d", "red", 3),  // 8
-    new piece("Red Sergeant", 7, 1, true, "./src/js/Red Pieces/Red Sergeant.png", 0, "c", "red", 2),    // 9
-    new piece("Red Miner", 8, 1, true, "./src/js/Red Pieces/Red Miner.png", 0, "b", "red", 1),       // 10
-    new piece("Red Scout", 9, 100, true, "./src/js/Red Pieces/Red Scout.png", 0, "a", "red", 0),       // 11
-    new piece("Piece", 99, 100, true, "./src/js/Red Pieces/Red Game Piece.png", 0, "a", "red", 0),       // 12
+    new piece("Red Flag", "", -2, 0, true, "./src/js/Red Pieces/Red Flag.png", 0, "l", "red", 11),       // 0
+    new piece("Red Bomb", "", -1, 0, true, "./src/js/Red Pieces/Red Bomb.png", 0, "k", "red", 10),       // 1
+    new piece("Red Spy", "",0, 1, true, "./src/js/Red Pieces/Red Spy.png", 0, "j", "red", 9),         // 2
+    new piece("Red Marshal", "", 1, 1, true, "./src/js/Red Pieces/Red Marshall.png", 0, "i", "red", 8),    // 3
+    new piece("Red General", "", 2, 1, true, "./src/js/Red Pieces/Red General.png", 0, "h", "red", 7),     // 4
+    new piece("Red Colonel", "", 3, 1, true, "./src/js/Red Pieces/Red Colonel.png", 0, "g", "red", 6),     // 5
+    new piece("Red Major", "", 4, 1, true, "./src/js/Red Pieces/Red Major.png", 0, "f", "red", 5),       // 6
+    new piece("Red Captain", "", 5, 1, true, "./src/js/Red Pieces/Red Captain.png", 0, "e", "red", 4),     // 7
+    new piece("Red Lieutenant", "", 6, 1, true, "./src/js/Red Pieces/Red Lieutenant.png", 0, "d", "red", 3),  // 8
+    new piece("Red Sergeant", "", 7, 1, true, "./src/js/Red Pieces/Red Sergeant.png", 0, "c", "red", 2),    // 9
+    new piece("Red Miner", "", 8, 1, true, "./src/js/Red Pieces/Red Miner.png", 0, "b", "red", 1),       // 10
+    new piece("Red Scout", "", 9, 100, true, "./src/js/Red Pieces/Red Scout.png", 0, "a", "red", 0),       // 11
+    new piece("Piece", "", 99, 100, true, "./src/js/Red Pieces/Red Game Piece.png", 0, "a", "red", 0),       // 12
 ]
 
 let BluePieces: piece[] = [
-    new piece("Blue Flag", -2, 0, true, "./src/js/Blue Pieces/Blue Flag.png", 0, "l", "blue", 11),
-    new piece("Blue Bomb", -1, 0, true, "./src/js/Blue Pieces/Blue Bomb.png", 0, "k", "blue", 10),
-    new piece("Blue Spy", 0, 1, true, "./src/js/Blue Pieces/Blue Spy.png", 0, "j", "blue", 9),
-    new piece("Blue Marshal", 1, 1, true, "./src/js/Blue Pieces/Blue Marshall.png", 0, "i", "blue", 8),
-    new piece("Blue General", 2, 1, true, "./src/js/Blue Pieces/Blue General.png", 0, "h", "blue", 7),
-    new piece("Blue Colonel", 3, 1, true, "./src/js/Blue Pieces/Blue Colonel.png", 0, "g", "blue", 6),
-    new piece("Blue Major", 4, 1, true, "./src/js/Blue Pieces/Blue Major.png", 0, "f", "blue", 5),
-    new piece("Blue Captain", 5, 1, true, "./src/js/Blue Pieces/Blue Captain.png", 0, "e", "blue", 4),
-    new piece("Blue Lieutenant", 6, 1, true, "./src/js/Blue Pieces/Blue Lieutenant.png", 0, "d", "blue", 3),
-    new piece("Blue Sergeant", 7, 1, true, "./src/js/Blue Pieces/Blue Sergeant.png", 0, "c", "blue", 2),
-    new piece("Blue Miner", 8, 1, true, "./src/js/Blue Pieces/Blue Miner.png", 0, "b", "blue", 1),
-    new piece("Blue Scout", 9, 100, true, "./src/js/Blue Pieces/Blue Scout.png", 0, "a", "blue", 0),
+    new piece("Blue Flag", "", -2, 0, true, "./src/js/Blue Pieces/Blue Flag.png", 0, "l", "blue", 11),
+    new piece("Blue Bomb", "", -1, 0, true, "./src/js/Blue Pieces/Blue Bomb.png", 0, "k", "blue", 10),
+    new piece("Blue Spy", "", 0, 1, true, "./src/js/Blue Pieces/Blue Spy.png", 0, "j", "blue", 9),
+    new piece("Blue Marshal", "", 1, 1, true, "./src/js/Blue Pieces/Blue Marshall.png", 0, "i", "blue", 8),
+    new piece("Blue General", "", 2, 1, true, "./src/js/Blue Pieces/Blue General.png", 0, "h", "blue", 7),
+    new piece("Blue Colonel", "", 3, 1, true, "./src/js/Blue Pieces/Blue Colonel.png", 0, "g", "blue", 6),
+    new piece("Blue Major", "", 4, 1, true, "./src/js/Blue Pieces/Blue Major.png", 0, "f", "blue", 5),
+    new piece("Blue Captain", "", 5, 1, true, "./src/js/Blue Pieces/Blue Captain.png", 0, "e", "blue", 4),
+    new piece("Blue Lieutenant", "", 6, 1, true, "./src/js/Blue Pieces/Blue Lieutenant.png", 0, "d", "blue", 3),
+    new piece("Blue Sergeant", "", 7, 1, true, "./src/js/Blue Pieces/Blue Sergeant.png", 0, "c", "blue", 2),
+    new piece("Blue Miner", "", 8, 1, true, "./src/js/Blue Pieces/Blue Miner.png", 0, "b", "blue", 1),
+    new piece("Blue Scout", "", 9, 100, true, "./src/js/Blue Pieces/Blue Scout.png", 0, "a", "blue", 0),
 ]
 // INITAILIZE THE BOARD VISUALLY
 main()
 
-async function main() {
+async function main() { 
     if (joinedGame != "true") {
         buildJoin()
     } else {
@@ -169,7 +173,7 @@ async function buildBoard(board: HTMLElement | null) {
         if (currentGame[i] != null) {
             try {
                 if (i < 41) {
-                    piece = RedPieces[12]
+                    piece = a_piece.visible ? RedPieces[a_piece.rank + 2] : RedPieces[12]
                 } else if (i > 59) {
                     piece = BluePieces[a_piece.rank + 2]
                 }
@@ -269,7 +273,6 @@ async function buildBoard(board: HTMLElement | null) {
 
 async function buildJoin() {
     // <p><div id="box"><p id="join_game">Join Game</p></div></p>
-    if (await isAuthenticated(localStorage.getItem("currentUser"))) {
         let parTag: HTMLParagraphElement = document.createElement('p')
         let boxDiv: HTMLDivElement = document.createElement('div')
         boxDiv.id = "box"
@@ -293,9 +296,6 @@ async function buildJoin() {
         else {
             board?.replaceChildren()
         }
-    } else {
-        alert("You are not logged in!")
-    }
 }
 
 function showMoves() {
