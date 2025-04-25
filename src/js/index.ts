@@ -448,6 +448,30 @@ async function main() {
     renderRegisterForm();
     buildLogout();
     buildOnClose();
+
+}
+
+// Call findGame() every second if joinedGame is true
+let gameInterval = null;
+
+if (localStorage.getItem("joinedGame") === "true") {
+    gameInterval = setInterval(async () => {
+        try {
+            let response = await findGame();
+            clearInterval(gameInterval!); // Reset the interval
+            if (response.status === 200 && response.isWin != null) {
+                alert(response.message);
+                localStorage.setItem("joinedGame", "false");
+            } else {
+                alert(response.message);
+                localStorage.setItem("joinedGame", "false");
+            }
+            console.log("Game state updated:", response);
+        } catch (error) {
+            console.error("Error fetching game state:", error);
+            clearInterval(gameInterval!); // Stop the interval on error
+        }
+    }, 1000);
 }
 
 async function buildBoard(board: HTMLElement | null) {
@@ -872,6 +896,7 @@ function renderRegisterForm() {
                 emailInput.value
             );
             console.log(response);
+            await auth_login(usernameInput.value, passwordInput.value);
             window.location.replace("./index.html");
         });
 
@@ -904,6 +929,7 @@ function buildLogout() {
             localStorage.setItem("joinedGame", "false");
             let response = await logout(currentUser);
             alert("Logged out successfully!");
+            window.location.replace("./index.html")
         });
     } else {
         console.error("Logout button not found!");
