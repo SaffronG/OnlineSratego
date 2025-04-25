@@ -173,7 +173,7 @@ async function buildBoard(board: HTMLElement | null) {
                 } else if (i > 59) {
                     piece = BluePieces[a_piece.rank + 2]
                 }
-                HTMLcell.innerHTML = `<img src="../${piece!.image}" alt="${piece!.name}"">`;
+                HTMLcell.innerHTML = `<img src="../${piece!.image}" alt="${piece!.name}"<id="${i}>">`;
             } catch {
                 HTMLcell.innerHTML = " ";
             }
