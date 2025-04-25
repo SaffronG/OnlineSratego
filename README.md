@@ -26,19 +26,15 @@ K Chase Harmer, Tyson Meade, Cael Church
 - [x] Implement login functionality
 
 # TODO
-- [ ] Choose color scheme
-- [ ] Create or generate (AI) piece images
-- [ ] Implement bounds checking
-- [ ] Valid move highlighting and checking
-- [ ] Drag and drop animation
-- [ ] Create basic grid, add css and shadows
-- [ ] Create simple move robot to move pieces in a simple way that can win them the game
-- [ ] Allow both a board randomizer and a board customizer function (for your pieces)
-
-# Optional
-- [ ] Create webhook server for multiplayer functionality
-- [ ] Create 3 unique maps
-
+- [x] Choose color scheme
+- [x] Create or generate (AI) piece images
+- [x] Implement bounds checking
+- [x] Valid move highlighting and checking
+- [x] Drag and drop animation
+- [x] Create basic grid, add css and shadows
+- [x] Create simple move robot to move pieces in a simple way that can win them the game
+- [x] Allow both a board randomizer and a board customizer function (for your pieces)
+- [x] Create webhook server for multiplayer functionality
 
 # UML Diagram
 https://lucid.app/lucidchart/a44e2201-ed57-493c-bb41-f5d009b19f49/edit?view_items=e6o6_PWrgp74&invitationId=inv_6e04dae5-279e-44bf-9a33-681c4611398f
