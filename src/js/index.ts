@@ -234,8 +234,7 @@ async function buildBoard(board: HTMLElement | null) {
                                 cell.classList.remove("active");
                                 cell.classList.remove("valid_move");
                             });
-                            
-                    }
+
                 })
             }
         }
@@ -712,8 +711,8 @@ async function sendMove(index_last: number, index: number) {
         body: JSON.stringify({
             lobbyId: Number(localStorage.getItem("lobbyId")),
             user: localStorage.getItem("currentUser"),
-            index_last: Number,
-            index: Number,
+            index_last: index_last,
+            index: index,
             time: null
         }),
     });
