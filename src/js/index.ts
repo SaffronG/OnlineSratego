@@ -1024,7 +1024,7 @@ async function findGame() {
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username }), // Fixed: Stringify the body
+        body: JSON.stringify({ username, Board: null }), // Fixed: Stringify the body
     });
 
     if (!response.ok) {
